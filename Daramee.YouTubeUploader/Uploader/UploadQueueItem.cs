@@ -54,6 +54,8 @@ namespace Daramee.YouTubeUploader.Uploader
 		public double Progress { get; private set; }
 		public UploadingStatus UploadingStatus { get; private set; }
 
+		public event EventHandler Started;
+		public event EventHandler Uploading;
 		public event EventHandler Completed;
 		public event EventHandler Failed;
 
@@ -105,7 +107,7 @@ namespace Daramee.YouTubeUploader.Uploader
 			videoInsertRequest.ChunkSize = ResumableUpload.MinimumChunkSize;
 			videoInsertRequest.ProgressChanged += ( uploadProgress ) =>
 			{
-				totalSentBytes += uploadProgress.BytesSent;
+				totalSentBytes = uploadProgress.BytesSent;
 				Progress = totalSentBytes / ( double ) mediaStream.Length;
 				PC ( nameof ( Progress ) );
 
@@ -114,11 +116,13 @@ namespace Daramee.YouTubeUploader.Uploader
 					case UploadStatus.Starting:
 						UploadingStatus = UploadingStatus.UploadStart;
 						PC ( nameof ( UploadingStatus ) );
+						Started?.Invoke ( this, EventArgs.Empty );
 						break;
 
 					case UploadStatus.Uploading:
 						UploadingStatus = UploadingStatus.Uploading;
 						PC ( nameof ( UploadingStatus ) );
+						Uploading?.Invoke ( this, EventArgs.Empty );
 						break;
 
 					case UploadStatus.Failed:
@@ -150,7 +154,9 @@ namespace Daramee.YouTubeUploader.Uploader
 					ySession.YouTubeService.Thumbnails.Set ( video.Id, thumbnailStream, "image/jpeg" ).Upload ();
 				}
 			};
-			await videoInsertRequest.UploadAsync ();
+			var uploadStatus = await videoInsertRequest.UploadAsync ();
+			if ( uploadStatus.Status == UploadStatus.NotStarted )
+				return false;
 
 			return true;
 		}

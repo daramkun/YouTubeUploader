@@ -28,17 +28,25 @@ namespace Daramee.YouTubeUploader.Uploader
 			YouTubeService = null;
 		}
 
+		private Stream GetDefaultClientSecretsStream ()
+		{
+			var stream = new MemoryStream ();
+
+			string json = "{ installed : { \"client_id\": \"265154369970-nvej6rlmsigg57b0956clc36j7of2anu.apps.googleusercontent.com\", \"client_secret\": \"T0v3vOo6WndzgH3WQ9UvkLlU\", \"redirect_uri\" : \"urn:ietf:wg:oauth:2.0:oob\" } }";
+			byte [] jsonBytes = Encoding.UTF8.GetBytes ( json );
+			stream.Write ( jsonBytes, 0, jsonBytes.Length );
+			stream.Position = 0;
+
+			return stream;
+		}
+
 		public async Task<bool> Authorization ()
 		{
 			UserCredential credential;
 
-			using ( var stream = new MemoryStream () )
+			Stream stream;
+			using ( stream = File.Exists ( "client_secrets.json" ) ? new FileStream ( "client_secrets.json", FileMode.Open, FileAccess.Read ) : GetDefaultClientSecretsStream () )
 			{
-				string json = "{ installed : { \"client_id\": \"757877220144-psi8ka6kft6i41slsm96qa7mcp4re916.apps.googleusercontent.com\", \"client_secret\": \"TkXZmrTjLOu3khUEL8NOSYoj\", \"redirect_uri\" : \"urn:ietf:wg:oauth:2.0:oob\" } }";
-				byte [] jsonBytes = Encoding.UTF8.GetBytes ( json );
-				stream.Write ( jsonBytes, 0, jsonBytes.Length );
-				stream.Position = 0;
-
 				credential = await GoogleWebAuthorizationBroker.AuthorizeAsync (
 					GoogleClientSecrets.Load ( stream ).Secrets,
 					new [] { YouTubeService.Scope.YoutubeUpload },
