@@ -2,20 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Daramee.YouTubeUploader.Uploader;
 using Microsoft.Win32;
 
@@ -160,12 +153,12 @@ namespace Daramee.YouTubeUploader
 
 		private void ButtonPlayItem_Click ( object sender, RoutedEventArgs e )
 		{
-			( ( ( ( sender as Button ).Parent as StackPanel ).Parent as Grid ).Children [ 0 ] as MediaElement ).Play ();
+			( ( ( ( sender as Button ).Parent as StackPanel ).Parent as Grid ).Children [ 1 ] as MediaElement ).Play ();
 		}
 
 		private void ButtonStopItem_Click ( object sender, RoutedEventArgs e )
 		{
-			var mediaElement = ( ( ( ( sender as Button ).Parent as StackPanel ).Parent as Grid ).Children [ 0 ] as MediaElement );
+			var mediaElement = ( ( ( ( sender as Button ).Parent as StackPanel ).Parent as Grid ).Children [ 1 ] as MediaElement );
 			mediaElement.Stop ();
 			mediaElement.Close ();
 		}
@@ -179,7 +172,7 @@ namespace Daramee.YouTubeUploader
 		{
 			var uploadQueueItem = ( ( sender as Button ).DataContext as UploadQueueItem );
 
-			if ( uploadQueueItem.Title.Trim ().Length == 0)
+			if ( uploadQueueItem.Title.Trim ().Length == 0 )
 			{
 				MessageBox.Show ( "영상 제목은 반드시 채워져야 합니다.", "오류", MessageBoxButton.OK, MessageBoxImage.Error );
 				return;
@@ -195,7 +188,6 @@ namespace Daramee.YouTubeUploader
 		{
 			OpenFileDialog ofd = new OpenFileDialog ();
 			ofd.Filter = "All Available Files(*.jpg;*.png)|*.jpg;*.png";
-			ofd.Multiselect = true;
 			if ( ofd.ShowDialog () == false )
 				return;
 
@@ -227,7 +219,7 @@ namespace Daramee.YouTubeUploader
 				MessageBox.Show ( "이미지 크기가 16:9 비율이어야 합니다.", "알림", MessageBoxButton.OK, MessageBoxImage.Exclamation );
 				return;
 			}
-			
+
 			( ( sender as Hyperlink ).DataContext as UploadQueueItem ).Thumbnail = bitmapSource;
 		}
 

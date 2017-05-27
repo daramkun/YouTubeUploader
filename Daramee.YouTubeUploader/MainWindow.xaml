@@ -115,6 +115,7 @@
 									<RowDefinition Height="16" />
 								</Grid.RowDefinitions>
 
+								<Rectangle Fill="Black" Width="214" Height="120" VerticalAlignment="Center" HorizontalAlignment="Left" />
 								<MediaElement Source="{Binding FileName}" IsMuted="True"
 									  Width="214" Height="120" LoadedBehavior="Manual" UnloadedBehavior="Close"
 									  VerticalAlignment="Center" HorizontalAlignment="Left" />
@@ -186,6 +187,7 @@
 								</ComboBox>
 								<TextBlock Grid.Row="4" Grid.Column="1" Margin="0,0,10,0" VerticalAlignment="Center" Text="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToStringConverter}}" />
 
+								<Image Grid.Row="1" Grid.Column="2" Grid.RowSpan="4" Source="./Resources/blank.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
 								<Image Grid.Row="1" Grid.Column="2" Grid.RowSpan="4" Source="{Binding Thumbnail}" />
 
 								<ProgressBar Grid.Row="5" Grid.ColumnSpan="3" Maximum="1" Value="{Binding Progress, Mode=OneWay}" />

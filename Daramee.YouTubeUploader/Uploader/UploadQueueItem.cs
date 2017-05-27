@@ -32,6 +32,8 @@ namespace Daramee.YouTubeUploader.Uploader
 
 	public sealed class UploadQueueItem : INotifyPropertyChanged, IDisposable
 	{
+		private static readonly IEnumerable<int> QualityLevels = new [] { 100, 80, 60, 40, 20, 1 };
+
 		WeakReference<YouTubeSession> youTubeSession;
 
 		Stream mediaStream;
@@ -96,7 +98,7 @@ namespace Daramee.YouTubeUploader.Uploader
 			{
 				Snippet = new VideoSnippet ()
 				{
-					Title = Title,
+					Title = Title.Trim (),
 					Description = Description
 				},
 				Status = new VideoStatus ()
@@ -145,11 +147,18 @@ namespace Daramee.YouTubeUploader.Uploader
 
 				using ( MemoryStream thumbnailStream = new MemoryStream () )
 				{
-					BitmapEncoder enc = new JpegBitmapEncoder ();
-					enc.Frames.Add ( BitmapFrame.Create ( Thumbnail ) );
-					enc.Save ( thumbnailStream );
+					JpegBitmapEncoder encoder = new JpegBitmapEncoder ();
+					foreach ( int quality in QualityLevels )
+					{
+						encoder.QualityLevel = quality;
+						encoder.Frames.Add ( BitmapFrame.Create ( Thumbnail ) );
+						encoder.Save ( thumbnailStream );
+						thumbnailStream.Position = 0;
 
-					thumbnailStream.Position = 0;
+						if ( thumbnailStream.Length < 2097152 )
+							break;
+					}
+
 					youTubeSession.TryGetTarget ( out YouTubeSession ySession );
 					ySession.YouTubeService.Thumbnails.Set ( video.Id, thumbnailStream, "image/jpeg" ).Upload ();
 				}
