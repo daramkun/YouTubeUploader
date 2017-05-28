@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Daramee.YouTubeUploader
@@ -40,7 +35,16 @@ namespace Daramee.YouTubeUploader
 			};
 			AppDomain.CurrentDomain.UnhandledException += ( sender, e2 ) =>
 			{
-				MessageBox.Show ( $"심각한 오류가 발생했습니다.\n{e2.ExceptionObject}", "오류" );
+				if ( e2.ExceptionObject is MissingMethodException )
+				{
+					MessageBox.Show ( $"심각한 오류가 발생했습니다.\n{( e2.ExceptionObject as MissingMethodException ).Message}",
+						"오류", MessageBoxButton.OK, MessageBoxImage.Error );
+				}
+				else if ( e2.ExceptionObject is FileNotFoundException )
+				{
+					MessageBox.Show ( $"심각한 오류가 발생했습니다.\n{( e2.ExceptionObject as FileNotFoundException ).FileName} 파일이 존재하지 않습니다.",
+						"오류", MessageBoxButton.OK, MessageBoxImage.Error );
+				}
 			};
 
 			base.OnStartup ( e );

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -55,7 +56,7 @@ namespace Daramee.YouTubeUploader
 			if ( alreadyAdded )
 				return;
 
-			var queueItem = new UploadQueueItem ( youtubeSession, filename );
+			var queueItem = new UploadQueueItem ( youtubeSession, filename ) { PrivacyStatus = ( PrivacyStatus ) comboBoxDefaultPrivacyStatus.SelectedIndex };
 			queueItem.Completed += ( sender, e ) =>
 			{
 				if ( !HaltWhenAllCompleted )
@@ -146,6 +147,8 @@ namespace Daramee.YouTubeUploader
 				buttonOpen.IsEnabled = true;
 				buttonConnect.IsEnabled = false;
 				buttonDisconnect.IsEnabled = true;
+				comboBoxDefaultPrivacyStatus.IsEnabled = true;
+				buttonAllUpload.IsEnabled = true;
 				haltWhenCompleteCheckBox.IsEnabled = true;
 			}
 		}
@@ -156,6 +159,8 @@ namespace Daramee.YouTubeUploader
 			buttonOpen.IsEnabled = false;
 			buttonConnect.IsEnabled = true;
 			buttonDisconnect.IsEnabled = false;
+			comboBoxDefaultPrivacyStatus.IsEnabled = false;
+			buttonAllUpload.IsEnabled = false;
 			haltWhenCompleteCheckBox.IsEnabled = false;
 		}
 
@@ -179,28 +184,7 @@ namespace Daramee.YouTubeUploader
 		private async void ButtonUpload_Click ( object sender, RoutedEventArgs e )
 		{
 			var uploadQueueItem = ( ( sender as Button ).DataContext as UploadQueueItem );
-
-			if ( uploadQueueItem.Title.Trim ().Length == 0 )
-			{
-				MessageBox.Show ( "영상 제목은 반드시 채워져야 합니다.", "오류", MessageBoxButton.OK, MessageBoxImage.Error );
-				return;
-			}
-
-			switch ( await uploadQueueItem.UploadStart () )
-			{
-				case UploadResult.AlreadyUploading:
-					MessageBox.Show ( "이미 업로드가 시작되었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
-					break;
-				case UploadResult.CannotAccesToFile:
-					MessageBox.Show ( "영상 파일에 접근할 수 없었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
-					break;
-				case UploadResult.FailedUploadRequest:
-					MessageBox.Show ( "업로드 요청을 시작할 수 없었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
-					break;
-				case UploadResult.CannotStartUpload:
-					MessageBox.Show ( "업로드 작업을 시작할 수 없었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
-					break;
-			}
+			await UploadItem ( uploadQueueItem );
 		}
 
 		private void HyperlinkBrowse_Click ( object sender, RoutedEventArgs e )
@@ -274,6 +258,40 @@ namespace Daramee.YouTubeUploader
 
 추가 안내 없이 종료를 시작하므로 주의하십시오.
 이 기능은 shutdown 명령어를 사용합니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Information );
+		}
+
+		private void ButtonAllUpload_Click ( object sender, RoutedEventArgs e )
+		{
+			foreach ( var item in uploadQueueListBox.ItemsSource as ObservableCollection<UploadQueueItem> )
+			{
+				if ( item.UploadingStatus == UploadingStatus.Queued || item.UploadingStatus == UploadingStatus.UploadFailed )
+					ThreadPool.QueueUserWorkItem ( async ( i )=> { await UploadItem ( i as UploadQueueItem ); }, item );
+			}
+		}
+
+		private async Task UploadItem ( UploadQueueItem uploadQueueItem )
+		{
+			if ( uploadQueueItem.Title.Trim ().Length == 0 )
+			{
+				MessageBox.Show ( "영상 제목은 반드시 채워져야 합니다.", "오류", MessageBoxButton.OK, MessageBoxImage.Error );
+				return;
+			}
+
+			switch ( await uploadQueueItem.UploadStart () )
+			{
+				case UploadResult.AlreadyUploading:
+					MessageBox.Show ( "이미 업로드가 시작되었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
+					break;
+				case UploadResult.CannotAccesToFile:
+					MessageBox.Show ( "영상 파일에 접근할 수 없었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
+					break;
+				case UploadResult.FailedUploadRequest:
+					MessageBox.Show ( "업로드 요청을 시작할 수 없었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
+					break;
+				case UploadResult.CannotStartUpload:
+					MessageBox.Show ( "업로드 작업을 시작할 수 없었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
+					break;
+			}
 		}
 	}
 }

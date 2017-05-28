@@ -80,6 +80,31 @@
 				</Button>
 
 				<Separator />
+				<ComboBox x:Name="comboBoxDefaultPrivacyStatus" Grid.Row="3" Grid.Column="1" Margin="0,0,10,0" IsEnabled="False" VerticalAlignment="Center" SelectedIndex="0">
+					<ComboBoxItem Content="공개" />
+					<ComboBoxItem Content="미등록" />
+					<ComboBoxItem Content="비공개" />
+				</ComboBox>
+				<Button x:Name="buttonAllUpload" IsEnabled="False" Click="ButtonAllUpload_Click">
+					<Button.Content>
+						<Image Source="./Resources/application_cascade_get.png">
+							<Image.Style>
+								<Style TargetType="Image">
+									<Style.Triggers>
+										<Trigger Property="IsEnabled" Value="False">
+											<Setter Property="Opacity" Value="0.5" />
+										</Trigger>
+									</Style.Triggers>
+								</Style>
+							</Image.Style>
+						</Image>
+					</Button.Content>
+					<Button.ToolTip>
+						<ToolTip Content="모든 파일 업로드" />
+					</Button.ToolTip>
+				</Button>
+
+				<Separator />
 
 				<CheckBox x:Name="haltWhenCompleteCheckBox" Content="완료 후 종료" IsEnabled="False"
 						  DataContext="{x:Static local:MainWindow.SharedWindow}"

@@ -71,6 +71,7 @@ namespace Daramee.YouTubeUploader.Uploader
 				HttpClientInitializer = credential,
 				HttpClientFactory = new MyHttpClientFactory (),
 			} );
+			YouTubeService.HttpClient.Timeout = TimeSpan.FromMinutes ( 5 );
 
 			return true;
 		}
