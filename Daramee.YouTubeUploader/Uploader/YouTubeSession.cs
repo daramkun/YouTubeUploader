@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.Auth.OAuth2;
+using Google.Apis.Http;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 
@@ -19,6 +22,9 @@ namespace Daramee.YouTubeUploader.Uploader
 		{
 			if ( sessionSaveDirectory != null )
 				GoogleWebAuthorizationBroker.Folder = sessionSaveDirectory;
+
+			ServicePointManager.ReusePort = true;
+			ServicePointManager.DefaultConnectionLimit = int.MaxValue;
 		}
 
 		public void Dispose ()
@@ -61,7 +67,9 @@ namespace Daramee.YouTubeUploader.Uploader
 			YouTubeService = new YouTubeService ( new BaseClientService.Initializer ()
 			{
 				ApplicationName = "YouTube Uploader",
-				HttpClientInitializer = credential
+				GZipEnabled = true,
+				HttpClientInitializer = credential,
+				HttpClientFactory = new MyHttpClientFactory (),
 			} );
 
 			return true;
@@ -78,6 +86,47 @@ namespace Daramee.YouTubeUploader.Uploader
 		public bool IsAlreadyAuthorized
 		{
 			get { return File.Exists ( Path.Combine ( GoogleWebAuthorizationBroker.Folder, "Google.Apis.Auth.OAuth2.Responses.TokenResponse-user" ) ); }
+		}
+
+		class MyHttpClientFactory : IHttpClientFactory
+		{
+			public ConfigurableHttpClient CreateHttpClient ( CreateHttpClientArgs args )
+			{
+				var handler = CreateHandler ( args );
+				var configurableHandler = new ConfigurableMessageHandler ( handler )
+				{
+					ApplicationName = args.ApplicationName
+				};
+				
+				var client = new ConfigurableHttpClient ( configurableHandler );
+				foreach ( var initializer in args.Initializers )
+				{
+					initializer.Initialize ( client );
+				}
+
+				return client;
+			}
+			
+			protected virtual HttpMessageHandler CreateHandler ( CreateHttpClientArgs args )
+			{
+				var handler = new HttpClientHandler ();
+				
+				if ( handler.SupportsRedirectConfiguration )
+				{
+					handler.AllowAutoRedirect = false;
+				}
+				
+				if ( handler.SupportsAutomaticDecompression && args.GZipEnabled )
+				{
+					handler.AutomaticDecompression = System.Net.DecompressionMethods.GZip |
+						System.Net.DecompressionMethods.Deflate;
+				}
+
+				handler.UseProxy = false;
+				handler.Proxy = null;
+
+				return handler;
+			}
 		}
 	}
 }

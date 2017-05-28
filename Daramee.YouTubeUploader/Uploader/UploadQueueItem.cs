@@ -31,6 +31,15 @@ namespace Daramee.YouTubeUploader.Uploader
 		UploadFailed,
 	}
 
+	public enum UploadResult : int
+	{
+		Succeed,
+		AlreadyUploading,
+		CannotAccesToFile,
+		FailedUploadRequest,
+		CannotStartUpload
+	}
+
 	public sealed class UploadQueueItem : INotifyPropertyChanged, IDisposable
 	{
 		private static readonly IEnumerable<int> QualityLevels = new [] { 100, 80, 60, 40, 20, 1 };
@@ -82,10 +91,10 @@ namespace Daramee.YouTubeUploader.Uploader
 			mediaStream = null;
 		}
 
-		public async Task<bool> UploadStart ()
+		public async Task<UploadResult> UploadStart ()
 		{
 			if ( !( UploadingStatus == UploadingStatus.Queued || UploadingStatus == UploadingStatus.UploadFailed ) )
-				return false;
+				return UploadResult.AlreadyUploading;
 
 			UploadingStatus = UploadingStatus.PrepareUpload;
 
@@ -94,7 +103,7 @@ namespace Daramee.YouTubeUploader.Uploader
 				if ( mediaStream == null )
 					mediaStream = new FileStream ( FileName.AbsolutePath, FileMode.Open, FileAccess.Read, FileShare.Read );
 			}
-			catch { UploadingStatus = UploadingStatus.UploadFailed; return false; }
+			catch { UploadingStatus = UploadingStatus.UploadFailed; return UploadResult.CannotAccesToFile; }
 			
 			youTubeSession.TryGetTarget ( out YouTubeSession session );
 			var videoInsertRequest = session.YouTubeService.Videos.Insert ( new Video ()
@@ -112,9 +121,9 @@ namespace Daramee.YouTubeUploader.Uploader
 			if ( videoInsertRequest == null )
 			{
 				UploadingStatus = UploadingStatus.UploadFailed;
-				return false;
+				return UploadResult.FailedUploadRequest;
 			}
-
+			
 			videoInsertRequest.ChunkSize = ResumableUpload.MinimumChunkSize;
 			videoInsertRequest.ProgressChanged += ( uploadProgress ) =>
 			{
@@ -181,10 +190,10 @@ namespace Daramee.YouTubeUploader.Uploader
 			if ( uploadStatus.Status == UploadStatus.NotStarted )
 			{
 				UploadingStatus = UploadingStatus.UploadFailed;
-				return false;
+				return UploadResult.CannotStartUpload;
 			}
 
-			return true;
+			return UploadResult.Succeed;
 		}
 
 		private static string GetPrivacyStatus ( PrivacyStatus ps )

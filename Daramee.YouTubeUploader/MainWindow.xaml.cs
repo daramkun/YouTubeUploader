@@ -186,9 +186,20 @@ namespace Daramee.YouTubeUploader
 				return;
 			}
 
-			if ( await uploadQueueItem.UploadStart () == false )
+			switch ( await uploadQueueItem.UploadStart () )
 			{
-				MessageBox.Show ( "이미 업로드가 시작되었거나\n업로드 작업을 시작할 수 없었거나\n영상 파일에 접근할 수 없었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
+				case UploadResult.AlreadyUploading:
+					MessageBox.Show ( "이미 업로드가 시작되었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
+					break;
+				case UploadResult.CannotAccesToFile:
+					MessageBox.Show ( "영상 파일에 접근할 수 없었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
+					break;
+				case UploadResult.FailedUploadRequest:
+					MessageBox.Show ( "업로드 요청을 시작할 수 없었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
+					break;
+				case UploadResult.CannotStartUpload:
+					MessageBox.Show ( "업로드 작업을 시작할 수 없었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
+					break;
 			}
 		}
 
