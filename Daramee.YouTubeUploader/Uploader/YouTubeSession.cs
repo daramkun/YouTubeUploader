@@ -22,8 +22,7 @@ namespace Daramee.YouTubeUploader.Uploader
 		{
 			if ( sessionSaveDirectory != null )
 				GoogleWebAuthorizationBroker.Folder = sessionSaveDirectory;
-
-			ServicePointManager.ReusePort = true;
+			
 			ServicePointManager.DefaultConnectionLimit = int.MaxValue;
 		}
 
