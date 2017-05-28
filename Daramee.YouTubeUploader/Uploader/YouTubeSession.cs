@@ -11,7 +11,7 @@ using Google.Apis.YouTube.v3;
 
 namespace Daramee.YouTubeUploader.Uploader
 {
-	public class YouTubeSession : IDisposable
+	public sealed class YouTubeSession : IDisposable
 	{
 		public YouTubeService YouTubeService { get; private set; }
 

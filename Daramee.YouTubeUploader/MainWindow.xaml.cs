@@ -17,7 +17,7 @@ namespace Daramee.YouTubeUploader
 	/// <summary>
 	/// MainWindow.xaml에 대한 상호 작용 논리
 	/// </summary>
-	public partial class MainWindow : Window
+	public sealed partial class MainWindow : Window, IDisposable
 	{
 		public static MainWindow SharedWindow { get; private set; }
 
@@ -113,8 +113,16 @@ namespace Daramee.YouTubeUploader
 			{
 				var result = MessageBox.Show ( "아직 업로드가 끝나지 않았습니다.\n그대로 종료하시겠습니까?", "안내", MessageBoxButton.YesNo, MessageBoxImage.Asterisk );
 				if ( result == MessageBoxResult.No )
+				{
 					e.Cancel = true;
+					return;
+				}
 			}
+		}
+
+		public void Dispose ()
+		{
+			youtubeSession.Dispose ();
 		}
 
 		private void ButtonOpen_Click ( object sender, RoutedEventArgs e )

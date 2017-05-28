@@ -24,6 +24,7 @@ namespace Daramee.YouTubeUploader.Uploader
 	public enum UploadingStatus : int
 	{
 		Queued,
+		PrepareUpload,
 		UploadStart,
 		Uploading,
 		UploadCompleted,
@@ -83,15 +84,17 @@ namespace Daramee.YouTubeUploader.Uploader
 
 		public async Task<bool> UploadStart ()
 		{
-			if ( UploadingStatus != UploadingStatus.Queued )
+			if ( !( UploadingStatus == UploadingStatus.Queued || UploadingStatus == UploadingStatus.UploadFailed ) )
 				return false;
+
+			UploadingStatus = UploadingStatus.PrepareUpload;
 
 			try
 			{
 				if ( mediaStream == null )
 					mediaStream = new FileStream ( FileName.AbsolutePath, FileMode.Open, FileAccess.Read, FileShare.Read );
 			}
-			catch { return false; }
+			catch { UploadingStatus = UploadingStatus.UploadFailed; return false; }
 			
 			youTubeSession.TryGetTarget ( out YouTubeSession session );
 			var videoInsertRequest = session.YouTubeService.Videos.Insert ( new Video ()
@@ -106,6 +109,12 @@ namespace Daramee.YouTubeUploader.Uploader
 					PrivacyStatus = GetPrivacyStatus ( PrivacyStatus )
 				}
 			}, "snippet,status", mediaStream, "video/*" );
+			if ( videoInsertRequest == null )
+			{
+				UploadingStatus = UploadingStatus.UploadFailed;
+				return false;
+			}
+
 			videoInsertRequest.ChunkSize = ResumableUpload.MinimumChunkSize;
 			videoInsertRequest.ProgressChanged += ( uploadProgress ) =>
 			{
@@ -152,6 +161,7 @@ namespace Daramee.YouTubeUploader.Uploader
 					{
 						encoder.QualityLevel = quality;
 						encoder.Frames.Add ( BitmapFrame.Create ( Thumbnail ) );
+						thumbnailStream.SetLength ( 0 );
 						encoder.Save ( thumbnailStream );
 						thumbnailStream.Position = 0;
 
@@ -159,13 +169,20 @@ namespace Daramee.YouTubeUploader.Uploader
 							break;
 					}
 
+					if ( thumbnailStream.Length >= 2097152 )
+						return;
+
 					youTubeSession.TryGetTarget ( out YouTubeSession ySession );
 					ySession.YouTubeService.Thumbnails.Set ( video.Id, thumbnailStream, "image/jpeg" ).Upload ();
 				}
 			};
+
 			var uploadStatus = await videoInsertRequest.UploadAsync ();
 			if ( uploadStatus.Status == UploadStatus.NotStarted )
+			{
+				UploadingStatus = UploadingStatus.UploadFailed;
 				return false;
+			}
 
 			return true;
 		}

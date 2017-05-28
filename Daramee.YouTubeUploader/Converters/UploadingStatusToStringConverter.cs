@@ -16,6 +16,7 @@ namespace Daramee.YouTubeUploader.Converters
 			switch ( (UploadingStatus)value)
 			{
 				case UploadingStatus.Queued: return "업로드를 준비 중입니다.";
+				case UploadingStatus.PrepareUpload: return "업로드 시작을 준비합니다.";
 				case UploadingStatus.UploadStart: return "업로드가 시작됐습니다.";
 				case UploadingStatus.Uploading: return "업로드 중...";
 				case UploadingStatus.UploadCompleted: return "업로드에 성공했습니다.";
