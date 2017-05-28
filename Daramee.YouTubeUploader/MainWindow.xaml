@@ -216,6 +216,7 @@
 								<Image Grid.Row="1" Grid.Column="2" Grid.RowSpan="4" Source="{Binding Thumbnail}" />
 
 								<ProgressBar Grid.Row="5" Grid.ColumnSpan="3" Maximum="1" Value="{Binding Progress, Mode=OneWay}" />
+								<TextBlock Grid.Row="5" Grid.ColumnSpan="3" Text="{Binding TimeRemaining}" FontSize="8" HorizontalAlignment="Center" />
 							</Grid>
 
 							<StackPanel Grid.Column="2" Orientation="Vertical">

@@ -12,7 +12,7 @@ namespace Daramee.YouTubeUploader
 	{
 		protected override void OnStartup ( StartupEventArgs e )
 		{
-			AppDomain.CurrentDomain.AssemblyResolve += ( sender, e2 ) =>
+			/*AppDomain.CurrentDomain.AssemblyResolve += ( sender, e2 ) =>
 			{
 				foreach ( string path in new [] { ".\\" } )
 				{
@@ -32,7 +32,7 @@ namespace Daramee.YouTubeUploader
 					}
 				}
 				return null;
-			};
+			};*/
 			AppDomain.CurrentDomain.UnhandledException += ( sender, e2 ) =>
 			{
 				if ( e2.ExceptionObject is MissingMethodException )

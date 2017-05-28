@@ -53,9 +53,10 @@ namespace Daramee.YouTubeUploader.Uploader
 
 		Video video;
 		VideosResource.InsertMediaUpload videoInsertRequest;
+		TimeSpan startTime;
 
 		Stream mediaStream;
-		long totalSentBytes;
+		long lastSentBytes;
 		
 		BitmapSource thumbnail;
 
@@ -74,6 +75,7 @@ namespace Daramee.YouTubeUploader.Uploader
 
 		public double Progress { get; private set; }
 		public UploadingStatus UploadingStatus { get; private set; }
+		public TimeSpan TimeRemaining { get; private set; }
 
 		public event EventHandler Started;
 		public event EventHandler Uploading;
@@ -131,38 +133,41 @@ namespace Daramee.YouTubeUploader.Uploader
 				videoInsertRequest.ChunkSize = ResumableUpload.MinimumChunkSize;
 				videoInsertRequest.ProgressChanged += ( uploadProgress ) =>
 				{
-					totalSentBytes = uploadProgress.BytesSent;
-					Progress = totalSentBytes / ( double ) mediaStream.Length;
-					PC ( nameof ( Progress ) );
+					Progress = uploadProgress.BytesSent / ( double ) mediaStream.Length;
+					double percentage = ( uploadProgress.BytesSent - lastSentBytes ) / ( double ) mediaStream.Length;
+					lastSentBytes = uploadProgress.BytesSent;
+					double totalSeconds = ( DateTime.Now.TimeOfDay - startTime ).TotalSeconds;
+					TimeRemaining = Progress != 0 ? TimeSpan.FromSeconds ( ( totalSeconds / Progress ) * ( 1 - Progress ) ) : TimeSpan.FromDays ( 999 );
 
 					switch ( uploadProgress.Status )
 					{
 						case UploadStatus.Starting:
+							startTime = DateTime.Now.TimeOfDay;
 							UploadingStatus = UploadingStatus.UploadStart;
-							PC ( nameof ( UploadingStatus ) );
 							Started?.Invoke ( this, EventArgs.Empty );
 							break;
 
 						case UploadStatus.Uploading:
 							UploadingStatus = UploadingStatus.Uploading;
-							PC ( nameof ( UploadingStatus ) );
 							Uploading?.Invoke ( this, EventArgs.Empty );
 							break;
 
 						case UploadStatus.Failed:
 							UploadingStatus = UploadingStatus.UploadFailed;
-							PC ( nameof ( UploadingStatus ) );
 							Failed?.Invoke ( this, EventArgs.Empty );
 							break;
 
 						case UploadStatus.Completed:
 							UploadingStatus = UploadingStatus.UploadCompleted;
-							PC ( nameof ( UploadingStatus ) );
 							Completed?.Invoke ( this, EventArgs.Empty );
 							mediaStream.Dispose ();
 							mediaStream = null;
 							break;
 					}
+
+					PC ( nameof ( Progress ) );
+					PC ( nameof ( UploadingStatus ) );
+					PC ( nameof ( TimeRemaining ) );
 				};
 				videoInsertRequest.ResponseReceived += ( video ) =>
 				{
@@ -195,6 +200,7 @@ namespace Daramee.YouTubeUploader.Uploader
 
 			try
 			{
+				startTime = DateTime.Now.TimeOfDay;
 				var uploadStatus = virIsNull ? await videoInsertRequest.UploadAsync () : await videoInsertRequest.ResumeAsync ();
 				if ( uploadStatus.Status == UploadStatus.NotStarted )
 				{

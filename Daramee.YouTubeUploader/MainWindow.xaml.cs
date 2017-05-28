@@ -10,6 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Shell;
 using Daramee.YouTubeUploader.Uploader;
 using Microsoft.Win32;
 
@@ -33,6 +34,7 @@ namespace Daramee.YouTubeUploader
 			RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
 
 			InitializeComponent ();
+			TaskbarItemInfo = new TaskbarItemInfo ();
 
 			uploadQueueListBox.ItemsSource = new ObservableCollection<UploadQueueItem> ();
 		}
@@ -87,7 +89,32 @@ namespace Daramee.YouTubeUploader
 
 				Thread.Sleep ( 1000 * 60 * 15 );
 
+				if ( !HaltWhenAllCompleted )
+					return;
+
 				await ( sender as UploadQueueItem ).UploadStart ();
+			};
+			queueItem.Uploading += ( sender, e ) =>
+			{
+				Dispatcher.BeginInvoke ( new Action ( () =>
+				{
+					double totalProgress = 0;
+					bool thereIsFailedItem = false;
+					int totalCount = 0;
+
+					foreach ( var item in uploadQueueListBox.ItemsSource as ObservableCollection<UploadQueueItem> )
+					{
+						if ( item.UploadingStatus == UploadingStatus.UploadFailed )
+							thereIsFailedItem = true;
+						else if ( item.UploadingStatus == UploadingStatus.Queued )
+							continue;
+						totalProgress += item.Progress;
+						++totalCount;
+					}
+
+					TaskbarItemInfo.ProgressState = thereIsFailedItem ? TaskbarItemProgressState.Paused : TaskbarItemProgressState.Normal;
+					TaskbarItemInfo.ProgressValue = totalProgress / totalCount;
+				} ) );
 			};
 			( uploadQueueListBox.ItemsSource as IList<UploadQueueItem> ).Add ( queueItem );
 		}
@@ -290,6 +317,9 @@ namespace Daramee.YouTubeUploader
 					break;
 				case UploadResult.CannotStartUpload:
 					MessageBox.Show ( "업로드 작업을 시작할 수 없었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
+					break;
+				case UploadResult.ComponentError:
+					MessageBox.Show ( "프로그램 구성요소에 문제가 있습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
 					break;
 			}
 		}
