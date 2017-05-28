@@ -37,7 +37,8 @@ namespace Daramee.YouTubeUploader.Uploader
 		AlreadyUploading,
 		CannotAccesToFile,
 		FailedUploadRequest,
-		CannotStartUpload
+		CannotStartUpload,
+		UploadCanceled,
 	}
 
 	public sealed class UploadQueueItem : INotifyPropertyChanged, IDisposable
@@ -186,11 +187,19 @@ namespace Daramee.YouTubeUploader.Uploader
 				}
 			};
 
-			var uploadStatus = await videoInsertRequest.UploadAsync ();
-			if ( uploadStatus.Status == UploadStatus.NotStarted )
+			try
+			{
+				var uploadStatus = await videoInsertRequest.UploadAsync ();
+				if ( uploadStatus.Status == UploadStatus.NotStarted )
+				{
+					UploadingStatus = UploadingStatus.UploadFailed;
+					return UploadResult.CannotStartUpload;
+				}
+			}
+			catch
 			{
 				UploadingStatus = UploadingStatus.UploadFailed;
-				return UploadResult.CannotStartUpload;
+				return UploadResult.UploadCanceled;
 			}
 
 			return UploadResult.Succeed;
