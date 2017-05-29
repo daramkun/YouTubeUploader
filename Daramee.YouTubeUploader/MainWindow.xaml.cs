@@ -205,7 +205,15 @@ namespace Daramee.YouTubeUploader
 
 		private void ButtonRemoveItem_Click ( object sender, RoutedEventArgs e )
 		{
-			( uploadQueueListBox.ItemsSource as IList<UploadQueueItem> ).Remove ( ( sender as Button ).DataContext as UploadQueueItem );
+			var item = ( sender as Button ).DataContext as UploadQueueItem;
+			if ( item.UploadingStatus == UploadingStatus.UploadFailed )
+			{
+				if ( MessageBox.Show ( "이 항목을 지우면 업로드를 이어서 하지 못하게 됩니다.\n정말로 이 항목을 목록에서 제거하시겠습니까?",
+					"안내", MessageBoxButton.YesNo, MessageBoxImage.Asterisk ) == MessageBoxResult.No )
+					return;
+			}
+
+			( uploadQueueListBox.ItemsSource as IList<UploadQueueItem> ).Remove ( item );
 		}
 
 		private async void ButtonUpload_Click ( object sender, RoutedEventArgs e )
@@ -251,6 +259,13 @@ namespace Daramee.YouTubeUploader
 			}
 
 			( ( sender as Hyperlink ).DataContext as UploadQueueItem ).Thumbnail = bitmapSource;
+		}
+
+		private void HyperlinkEditTags_Click ( object sender, RoutedEventArgs e )
+		{
+			var item = ( ( sender as Hyperlink ).DataContext as UploadQueueItem );
+			TagEditorWindow window = new TagEditorWindow ( item.Tags as ObservableCollection<string> );
+			window.ShowDialog ();
 		}
 
 		private void uploadQueueListBox_Drop ( object sender, DragEventArgs e )
@@ -317,9 +332,6 @@ namespace Daramee.YouTubeUploader
 					break;
 				case UploadResult.CannotStartUpload:
 					MessageBox.Show ( "업로드 작업을 시작할 수 없었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
-					break;
-				case UploadResult.ComponentError:
-					MessageBox.Show ( "프로그램 구성요소에 문제가 있습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
 					break;
 			}
 		}

@@ -54,6 +54,9 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\MainIcon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>DaramYouTubeUploader.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Google.Apis, Version=1.26.2.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.1.26.2\lib\net45\Google.Apis.dll</HintPath>
@@ -95,7 +98,13 @@
     </ApplicationDefinition>
     <Compile Include="Converters\PrivacyStatusToIntegerConverter.cs" />
     <Compile Include="Converters\UploadingStatusToBooleanConverter.cs" />
+    <Compile Include="Converters\UploadingStatusToBooleanForEditableConverter.cs" />
+    <Compile Include="Converters\UploadingStatusToBooleanForRemoveConverter.cs" />
+    <Compile Include="Converters\UploadingStatusToColorConverter.cs" />
     <Compile Include="Converters\UploadingStatusToStringConverter.cs" />
+    <Compile Include="TagEditorWindow.xaml.cs">
+      <DependentUpon>TagEditorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Uploader\UploadQueueItem.cs" />
     <Compile Include="Uploader\YouTubeSession.cs" />
     <Page Include="MainWindow.xaml">
@@ -110,11 +119,16 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="TagEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <None Include="DaramYouTubeUploader.manifest" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

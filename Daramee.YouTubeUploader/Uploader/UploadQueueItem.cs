@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -42,7 +43,6 @@ namespace Daramee.YouTubeUploader.Uploader
 		FailedUploadRequest,
 		CannotStartUpload,
 		UploadCanceled,
-		ComponentError,
 	}
 
 	public sealed class UploadQueueItem : INotifyPropertyChanged, IDisposable
@@ -71,6 +71,7 @@ namespace Daramee.YouTubeUploader.Uploader
 			get { return GetPrivacyStatus ( video.Status.PrivacyStatus ); }
 			set { video.Status.PrivacyStatus = GetPrivacyStatus ( value ); PC (); }
 		}
+		public IList<string> Tags { get { return video.Snippet.Tags; } }
 		public BitmapSource Thumbnail { get { return thumbnail; } set { thumbnail = value; PC (); } }
 
 		public double Progress { get; private set; }
@@ -87,6 +88,7 @@ namespace Daramee.YouTubeUploader.Uploader
 			youTubeSession = new WeakReference<YouTubeSession> ( session );
 			video = new Video ();
 			video.Snippet = new VideoSnippet ();
+			video.Snippet.Tags = new ObservableCollection<string> ();
 			video.Status = new VideoStatus ();
 
 			FileName = new Uri ( filename, UriKind.Absolute );
@@ -211,11 +213,6 @@ namespace Daramee.YouTubeUploader.Uploader
 				{
 					video = videoInsertRequest.ResponseBody ?? video;
 				}
-			}
-			catch ( MissingMethodException ex )
-			{
-				UploadingStatus = UploadingStatus.UploadFailed;
-				return UploadResult.ComponentError;
 			}
 			catch
 			{
