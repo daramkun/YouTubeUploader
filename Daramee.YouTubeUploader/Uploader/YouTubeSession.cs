@@ -54,7 +54,7 @@ namespace Daramee.YouTubeUploader.Uploader
 			{
 				credential = await GoogleWebAuthorizationBroker.AuthorizeAsync (
 					GoogleClientSecrets.Load ( stream ).Secrets,
-					new [] { YouTubeService.Scope.YoutubeUpload },
+					new [] { YouTubeService.Scope.Youtube, YouTubeService.Scope.YoutubeUpload },
 					"user",
 					CancellationToken.None
 				);
@@ -65,6 +65,7 @@ namespace Daramee.YouTubeUploader.Uploader
 
 			YouTubeService = new YouTubeService ( new BaseClientService.Initializer ()
 			{
+				ApiKey = "AIzaSyCvMp_S7s1vNhrfCZuOEUtSk7tcEuuKcpE",
 				ApplicationName = "YouTube Uploader",
 				GZipEnabled = true,
 				HttpClientInitializer = credential,
@@ -112,15 +113,10 @@ namespace Daramee.YouTubeUploader.Uploader
 				var handler = new HttpClientHandler ();
 				
 				if ( handler.SupportsRedirectConfiguration )
-				{
 					handler.AllowAutoRedirect = false;
-				}
 				
 				if ( handler.SupportsAutomaticDecompression && args.GZipEnabled )
-				{
-					handler.AutomaticDecompression = System.Net.DecompressionMethods.GZip |
-						System.Net.DecompressionMethods.Deflate;
-				}
+					handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
 				handler.UseProxy = false;
 				handler.Proxy = null;

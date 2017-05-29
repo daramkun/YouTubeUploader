@@ -24,6 +24,7 @@ namespace Daramee.YouTubeUploader
 		public static MainWindow SharedWindow { get; private set; }
 
 		YouTubeSession youtubeSession = new YouTubeSession ( Environment.CurrentDirectory );
+		Categories categories;
 
 		public bool HaltWhenAllCompleted { get; set; } = false;
 
@@ -171,6 +172,8 @@ namespace Daramee.YouTubeUploader
 		{
 			if ( await youtubeSession.Authorization () )
 			{
+				categories = new Categories ( youtubeSession );
+
 				buttonOpen.IsEnabled = true;
 				buttonConnect.IsEnabled = false;
 				buttonDisconnect.IsEnabled = true;
@@ -182,6 +185,7 @@ namespace Daramee.YouTubeUploader
 
 		private void ButtonDisconnect_Click ( object sender, RoutedEventArgs e )
 		{
+			categories = null;
 			youtubeSession.Unauthorization ();
 			buttonOpen.IsEnabled = false;
 			buttonConnect.IsEnabled = true;
@@ -201,6 +205,13 @@ namespace Daramee.YouTubeUploader
 			var mediaElement = ( ( ( ( sender as Button ).Parent as StackPanel ).Parent as Grid ).Children [ 1 ] as MediaElement );
 			mediaElement.Stop ();
 			mediaElement.Close ();
+		}
+
+		private void ItemCategoryComboBox_SelectionChanged ( object sender, SelectionChangedEventArgs e )
+		{
+			if ( e.AddedItems.Count == 0 ) return;
+			var item = ( sender as ComboBox ).DataContext as UploadQueueItem;
+			item.Category = ( e.AddedItems [ 0 ] as VideoCategory ).Id;
 		}
 
 		private void ButtonRemoveItem_Click ( object sender, RoutedEventArgs e )

@@ -105,6 +105,7 @@
     <Compile Include="TagEditorWindow.xaml.cs">
       <DependentUpon>TagEditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Uploader\Categories.cs" />
     <Compile Include="Uploader\UploadQueueItem.cs" />
     <Compile Include="Uploader\YouTubeSession.cs" />
     <Page Include="MainWindow.xaml">

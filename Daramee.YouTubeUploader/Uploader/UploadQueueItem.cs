@@ -71,6 +71,7 @@ namespace Daramee.YouTubeUploader.Uploader
 			get { return GetPrivacyStatus ( video.Status.PrivacyStatus ); }
 			set { video.Status.PrivacyStatus = GetPrivacyStatus ( value ); PC (); }
 		}
+		public string Category { get { return video.Snippet.CategoryId; } set { video.Snippet.CategoryId = value; } }
 		public IList<string> Tags { get { return video.Snippet.Tags; } }
 		public BitmapSource Thumbnail { get { return thumbnail; } set { thumbnail = value; PC (); } }
 

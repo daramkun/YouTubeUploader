@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Daramee.YouTubeUploader"
         xmlns:conv="clr-namespace:Daramee.YouTubeUploader.Converters"
+		xmlns:uploader="clr-namespace:Daramee.YouTubeUploader.Uploader"
 		mc:Ignorable="d" Icon="./Resources/MainIcon.ico"
 		ResizeMode="CanMinimize"
-        Title="다람 유튜브 업로더" Height="600" Width="800" Loaded="Window_Loaded" Closing="Window_Closing">
+        Title="다람 유튜브 업로더" Height="600" Width="860" Loaded="Window_Loaded" Closing="Window_Closing">
 	<Window.Resources>
 		<conv:PrivacyStatusToIntegerConverter x:Key="privacyStatusToIntegerConverter" />
 		<conv:UploadingStatusToStringConverter x:Key="uploadingStatusToStringConverter" />
@@ -31,7 +32,7 @@
 				<Grid Height="160" Margin="5">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="220" />
-						<ColumnDefinition Width="500" />
+						<ColumnDefinition Width="560" />
 						<ColumnDefinition Width="20" />
 					</Grid.ColumnDefinitions>
 
@@ -62,6 +63,8 @@
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="60" />
 							<ColumnDefinition />
+							<ColumnDefinition Width="60" />
+							<ColumnDefinition />
 							<ColumnDefinition Width="160" />
 						</Grid.ColumnDefinitions>
 						<Grid.RowDefinitions>
@@ -78,10 +81,11 @@
 						<TextBlock Text="제목: " Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" />
 						<TextBlock Text="설명: " Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" />
 						<TextBlock Text="공개: " Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" />
+						<TextBlock Text="분류: " Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" />
 						<TextBlock Text="기타: " Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" />
 						<TextBlock Text="상태: " Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" />
 						<!-- 2열 텍스트 -->
-						<StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal">
+						<StackPanel Grid.Row="0" Grid.Column="4" Orientation="Horizontal">
 							<TextBlock Text="썸네일: " VerticalAlignment="Center" Margin="0,0,5,0" />
 							<TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
 								<Hyperlink Click="HyperlinkBrowse_Click"
@@ -98,10 +102,10 @@
 						</StackPanel>
 
 						<!-- 1열 편집 -->
-						<TextBox Text="{Binding Title}" Grid.Row="0" Grid.Column="1"
+						<TextBox Text="{Binding Title}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
 									VerticalAlignment="Center" Margin="0,0,10,0"
 									IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" />
-						<TextBox Text="{Binding Description}" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2"
+						<TextBox Text="{Binding Description}" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3"
 									TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
 									MaxLines="16" Margin="0,0,10,0"
 									IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}"  />
@@ -112,7 +116,16 @@
 							<ComboBoxItem Content="미등록" />
 							<ComboBoxItem Content="비공개" />
 						</ComboBox>
-						<StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="0,0,10,0" VerticalAlignment="Center">
+						<ComboBox Grid.Row="3" Grid.Column="3" Margin="0,0,10,0" SelectionChanged="ItemCategoryComboBox_SelectionChanged"
+									VerticalAlignment="Center" ItemsSource="{x:Static uploader:Categories.DetectedCategories}" SelectedIndex="0"
+									IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding Name}" />
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+						<StackPanel Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,0,10,0" VerticalAlignment="Center">
 							<TextBlock Margin="0,0,5,0">
 								<Hyperlink IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" Click="HyperlinkEditTags_Click">
 									태그 편집
@@ -120,13 +133,13 @@
 							</TextBlock>
 						</StackPanel>
 						<!-- 1열 상태 표기 -->
-						<TextBlock Grid.Row="5" Grid.Column="1" Margin="0,0,10,0" VerticalAlignment="Center"
+						<TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,0,10,0" VerticalAlignment="Center"
 										   Text="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToStringConverter}}"
 										   Foreground="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToColorConverter}}" />
 
 						<!-- 2열 이미지 -->
-						<Image Grid.Row="1" Grid.Column="2" Grid.RowSpan="5" Source="./Resources/blank.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
-						<Image Grid.Row="1" Grid.Column="2" Grid.RowSpan="5" Source="{Binding Thumbnail}" />
+						<Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="5" Source="./Resources/blank.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+						<Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="5" Source="{Binding Thumbnail}" />
 
 						<!-- 마지막 행 진행 상태 표기 -->
 						<ProgressBar Grid.Row="6" Grid.ColumnSpan="3" Maximum="1" Value="{Binding Progress, Mode=OneWay}" />
