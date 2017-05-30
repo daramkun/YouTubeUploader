@@ -99,8 +99,14 @@
 										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
 									클립보드
 								</Hyperlink>
-							</TextBlock>
-						</StackPanel>
+                            </TextBlock>
+                            <TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
+								<Hyperlink Click="HyperlinkBlank_Click"
+										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
+									클립보드
+								</Hyperlink>
+                            </TextBlock>
+                        </StackPanel>
 
 						<!-- 1열 편집 -->
 						<TextBox Text="{Binding Title}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
@@ -177,7 +183,7 @@
 	<!-- 최상위 그리드 -->
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="28" />
+			<RowDefinition Height="26" />
 			<RowDefinition />
 		</Grid.RowDefinitions>
 
@@ -218,7 +224,13 @@
 				<Button x:Name="buttonManagePlaylist" IsEnabled="False" ToolTip="재생목록 관리">
 					<Image Source="./Resources/report.png" Style="{StaticResource toolBarImages}" />
 				</Button>-->
-			</ToolBar>
+
+                <Separator />
+
+                <Button ToolTip="업데이트 확인" Click="ButtonCheckUpdate_Click">
+                    <Image Source="./Resources/application_lightning.png" Style="{StaticResource toolBarImages}" />
+                </Button>
+            </ToolBar>
 		</ToolBarTray>
 
 		<!-- 리스트박스 -->

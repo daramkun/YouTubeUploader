@@ -122,10 +122,13 @@ namespace Daramee.YouTubeUploader
 			( uploadQueueListBox.ItemsSource as IList<UploadQueueItem> ).Add ( queueItem );
 		}
 
-		private void Window_Loaded ( object sender, RoutedEventArgs e )
+		private async void Window_Loaded ( object sender, RoutedEventArgs e )
 		{
 			if ( youtubeSession.IsAlreadyAuthorized )
 				ButtonConnect_Click ( sender, e );
+
+			if ( await UpdateChecker.CheckUpdate () == true )
+				Title += " - 업데이트 있음";
 		}
 
 		private void Window_Closing ( object sender, System.ComponentModel.CancelEventArgs e )
@@ -204,6 +207,11 @@ namespace Daramee.YouTubeUploader
 			buttonAllUpload.IsEnabled = false;
 			haltWhenCompleteCheckBox.IsEnabled = false;
 			//buttonManagePlaylist.IsEnabled = false;
+		}
+
+		private async void ButtonCheckUpdate_Click ( object sender, RoutedEventArgs e )
+		{
+			await UpdateChecker.CheckUpdate ( true );
 		}
 
 		private void ButtonPlayItem_Click ( object sender, RoutedEventArgs e )
