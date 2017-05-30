@@ -71,7 +71,7 @@ namespace Daramee.YouTubeUploader.Uploader
 	{
 		private static readonly IEnumerable<int> QualityLevels = new [] { 100, 80, 60, 40, 20, 1 };
 
-		WeakReference<YouTubeSession> youTubeSession;
+		WeakReference<YouTubeSession> youtubeSession;
 
 		Google.Apis.YouTube.v3.Data.Video video;
 		VideosResource.InsertMediaUpload videoInsertRequest;
@@ -111,7 +111,7 @@ namespace Daramee.YouTubeUploader.Uploader
 
 		public UploadQueueItem ( YouTubeSession session, string filename )
 		{
-			youTubeSession = new WeakReference<YouTubeSession> ( session );
+			youtubeSession = new WeakReference<YouTubeSession> ( session );
 
 			FileName = new Uri ( filename, UriKind.Absolute );
 			var fileInfo = new FileInfo ( filename );
@@ -142,7 +142,7 @@ namespace Daramee.YouTubeUploader.Uploader
 
 		public async Task<UploadResult> UploadStart ()
 		{
-			youTubeSession.TryGetTarget ( out YouTubeSession session );
+			youtubeSession.TryGetTarget ( out YouTubeSession session );
 
 			if ( video.Id != null && ( UploadingStatus == UploadingStatus.UploadFailed || UploadingStatus == UploadingStatus.UploadCompleted ) )
 			{
@@ -229,10 +229,7 @@ namespace Daramee.YouTubeUploader.Uploader
 				};
 				videoInsertRequest.ResponseReceived += async ( video ) =>
 				{
-					if ( thumbnail != null )
-					{
-						await UploadThumbnail ();
-					}
+					await UploadThumbnail ();
 
 					foreach ( var playlist in Playlists )
 						playlist.AddVideo ( video.Id );
@@ -261,6 +258,17 @@ namespace Daramee.YouTubeUploader.Uploader
 
 		private async Task UploadThumbnail ()
 		{
+			if ( !changedThumbnail )
+				return;
+
+			if ( Thumbnail == null )
+			{
+				youtubeSession.TryGetTarget ( out YouTubeSession session );
+				await session.YouTubeService.Thumbnails.Set ( video.Id ).ExecuteAsync ();
+				changedThumbnail = false;
+				return;
+			}
+
 			using ( MemoryStream thumbnailStream = new MemoryStream () )
 			{
 				JpegBitmapEncoder encoder = new JpegBitmapEncoder ();
@@ -278,7 +286,7 @@ namespace Daramee.YouTubeUploader.Uploader
 
 				if ( thumbnailStream.Length < 2097152 )
 				{
-					youTubeSession.TryGetTarget ( out YouTubeSession session );
+					youtubeSession.TryGetTarget ( out YouTubeSession session );
 					await session.YouTubeService.Thumbnails.Set ( video.Id, thumbnailStream, "image/jpeg" ).UploadAsync ();
 				}
 			}
