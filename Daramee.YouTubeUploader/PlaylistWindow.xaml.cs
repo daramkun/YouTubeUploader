@@ -35,14 +35,14 @@ namespace Daramee.YouTubeUploader
 	{
 		ObservableCollection<Playlist> playlistsObject;
 
-		public PlaylistWindow ( ObservableCollection<Playlist> playlistsObject, Playlists playlists )
+		public PlaylistWindow ( ObservableCollection<Playlist> playlistsObject )
 		{
 			InitializeComponent ();
 
 			this.playlistsObject = playlistsObject;
 
 			ObservableCollection<SelectablePlaylist> binding = new ObservableCollection<SelectablePlaylist> ();
-			foreach ( var playlist in playlists.DetectedPlaylists )
+			foreach ( var playlist in Playlists.DetectedPlaylists )
 			{
 				SelectablePlaylist pl = new SelectablePlaylist ( playlist );
 				var alreadySelected = ( from id in playlistsObject where pl.Playlist.Id == id.Id select id ).Count () > 0;

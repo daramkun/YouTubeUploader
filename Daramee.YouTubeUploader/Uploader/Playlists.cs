@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -101,13 +102,11 @@ namespace Daramee.YouTubeUploader.Uploader
 		}
 	}
 
-	public class Playlists
+	public static class Playlists
 	{
-		WeakReference<YouTubeSession> youTubeSession;
-
-		public IReadOnlyList<Playlist> DetectedPlaylists { get; private set; } = new ObservableCollection<Playlist> ();
+		public static IReadOnlyList<Playlist> DetectedPlaylists { get; private set; } = new ObservableCollection<Playlist> ();
 		
-		public async Task Refresh ( YouTubeSession session )
+		public static async Task Refresh ( YouTubeSession session )
 		{
 			( DetectedPlaylists as IList<Playlist> ).Clear ();
 			
@@ -118,6 +117,7 @@ namespace Daramee.YouTubeUploader.Uploader
 				request.Mine = true;
 				request.MaxResults = 50;
 				request.PageToken = nextToken;
+				request.Hl = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 				var result = await request.ExecuteAsync ();
 				foreach ( var item in result.Items )
 				{
@@ -128,7 +128,7 @@ namespace Daramee.YouTubeUploader.Uploader
 			while ( nextToken != null );
 		}
 
-		public bool AddPlaylist ( string title, string description, PrivacyStatus privacyStatus )
+		public static bool AddPlaylist ( YouTubeSession session, string title, string description, PrivacyStatus privacyStatus )
 		{
 			if ( privacyStatus == PrivacyStatus.Unlisted ) return false;
 
@@ -142,26 +142,23 @@ namespace Daramee.YouTubeUploader.Uploader
 			{
 				PrivacyStatus = privacyStatus.GetPrivacyStatus ()
 			};
-
-			youTubeSession.TryGetTarget ( out YouTubeSession session );
+			
 			var insert = session.YouTubeService.Playlists.Insert ( pl, "snippet,status" );
 
 			return ( insert.Execute () != null );
 		}
 
-		public bool RemovePlaylist ( Playlist playlist )
+		public static bool RemovePlaylist ( YouTubeSession session, Playlist playlist )
 		{
 			if ( playlist.Id == null ) return false;
-
-			youTubeSession.TryGetTarget ( out YouTubeSession session );
+			
 			var delete = session.YouTubeService.Playlists.Delete ( playlist.Id );
 			var result = delete.Execute ();
 			return ( result == null || result == "" );
 		}
 
-		public bool UpdatePlaylist ( Playlist playlist )
+		public static bool UpdatePlaylist ( YouTubeSession session, Playlist playlist )
 		{
-			youTubeSession.TryGetTarget ( out YouTubeSession session );
 			var update = session.YouTubeService.Playlists.Update ( playlist.Original, "snippet,status" );
 			var result = update.Execute ();
 			return ( result != null );

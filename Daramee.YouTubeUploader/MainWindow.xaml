@@ -15,7 +15,8 @@
 		<conv:UploadingStatusToBooleanConverter x:Key="uploadingStatusToBooleanConverter" />
 		<conv:UploadingStatusToBooleanForEditableConverter x:Key="uploadingStatusToBooleanForEditableConverter" />
 		<conv:UploadingStatusToBooleanForRemoveConverter x:Key="uploadingStatusToBooleanForRemoveConverter" />
-		<conv:UploadingStatusToColorConverter x:Key="uploadingStatusToColorConverter" />
+        <conv:UploadingStatusToBooleanForPlaylistEditConverter x:Key="uploadingStatusToBooleanForPlaylistEditConverter" />
+        <conv:UploadingStatusToColorConverter x:Key="uploadingStatusToColorConverter" />
 
 		<!-- 툴바 버튼 이미지 속성 -->
 		<Style x:Key="toolBarImages" TargetType="Image">
@@ -89,13 +90,13 @@
 							<TextBlock Text="썸네일: " VerticalAlignment="Center" Margin="0,0,5,0" />
 							<TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
 								<Hyperlink Click="HyperlinkBrowse_Click"
-										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanConverter}}">
+										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
 									파일
 								</Hyperlink>
 							</TextBlock>
 							<TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
 								<Hyperlink Click="HyperlinkClipboard_Click"
-										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanConverter}}">
+										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
 									클립보드
 								</Hyperlink>
 							</TextBlock>
@@ -132,7 +133,7 @@
 								</Hyperlink>
 							</TextBlock>
 							<TextBlock Margin="0,0,5,0">
-								<Hyperlink IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" Click="HyperlinkAddPlaylists_Click">
+								<Hyperlink IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForPlaylistEditConverter}}" Click="HyperlinkAddPlaylists_Click">
 									재생목록 추가
 								</Hyperlink>
 							</TextBlock>
@@ -154,7 +155,7 @@
 					<!-- 업로드, 제거 버튼 화면 -->
 					<StackPanel Grid.Column="2" Orientation="Vertical">
 						<Button Click="ButtonUpload_Click" Margin="0,0,0,5"
-									 IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanConverter}}" >
+									 IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" >
 							<Image Source="./Resources/application_get.png" />
 							<Button.ToolTip>
 								<ToolTip Content="업로드" />

@@ -64,6 +64,7 @@ namespace Daramee.YouTubeUploader.Uploader
 		FailedUploadRequest,
 		CannotStartUpload,
 		UploadCanceled,
+		UpdateFailed,
 	}
 
 	public sealed class UploadQueueItem : INotifyPropertyChanged, IDisposable
@@ -80,6 +81,7 @@ namespace Daramee.YouTubeUploader.Uploader
 		long lastSentBytes;
 		
 		BitmapSource thumbnail;
+		bool changedThumbnail;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		private void PC ( [CallerMemberName] string propName = "" ) { PropertyChanged?.Invoke ( this, new PropertyChangedEventArgs ( propName ) ); }
@@ -94,7 +96,7 @@ namespace Daramee.YouTubeUploader.Uploader
 		}
 		public string Category { get { return video.Snippet.CategoryId; } set { video.Snippet.CategoryId = value; } }
 		public IList<string> Tags { get { return video.Snippet.Tags; } }
-		public BitmapSource Thumbnail { get { return thumbnail; } set { thumbnail = value; PC (); } }
+		public BitmapSource Thumbnail { get { return thumbnail; } set { thumbnail = value; changedThumbnail = true; PC (); } }
 
 		public IList<Playlist> Playlists { get; private set; } = new ObservableCollection<Playlist> ();
 
@@ -140,6 +142,29 @@ namespace Daramee.YouTubeUploader.Uploader
 
 		public async Task<UploadResult> UploadStart ()
 		{
+			youTubeSession.TryGetTarget ( out YouTubeSession session );
+
+			if ( video.Id != null && ( UploadingStatus == UploadingStatus.UploadFailed || UploadingStatus == UploadingStatus.UploadCompleted ) )
+			{
+				UploadingStatus = UploadingStatus.PrepareUpload;
+
+				if ( changedThumbnail && thumbnail != null )
+					await UploadThumbnail ();
+
+				var videoUpdateRequest = session.YouTubeService.Videos.Update ( video, "snippet,status" );
+				var result = await videoUpdateRequest.ExecuteAsync ();
+				if ( result != null )
+				{
+					UploadingStatus = UploadingStatus.UploadCompleted;
+					return UploadResult.Succeed;
+				}
+				else
+				{
+					UploadingStatus = UploadingStatus.UploadFailed;
+					return UploadResult.UpdateFailed;
+				}
+			}
+
 			if ( !( UploadingStatus == UploadingStatus.Queued || UploadingStatus == UploadingStatus.UploadFailed ) )
 				return UploadResult.AlreadyUploading;
 
@@ -155,7 +180,6 @@ namespace Daramee.YouTubeUploader.Uploader
 			bool virIsNull = videoInsertRequest == null;
 			if ( virIsNull )
 			{
-				youTubeSession.TryGetTarget ( out YouTubeSession session );
 				videoInsertRequest = session.YouTubeService.Videos.Insert ( video, "snippet,status", mediaStream, "video/*" );
 				if ( videoInsertRequest == null )
 				{
@@ -203,31 +227,11 @@ namespace Daramee.YouTubeUploader.Uploader
 					PC ( nameof ( UploadingStatus ) );
 					PC ( nameof ( TimeRemaining ) );
 				};
-				videoInsertRequest.ResponseReceived += ( video ) =>
+				videoInsertRequest.ResponseReceived += async ( video ) =>
 				{
 					if ( thumbnail != null )
 					{
-						using ( MemoryStream thumbnailStream = new MemoryStream () )
-						{
-							JpegBitmapEncoder encoder = new JpegBitmapEncoder ();
-							foreach ( int quality in QualityLevels )
-							{
-								encoder.QualityLevel = quality;
-								encoder.Frames.Add ( BitmapFrame.Create ( Thumbnail ) );
-								thumbnailStream.SetLength ( 0 );
-								encoder.Save ( thumbnailStream );
-								thumbnailStream.Position = 0;
-
-								if ( thumbnailStream.Length < 2097152 )
-									break;
-							}
-
-							if ( thumbnailStream.Length < 2097152 )
-							{
-								youTubeSession.TryGetTarget ( out YouTubeSession ySession );
-								ySession.YouTubeService.Thumbnails.Set ( video.Id, thumbnailStream, "image/jpeg" ).Upload ();
-							}
-						}
+						await UploadThumbnail ();
 					}
 
 					foreach ( var playlist in Playlists )
@@ -239,14 +243,11 @@ namespace Daramee.YouTubeUploader.Uploader
 			{
 				startTime = DateTime.Now.TimeOfDay;
 				var uploadStatus = virIsNull ? await videoInsertRequest.UploadAsync () : await videoInsertRequest.ResumeAsync ();
+				video = videoInsertRequest.ResponseBody ?? video;
 				if ( uploadStatus.Status == UploadStatus.NotStarted )
 				{
 					UploadingStatus = UploadingStatus.UploadFailed;
 					return UploadResult.CannotStartUpload;
-				}
-				else if ( uploadStatus.Status == UploadStatus.Failed )
-				{
-					video = videoInsertRequest.ResponseBody ?? video;
 				}
 			}
 			catch
@@ -256,6 +257,32 @@ namespace Daramee.YouTubeUploader.Uploader
 			}
 
 			return UploadResult.Succeed;
+		}
+
+		private async Task UploadThumbnail ()
+		{
+			using ( MemoryStream thumbnailStream = new MemoryStream () )
+			{
+				JpegBitmapEncoder encoder = new JpegBitmapEncoder ();
+				foreach ( int quality in QualityLevels )
+				{
+					encoder.QualityLevel = quality;
+					encoder.Frames.Add ( BitmapFrame.Create ( Thumbnail ) );
+					thumbnailStream.SetLength ( 0 );
+					encoder.Save ( thumbnailStream );
+					thumbnailStream.Position = 0;
+
+					if ( thumbnailStream.Length < 2097152 )
+						break;
+				}
+
+				if ( thumbnailStream.Length < 2097152 )
+				{
+					youTubeSession.TryGetTarget ( out YouTubeSession session );
+					await session.YouTubeService.Thumbnails.Set ( video.Id, thumbnailStream, "image/jpeg" ).UploadAsync ();
+				}
+			}
+			changedThumbnail = false;
 		}
 	}
 }

@@ -9,19 +9,19 @@ using Daramee.YouTubeUploader.Uploader;
 
 namespace Daramee.YouTubeUploader.Converters
 {
-	class UploadingStatusToBooleanForEditableConverter : IValueConverter
+	class UploadingStatusToBooleanForPlaylistEditConverter : IValueConverter
 	{
 		public object Convert ( object value, Type targetType, object parameter, CultureInfo culture )
 		{
 			switch ( ( UploadingStatus ) value )
 			{
 				case UploadingStatus.Queued:
-				case UploadingStatus.UploadFailed:
-				case UploadingStatus.UploadCompleted:
 					return true;
-					
+
 				case UploadingStatus.UploadStart:
 				case UploadingStatus.Uploading:
+				case UploadingStatus.UploadCompleted:
+				case UploadingStatus.UploadFailed:
 					return false;
 
 				default: return false;
