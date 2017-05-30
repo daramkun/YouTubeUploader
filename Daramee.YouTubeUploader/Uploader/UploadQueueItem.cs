@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using System.Windows;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 using Google.Apis.Upload;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
@@ -23,6 +19,31 @@ namespace Daramee.YouTubeUploader.Uploader
 		Public = 0,
 		Unlisted = 1,
 		Private = 2,
+	}
+
+	public static class PrivacyStatusExtension
+	{
+		public static string GetPrivacyStatus ( this PrivacyStatus ps )
+		{
+			switch ( ps )
+			{
+				case PrivacyStatus.Public: return "public";
+				case PrivacyStatus.Private: return "private";
+				case PrivacyStatus.Unlisted: return "unlisted";
+				default: return "";
+			}
+		}
+
+		public static PrivacyStatus GetPrivacyStatus ( this string ps )
+		{
+			switch ( ps )
+			{
+				case "public": return PrivacyStatus.Public;
+				case "private": return PrivacyStatus.Private;
+				case "unlisted": return PrivacyStatus.Unlisted;
+				default: return PrivacyStatus.Unknown;
+			}
+		}
 	}
 
 	public enum UploadingStatus : int
@@ -51,7 +72,7 @@ namespace Daramee.YouTubeUploader.Uploader
 
 		WeakReference<YouTubeSession> youTubeSession;
 
-		Video video;
+		Google.Apis.YouTube.v3.Data.Video video;
 		VideosResource.InsertMediaUpload videoInsertRequest;
 		TimeSpan startTime;
 
@@ -68,12 +89,14 @@ namespace Daramee.YouTubeUploader.Uploader
 		public string Description { get { return video.Snippet.Description; } set { video.Snippet.Description = value; PC (); } }
 		public PrivacyStatus PrivacyStatus
 		{
-			get { return GetPrivacyStatus ( video.Status.PrivacyStatus ); }
-			set { video.Status.PrivacyStatus = GetPrivacyStatus ( value ); PC (); }
+			get { return video.Status.PrivacyStatus.GetPrivacyStatus (); }
+			set { video.Status.PrivacyStatus = value.GetPrivacyStatus (); PC (); }
 		}
 		public string Category { get { return video.Snippet.CategoryId; } set { video.Snippet.CategoryId = value; } }
 		public IList<string> Tags { get { return video.Snippet.Tags; } }
 		public BitmapSource Thumbnail { get { return thumbnail; } set { thumbnail = value; PC (); } }
+
+		public IList<Playlist> Playlists { get; private set; } = new ObservableCollection<Playlist> ();
 
 		public double Progress { get; private set; }
 		public UploadingStatus UploadingStatus { get; private set; }
@@ -87,10 +110,14 @@ namespace Daramee.YouTubeUploader.Uploader
 		public UploadQueueItem ( YouTubeSession session, string filename )
 		{
 			youTubeSession = new WeakReference<YouTubeSession> ( session );
-			video = new Video ();
-			video.Snippet = new VideoSnippet ();
-			video.Snippet.Tags = new ObservableCollection<string> ();
-			video.Status = new VideoStatus ();
+			video = new Google.Apis.YouTube.v3.Data.Video ()
+			{
+				Snippet = new VideoSnippet ()
+				{
+					Tags = new ObservableCollection<string> ()
+				},
+				Status = new VideoStatus ()
+			};
 
 			FileName = new Uri ( filename, UriKind.Absolute );
 			Title = Path.GetFileNameWithoutExtension ( filename );
@@ -197,6 +224,9 @@ namespace Daramee.YouTubeUploader.Uploader
 
 						youTubeSession.TryGetTarget ( out YouTubeSession ySession );
 						ySession.YouTubeService.Thumbnails.Set ( video.Id, thumbnailStream, "image/jpeg" ).Upload ();
+
+						foreach ( var playlist in Playlists )
+							playlist.AddVideo ( video.Id );
 					}
 				};
 			}
@@ -222,28 +252,6 @@ namespace Daramee.YouTubeUploader.Uploader
 			}
 
 			return UploadResult.Succeed;
-		}
-
-		private static string GetPrivacyStatus ( PrivacyStatus ps )
-		{
-			switch ( ps )
-			{
-				case PrivacyStatus.Public: return "public";
-				case PrivacyStatus.Private: return "private";
-				case PrivacyStatus.Unlisted: return "unlisted";
-				default: return "";
-			}
-		}
-
-		private static PrivacyStatus GetPrivacyStatus ( string ps )
-		{
-			switch ( ps )
-			{
-				case "public": return PrivacyStatus.Public;
-				case "private": return PrivacyStatus.Private;
-				case "unlisted": return PrivacyStatus.Unlisted;
-				default: return PrivacyStatus.Unknown;
-			}
 		}
 	}
 }

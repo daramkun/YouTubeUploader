@@ -16,15 +16,18 @@ namespace Daramee.YouTubeUploader.Uploader
 	public class Categories
 	{
 		public static IReadOnlyList<VideoCategory> DetectedCategories { get; private set; }
-			= new List<VideoCategory> () { new VideoCategory () { Name = "No Category", Id = null } };
+			= new List<VideoCategory> () { new VideoCategory () { Name = "없음", Id = null } };
 
 		public Categories ( YouTubeSession session )
 		{
 			var request = session.YouTubeService.VideoCategories.List ( "snippet" );
 			request.RegionCode = RegionInfo.CurrentRegion.TwoLetterISORegionName;
+			request.Hl = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 			var result = request.Execute ();
 			foreach ( var i in result.Items)
 			{
+				if ( i.Snippet.Assignable == false )
+					continue;
 				VideoCategory item = new VideoCategory ();
 				item.Name = i.Snippet.Title;
 				item.Id = i.Id;

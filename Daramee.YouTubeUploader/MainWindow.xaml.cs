@@ -25,6 +25,7 @@ namespace Daramee.YouTubeUploader
 
 		YouTubeSession youtubeSession = new YouTubeSession ( Environment.CurrentDirectory );
 		Categories categories;
+		Playlists playlists;
 
 		public bool HaltWhenAllCompleted { get; set; } = false;
 
@@ -173,6 +174,7 @@ namespace Daramee.YouTubeUploader
 			if ( await youtubeSession.Authorization () )
 			{
 				categories = new Categories ( youtubeSession );
+				playlists = new Playlists ( youtubeSession );
 
 				buttonOpen.IsEnabled = true;
 				buttonConnect.IsEnabled = false;
@@ -180,6 +182,7 @@ namespace Daramee.YouTubeUploader
 				comboBoxDefaultPrivacyStatus.IsEnabled = true;
 				buttonAllUpload.IsEnabled = true;
 				haltWhenCompleteCheckBox.IsEnabled = true;
+				//buttonManagePlaylist.IsEnabled = true;
 			}
 		}
 
@@ -193,6 +196,7 @@ namespace Daramee.YouTubeUploader
 			comboBoxDefaultPrivacyStatus.IsEnabled = false;
 			buttonAllUpload.IsEnabled = false;
 			haltWhenCompleteCheckBox.IsEnabled = false;
+			//buttonManagePlaylist.IsEnabled = false;
 		}
 
 		private void ButtonPlayItem_Click ( object sender, RoutedEventArgs e )
@@ -276,6 +280,13 @@ namespace Daramee.YouTubeUploader
 		{
 			var item = ( ( sender as Hyperlink ).DataContext as UploadQueueItem );
 			TagEditorWindow window = new TagEditorWindow ( item.Tags as ObservableCollection<string> );
+			window.ShowDialog ();
+		}
+
+		private void HyperlinkAddPlaylists_Click ( object sender, RoutedEventArgs e )
+		{
+			var item = ( ( sender as Hyperlink ).DataContext as UploadQueueItem );
+			PlaylistWindow window = new PlaylistWindow ( item.Playlists as ObservableCollection<Playlist>, playlists );
 			window.ShowDialog ();
 		}
 
