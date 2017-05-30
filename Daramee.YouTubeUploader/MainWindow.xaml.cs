@@ -24,8 +24,8 @@ namespace Daramee.YouTubeUploader
 		public static MainWindow SharedWindow { get; private set; }
 
 		YouTubeSession youtubeSession = new YouTubeSession ( Environment.CurrentDirectory );
-		Categories categories;
-		Playlists playlists;
+		Categories categories = new Categories ();
+		Playlists playlists = new Playlists ();
 
 		public bool HaltWhenAllCompleted { get; set; } = false;
 
@@ -78,9 +78,11 @@ namespace Daramee.YouTubeUploader
 
 				if ( !incompleted )
 				{
-					var psi = new ProcessStartInfo ( "shutdown", "/s /t 10" );
-					psi.CreateNoWindow = true;
-					psi.UseShellExecute = false;
+					var psi = new ProcessStartInfo ( "shutdown", "/s /t 10" )
+					{
+						CreateNoWindow = true,
+						UseShellExecute = false
+					};
 					Process.Start ( psi );
 				}
 			};
@@ -157,9 +159,11 @@ namespace Daramee.YouTubeUploader
 
 		private void ButtonOpen_Click ( object sender, RoutedEventArgs e )
 		{
-			OpenFileDialog ofd = new OpenFileDialog ();
-			ofd.Filter = "All Available Files(*.mp4;*.mkv;*.webm;*.avi;*.mov;*.flv;*.wmv;*.3gp)|*.mp4;*.mkv;*.webm;*.avi;*.mov;*.flv;*.wmv;*.3gp";
-			ofd.Multiselect = true;
+			OpenFileDialog ofd = new OpenFileDialog ()
+			{
+				Filter = "All Available Files(*.mp4;*.mkv;*.webm;*.avi;*.mov;*.flv;*.wmv;*.3gp)|*.mp4;*.mkv;*.webm;*.avi;*.mov;*.flv;*.wmv;*.3gp",
+				Multiselect = true
+			};
 			if ( ofd.ShowDialog () == false )
 				return;
 
@@ -173,9 +177,6 @@ namespace Daramee.YouTubeUploader
 		{
 			if ( await youtubeSession.Authorization () )
 			{
-				categories = new Categories ( youtubeSession );
-				playlists = new Playlists ( youtubeSession );
-
 				buttonOpen.IsEnabled = true;
 				buttonConnect.IsEnabled = false;
 				buttonDisconnect.IsEnabled = true;
@@ -183,6 +184,13 @@ namespace Daramee.YouTubeUploader
 				buttonAllUpload.IsEnabled = true;
 				haltWhenCompleteCheckBox.IsEnabled = true;
 				//buttonManagePlaylist.IsEnabled = true;
+
+				try
+				{
+					await categories.Refresh ( youtubeSession );
+					await playlists.Refresh ( youtubeSession );
+				}
+				catch { ButtonDisconnect_Click ( this, e ); }
 			}
 		}
 
@@ -239,8 +247,10 @@ namespace Daramee.YouTubeUploader
 
 		private void HyperlinkBrowse_Click ( object sender, RoutedEventArgs e )
 		{
-			OpenFileDialog ofd = new OpenFileDialog ();
-			ofd.Filter = "All Available Files(*.jpg;*.png)|*.jpg;*.png";
+			OpenFileDialog ofd = new OpenFileDialog ()
+			{
+				Filter = "All Available Files(*.jpg;*.png)|*.jpg;*.png"
+			};
 			if ( ofd.ShowDialog () == false )
 				return;
 
@@ -290,7 +300,7 @@ namespace Daramee.YouTubeUploader
 			window.ShowDialog ();
 		}
 
-		private void uploadQueueListBox_Drop ( object sender, DragEventArgs e )
+		private void UploadQueueListBox_Drop ( object sender, DragEventArgs e )
 		{
 			if ( !e.Data.GetDataPresent ( DataFormats.FileDrop ) )
 				return;
@@ -306,13 +316,13 @@ namespace Daramee.YouTubeUploader
 			}
 		}
 
-		private void uploadQueueListBox_DragEnter ( object sender, DragEventArgs e )
+		private void UploadQueueListBox_DragEnter ( object sender, DragEventArgs e )
 		{
 			if ( e.Data.GetDataPresent ( DataFormats.FileDrop ) )
 				e.Effects = DragDropEffects.None;
 		}
 
-		private void haltWhenCompleteCheckBox_Checked ( object sender, RoutedEventArgs e )
+		private void HaltWhenCompleteCheckBox_Checked ( object sender, RoutedEventArgs e )
 		{
 			MessageBox.Show ( @"모든 업로드가 성공적으로 완료되면
 10초 후 자동으로 컴퓨터를 종료하는 기능입니다.
@@ -329,7 +339,7 @@ namespace Daramee.YouTubeUploader
 			foreach ( var item in uploadQueueListBox.ItemsSource as ObservableCollection<UploadQueueItem> )
 			{
 				if ( item.UploadingStatus == UploadingStatus.Queued || item.UploadingStatus == UploadingStatus.UploadFailed )
-					ThreadPool.QueueUserWorkItem ( async ( i )=> { await UploadItem ( i as UploadQueueItem ); }, item );
+					ThreadPool.QueueUserWorkItem ( async ( i ) => { await UploadItem ( i as UploadQueueItem ); }, item );
 			}
 		}
 

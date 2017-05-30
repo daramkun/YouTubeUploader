@@ -12,7 +12,7 @@
 			<RowDefinition Height="32" />
 		</Grid.RowDefinitions>
 
-		<ListBox x:Name="listBoxPlaylists" Grid.Row="0" SelectionMode="Multiple">
+		<ListBox x:Name="listBoxPlaylists" Grid.Row="0">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<CheckBox Content="{Binding Name, Mode=OneWay}" IsChecked="{Binding IsChecked, Mode=TwoWay}" />

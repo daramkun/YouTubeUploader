@@ -210,7 +210,7 @@
 
 				<CheckBox x:Name="haltWhenCompleteCheckBox" Content="완료 후 종료" IsEnabled="False"
 						  DataContext="{x:Static local:MainWindow.SharedWindow}"
-						  IsChecked="{Binding HaltWhenAllCompleted}" Checked="haltWhenCompleteCheckBox_Checked" />
+						  IsChecked="{Binding HaltWhenAllCompleted}" Checked="HaltWhenCompleteCheckBox_Checked" />
 
 				<!--<Separator />
 
@@ -226,7 +226,7 @@
 				 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
 				 ScrollViewer.CanContentScroll="False"
 				 ItemTemplate="{StaticResource listBoxItem}"
-				 AllowDrop="True" Drop="uploadQueueListBox_Drop" DragEnter="uploadQueueListBox_DragEnter">
+				 AllowDrop="True" Drop="UploadQueueListBox_Drop" DragEnter="UploadQueueListBox_DragEnter">
 			<ListBox.ItemContainerStyle>
 				<Style TargetType="ListBoxItem">
 					<Setter Property="Padding" Value="0"/>

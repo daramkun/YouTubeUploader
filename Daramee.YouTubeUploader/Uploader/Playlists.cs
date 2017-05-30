@@ -106,27 +106,26 @@ namespace Daramee.YouTubeUploader.Uploader
 		WeakReference<YouTubeSession> youTubeSession;
 
 		public IReadOnlyList<Playlist> DetectedPlaylists { get; private set; } = new ObservableCollection<Playlist> ();
-
-		public Playlists ( YouTubeSession session )
-		{
-			youTubeSession = new WeakReference<YouTubeSession> ( session );
-
-			Refresh ();
-		}
-
-		public void Refresh ()
+		
+		public async Task Refresh ( YouTubeSession session )
 		{
 			( DetectedPlaylists as IList<Playlist> ).Clear ();
-
-			youTubeSession.TryGetTarget ( out YouTubeSession session );
-			var request = session.YouTubeService.Playlists.List ( "snippet,status" );
-			request.Mine = true;
-			request.MaxResults = 50;
-			var result = request.Execute ();
-			foreach ( var item in result.Items )
+			
+			string nextToken = null;
+			do
 			{
-				( DetectedPlaylists as IList<Playlist> ).Add ( new Playlist ( session, item ) );
+				var request = session.YouTubeService.Playlists.List ( "snippet,status" );
+				request.Mine = true;
+				request.MaxResults = 50;
+				request.PageToken = nextToken;
+				var result = await request.ExecuteAsync ();
+				foreach ( var item in result.Items )
+				{
+					( DetectedPlaylists as IList<Playlist> ).Add ( new Playlist ( session, item ) );
+				}
+				nextToken = result.NextPageToken;
 			}
+			while ( nextToken != null );
 		}
 
 		public bool AddPlaylist ( string title, string description, PrivacyStatus privacyStatus )
