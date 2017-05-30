@@ -147,8 +147,8 @@
 						<Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="5" Source="{Binding Thumbnail}" />
 
 						<!-- 마지막 행 진행 상태 표기 -->
-						<ProgressBar Grid.Row="6" Grid.ColumnSpan="3" Maximum="1" Value="{Binding Progress, Mode=OneWay}" />
-						<TextBlock Grid.Row="6" Grid.ColumnSpan="3" Text="{Binding TimeRemaining}" FontSize="8" HorizontalAlignment="Center" />
+						<ProgressBar Grid.Row="6" Grid.ColumnSpan="5" Maximum="1" Value="{Binding Progress, Mode=OneWay}" />
+						<TextBlock Grid.Row="6" Grid.ColumnSpan="5" Text="{Binding TimeRemaining}" FontSize="8" HorizontalAlignment="Center" />
 					</Grid>
 
 					<!-- 업로드, 제거 버튼 화면 -->
