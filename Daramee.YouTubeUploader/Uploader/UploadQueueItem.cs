@@ -110,6 +110,10 @@ namespace Daramee.YouTubeUploader.Uploader
 		public UploadQueueItem ( YouTubeSession session, string filename )
 		{
 			youTubeSession = new WeakReference<YouTubeSession> ( session );
+
+			FileName = new Uri ( filename, UriKind.Absolute );
+			var fileInfo = new FileInfo ( filename );
+
 			video = new Google.Apis.YouTube.v3.Data.Video ()
 			{
 				Snippet = new VideoSnippet ()
@@ -119,7 +123,6 @@ namespace Daramee.YouTubeUploader.Uploader
 				Status = new VideoStatus ()
 			};
 
-			FileName = new Uri ( filename, UriKind.Absolute );
 			Title = Path.GetFileNameWithoutExtension ( filename );
 			Description = "";
 			PrivacyStatus = PrivacyStatus.Public;
@@ -189,6 +192,7 @@ namespace Daramee.YouTubeUploader.Uploader
 
 						case UploadStatus.Completed:
 							UploadingStatus = UploadingStatus.UploadCompleted;
+							Uploading?.Invoke ( this, EventArgs.Empty );
 							Completed?.Invoke ( this, EventArgs.Empty );
 							mediaStream.Dispose ();
 							mediaStream = null;
@@ -201,33 +205,33 @@ namespace Daramee.YouTubeUploader.Uploader
 				};
 				videoInsertRequest.ResponseReceived += ( video ) =>
 				{
-					if ( thumbnail == null )
-						return;
-
-					using ( MemoryStream thumbnailStream = new MemoryStream () )
+					if ( thumbnail != null )
 					{
-						JpegBitmapEncoder encoder = new JpegBitmapEncoder ();
-						foreach ( int quality in QualityLevels )
+						using ( MemoryStream thumbnailStream = new MemoryStream () )
 						{
-							encoder.QualityLevel = quality;
-							encoder.Frames.Add ( BitmapFrame.Create ( Thumbnail ) );
-							thumbnailStream.SetLength ( 0 );
-							encoder.Save ( thumbnailStream );
-							thumbnailStream.Position = 0;
+							JpegBitmapEncoder encoder = new JpegBitmapEncoder ();
+							foreach ( int quality in QualityLevels )
+							{
+								encoder.QualityLevel = quality;
+								encoder.Frames.Add ( BitmapFrame.Create ( Thumbnail ) );
+								thumbnailStream.SetLength ( 0 );
+								encoder.Save ( thumbnailStream );
+								thumbnailStream.Position = 0;
+
+								if ( thumbnailStream.Length < 2097152 )
+									break;
+							}
 
 							if ( thumbnailStream.Length < 2097152 )
-								break;
+							{
+								youTubeSession.TryGetTarget ( out YouTubeSession ySession );
+								ySession.YouTubeService.Thumbnails.Set ( video.Id, thumbnailStream, "image/jpeg" ).Upload ();
+							}
 						}
-
-						if ( thumbnailStream.Length >= 2097152 )
-							return;
-
-						youTubeSession.TryGetTarget ( out YouTubeSession ySession );
-						ySession.YouTubeService.Thumbnails.Set ( video.Id, thumbnailStream, "image/jpeg" ).Upload ();
-
-						foreach ( var playlist in Playlists )
-							playlist.AddVideo ( video.Id );
 					}
+
+					foreach ( var playlist in Playlists )
+						playlist.AddVideo ( video.Id );
 				};
 			}
 
