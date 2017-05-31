@@ -93,14 +93,8 @@
 									파일
 								</Hyperlink>
 							</TextBlock>
-							<TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
-								<Hyperlink Click="HyperlinkClipboard_Click"
-										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
-									클립보드
-								</Hyperlink>
-                            </TextBlock>
                             <TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
-								<Hyperlink Click="HyperlinkBlank_Click"
+								<Hyperlink Click="HyperlinkClipboard_Click"
 										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
 									클립보드
 								</Hyperlink>

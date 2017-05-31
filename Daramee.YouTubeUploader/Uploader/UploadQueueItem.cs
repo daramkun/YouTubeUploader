@@ -156,8 +156,7 @@ namespace Daramee.YouTubeUploader.Uploader
 			{
 				UploadingStatus = UploadingStatus.UpdateStart;
 
-				if ( changedThumbnail )
-					await UploadThumbnail ();
+				await UploadThumbnail ( video.Id );
 
 				var videoUpdateRequest = session.YouTubeService.Videos.Update ( video, "snippet,status" );
 				var result = await videoUpdateRequest.ExecuteAsync ();
@@ -241,7 +240,7 @@ namespace Daramee.YouTubeUploader.Uploader
 				};
 				videoInsertRequest.ResponseReceived += async ( video ) =>
 				{
-					await UploadThumbnail ();
+					await UploadThumbnail ( video.Id );
 
 					foreach ( var playlist in Playlists )
 						playlist.AddVideo ( video.Id );
@@ -268,19 +267,11 @@ namespace Daramee.YouTubeUploader.Uploader
 			return UploadResult.Succeed;
 		}
 
-		private async Task UploadThumbnail ()
+		private async Task UploadThumbnail ( string id )
 		{
-			if ( !changedThumbnail )
+			if ( changedThumbnail == false || Thumbnail == null )
 				return;
-
-			if ( Thumbnail == null )
-			{
-				youtubeSession.TryGetTarget ( out YouTubeSession session );
-				await session.YouTubeService.Thumbnails.Set ( video.Id ).ExecuteAsync ();
-				changedThumbnail = false;
-				return;
-			}
-
+			
 			using ( MemoryStream thumbnailStream = new MemoryStream () )
 			{
 				JpegBitmapEncoder encoder = new JpegBitmapEncoder ();
@@ -299,7 +290,7 @@ namespace Daramee.YouTubeUploader.Uploader
 				if ( thumbnailStream.Length < 2097152 )
 				{
 					youtubeSession.TryGetTarget ( out YouTubeSession session );
-					await session.YouTubeService.Thumbnails.Set ( video.Id, thumbnailStream, "image/jpeg" ).UploadAsync ();
+					var result = await session.YouTubeService.Thumbnails.Set ( id, thumbnailStream, "image/jpeg" ).UploadAsync ();
 				}
 			}
 			changedThumbnail = false;

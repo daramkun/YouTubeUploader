@@ -83,7 +83,7 @@ namespace Daramee.YouTubeUploader
 						UseShellExecute = false
 					};
 					Process.Start ( psi );*/
-					new HaltWindow ().ShowDialog ();
+					Dispatcher.BeginInvoke ( new Action ( () => { new HaltWindow ().ShowDialog (); } ) );
 				}
 			};
 			queueItem.Failed += async ( sender, e ) =>
@@ -294,11 +294,6 @@ namespace Daramee.YouTubeUploader
 		{
 			BitmapSource bitmapSource = ClipboardImageUtility.GetClipboardImage ();
 			( ( sender as Hyperlink ).DataContext as UploadQueueItem ).Thumbnail = bitmapSource;
-		}
-
-		private void HyperlinkBlank_Click ( object sender, RoutedEventArgs e )
-		{
-			( ( sender as Hyperlink ).DataContext as UploadQueueItem ).Thumbnail = null;
 		}
 
 		private void HyperlinkEditTags_Click ( object sender, RoutedEventArgs e )

@@ -4,8 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Daramee.YouTubeUploader"
-        mc:Ignorable="d" ResizeMode="NoResize"
-        Title="Microsoft® Windows® 종료" Height="100" Width="320" Loaded="Window_Loaded">
+        mc:Ignorable="d" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        Title="Microsoft® Windows® 종료" Height="110" Width="320" Loaded="Window_Loaded">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="24" />
