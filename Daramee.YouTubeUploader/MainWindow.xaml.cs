@@ -334,14 +334,19 @@ namespace Daramee.YouTubeUploader
 
 		private void HaltWhenCompleteCheckBox_Checked ( object sender, RoutedEventArgs e )
 		{
-			MessageBox.Show ( @"모든 업로드가 성공적으로 완료되면
-10초 후 자동으로 컴퓨터를 종료하는 기능입니다.
+			MessageBox.Show ( @"
+모든 업로드가 성공적으로 완료되면 30초 후
+자동으로 컴퓨터를 종료하는 기능입니다.
 
 이 기능이 켜져있으면서 업로드에 실패한 경우
 15분 후 실패한 업로드를 재업로드 시도합니다.
 
-추가 안내 없이 종료를 시작하므로 주의하십시오.
-이 기능은 shutdown 명령어를 사용합니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Information );
+30초 후에는 추가 안내 없이 종료를 시작하므로
+주의하십시오.
+
+종료 시점에 이 프로그램 외에 다른 프로그램이
+켜져있다면 강제 종료 전에는 컴퓨터가 제대로
+종료되지 않을 수 있습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Information );
 		}
 
 		private async Task UploadItem ( UploadQueueItem uploadQueueItem )
