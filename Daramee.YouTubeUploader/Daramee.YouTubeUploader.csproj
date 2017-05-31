@@ -103,6 +103,9 @@
     <Compile Include="Converters\UploadingStatusToBooleanForRemoveConverter.cs" />
     <Compile Include="Converters\UploadingStatusToColorConverter.cs" />
     <Compile Include="Converters\UploadingStatusToStringConverter.cs" />
+    <Compile Include="HaltWindow.xaml.cs">
+      <DependentUpon>HaltWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PlaylistWindow.xaml.cs">
       <DependentUpon>PlaylistWindow.xaml</DependentUpon>
     </Compile>
@@ -114,6 +117,10 @@
     <Compile Include="Uploader\Playlists.cs" />
     <Compile Include="Uploader\UploadQueueItem.cs" />
     <Compile Include="Uploader\YouTubeSession.cs" />
+    <Page Include="HaltWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

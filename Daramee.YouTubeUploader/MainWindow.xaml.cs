@@ -77,12 +77,13 @@ namespace Daramee.YouTubeUploader
 
 				if ( !incompleted )
 				{
-					var psi = new ProcessStartInfo ( "shutdown", "/s /t 10" )
+					/*var psi = new ProcessStartInfo ( "shutdown", "/s /t 10" )
 					{
 						CreateNoWindow = true,
 						UseShellExecute = false
 					};
-					Process.Start ( psi );
+					Process.Start ( psi );*/
+					new HaltWindow ().ShowDialog ();
 				}
 			};
 			queueItem.Failed += async ( sender, e ) =>

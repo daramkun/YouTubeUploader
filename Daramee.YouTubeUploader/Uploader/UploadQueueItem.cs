@@ -156,7 +156,7 @@ namespace Daramee.YouTubeUploader.Uploader
 			{
 				UploadingStatus = UploadingStatus.UpdateStart;
 
-				if ( changedThumbnail && thumbnail != null )
+				if ( changedThumbnail )
 					await UploadThumbnail ();
 
 				var videoUpdateRequest = session.YouTubeService.Videos.Update ( video, "snippet,status" );
@@ -164,12 +164,14 @@ namespace Daramee.YouTubeUploader.Uploader
 				if ( result != null )
 				{
 					UploadingStatus = UploadingStatus.UpdateComplete;
+					PC ( nameof ( UploadingStatus ) );
 					Completed?.Invoke ( this, EventArgs.Empty );
 					return UploadResult.Succeed;
 				}
 				else
 				{
 					UploadingStatus = UploadingStatus.UpdateFailed;
+					PC ( nameof ( UploadingStatus ) );
 					Failed?.Invoke ( this, EventArgs.Empty );
 					return UploadResult.UpdateFailed;
 				}
