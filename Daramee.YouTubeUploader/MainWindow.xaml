@@ -12,7 +12,6 @@
 	<Window.Resources>
 		<conv:PrivacyStatusToIntegerConverter x:Key="privacyStatusToIntegerConverter" />
 		<conv:UploadingStatusToStringConverter x:Key="uploadingStatusToStringConverter" />
-		<conv:UploadingStatusToBooleanConverter x:Key="uploadingStatusToBooleanConverter" />
 		<conv:UploadingStatusToBooleanForEditableConverter x:Key="uploadingStatusToBooleanForEditableConverter" />
 		<conv:UploadingStatusToBooleanForRemoveConverter x:Key="uploadingStatusToBooleanForRemoveConverter" />
         <conv:UploadingStatusToBooleanForPlaylistEditConverter x:Key="uploadingStatusToBooleanForPlaylistEditConverter" />

@@ -18,10 +18,14 @@ namespace Daramee.YouTubeUploader.Converters
 				case UploadingStatus.Queued:
 				case UploadingStatus.UploadFailed:
 				case UploadingStatus.UploadCompleted:
+				case UploadingStatus.UpdateFailed:
+				case UploadingStatus.UpdateComplete:
 					return true;
-					
+
+				case UploadingStatus.PrepareUpload:
 				case UploadingStatus.UploadStart:
 				case UploadingStatus.Uploading:
+				case UploadingStatus.UpdateStart:
 					return false;
 
 				default: return false;

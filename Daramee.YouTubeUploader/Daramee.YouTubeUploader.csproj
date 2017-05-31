@@ -98,7 +98,6 @@
     </ApplicationDefinition>
     <Compile Include="ClipboardImageUtility.cs" />
     <Compile Include="Converters\PrivacyStatusToIntegerConverter.cs" />
-    <Compile Include="Converters\UploadingStatusToBooleanConverter.cs" />
     <Compile Include="Converters\UploadingStatusToBooleanForEditableConverter.cs" />
     <Compile Include="Converters\UploadingStatusToBooleanForPlaylistEditConverter.cs" />
     <Compile Include="Converters\UploadingStatusToBooleanForRemoveConverter.cs" />

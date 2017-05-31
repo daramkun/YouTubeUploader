@@ -54,6 +54,9 @@ namespace Daramee.YouTubeUploader.Uploader
 		Uploading,
 		UploadCompleted,
 		UploadFailed,
+		UpdateStart,
+		UpdateComplete,
+		UpdateFailed,
 	}
 
 	public enum UploadResult : int
@@ -144,9 +147,14 @@ namespace Daramee.YouTubeUploader.Uploader
 		{
 			youtubeSession.TryGetTarget ( out YouTubeSession session );
 
-			if ( video.Id != null && ( UploadingStatus == UploadingStatus.UploadFailed || UploadingStatus == UploadingStatus.UploadCompleted ) )
+			if ( video.Id != null && (
+					UploadingStatus == UploadingStatus.UploadFailed ||
+					UploadingStatus == UploadingStatus.UploadCompleted ||
+					UploadingStatus == UploadingStatus.UpdateFailed ||
+					UploadingStatus == UploadingStatus.UpdateComplete
+				) )
 			{
-				UploadingStatus = UploadingStatus.PrepareUpload;
+				UploadingStatus = UploadingStatus.UpdateStart;
 
 				if ( changedThumbnail && thumbnail != null )
 					await UploadThumbnail ();
@@ -155,12 +163,14 @@ namespace Daramee.YouTubeUploader.Uploader
 				var result = await videoUpdateRequest.ExecuteAsync ();
 				if ( result != null )
 				{
-					UploadingStatus = UploadingStatus.UploadCompleted;
+					UploadingStatus = UploadingStatus.UpdateComplete;
+					Completed?.Invoke ( this, EventArgs.Empty );
 					return UploadResult.Succeed;
 				}
 				else
 				{
-					UploadingStatus = UploadingStatus.UploadFailed;
+					UploadingStatus = UploadingStatus.UpdateFailed;
+					Failed?.Invoke ( this, EventArgs.Empty );
 					return UploadResult.UpdateFailed;
 				}
 			}

@@ -69,7 +69,7 @@ namespace Daramee.YouTubeUploader
 				bool incompleted = false;
 				foreach ( var i in list )
 				{
-					if ( i.UploadingStatus == UploadingStatus.UploadCompleted )
+					if ( i.UploadingStatus == UploadingStatus.UploadCompleted || i.UploadingStatus == UploadingStatus.UpdateComplete )
 						continue;
 					incompleted = true;
 					break;
@@ -107,7 +107,7 @@ namespace Daramee.YouTubeUploader
 
 					foreach ( var item in uploadQueueListBox.ItemsSource as ObservableCollection<UploadQueueItem> )
 					{
-						if ( item.UploadingStatus == UploadingStatus.UploadFailed )
+						if ( item.UploadingStatus == UploadingStatus.UploadFailed || item.UploadingStatus == UploadingStatus.UpdateFailed )
 							thereIsFailedItem = true;
 						else if ( item.UploadingStatus == UploadingStatus.Queued )
 							continue;
@@ -137,7 +137,7 @@ namespace Daramee.YouTubeUploader
 			bool incompleted = false;
 			foreach ( var i in list )
 			{
-				if ( i.UploadingStatus == UploadingStatus.UploadCompleted )
+				if ( i.UploadingStatus == UploadingStatus.UploadCompleted || i.UploadingStatus == UploadingStatus.UpdateComplete )
 					continue;
 				incompleted = true;
 				break;
@@ -207,6 +207,19 @@ namespace Daramee.YouTubeUploader
 			buttonAllUpload.IsEnabled = false;
 			haltWhenCompleteCheckBox.IsEnabled = false;
 			//buttonManagePlaylist.IsEnabled = false;
+		}
+
+		private void ButtonAllUpload_Click ( object sender, RoutedEventArgs e )
+		{
+			foreach ( var item in uploadQueueListBox.ItemsSource as ObservableCollection<UploadQueueItem> )
+			{
+				if ( item.UploadingStatus == UploadingStatus.Queued || item.UploadingStatus == UploadingStatus.UploadFailed )
+				{
+					ThreadPool.QueueUserWorkItem ( async ( i ) => { await UploadItem ( i as UploadQueueItem ); }, item );
+					while ( item.UploadingStatus < UploadingStatus.UploadStart )
+						;
+				}
+			}
 		}
 
 		private async void ButtonCheckUpdate_Click ( object sender, RoutedEventArgs e )
@@ -333,15 +346,6 @@ namespace Daramee.YouTubeUploader
 
 추가 안내 없이 종료를 시작하므로 주의하십시오.
 이 기능은 shutdown 명령어를 사용합니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Information );
-		}
-
-		private void ButtonAllUpload_Click ( object sender, RoutedEventArgs e )
-		{
-			foreach ( var item in uploadQueueListBox.ItemsSource as ObservableCollection<UploadQueueItem> )
-			{
-				if ( item.UploadingStatus == UploadingStatus.Queued || item.UploadingStatus == UploadingStatus.UploadFailed )
-					ThreadPool.QueueUserWorkItem ( async ( i ) => { await UploadItem ( i as UploadQueueItem ); }, item );
-			}
 		}
 
 		private async Task UploadItem ( UploadQueueItem uploadQueueItem )
