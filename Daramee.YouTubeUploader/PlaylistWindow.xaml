@@ -6,22 +6,22 @@
         xmlns:local="clr-namespace:Daramee.YouTubeUploader"
         mc:Ignorable="d" ResizeMode="NoResize"
         Title="재생목록 추가" Height="400" Width="500">
-	<Grid Margin="5">
-		<Grid.RowDefinitions>
-			<RowDefinition />
-			<RowDefinition Height="32" />
-		</Grid.RowDefinitions>
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="32" />
+        </Grid.RowDefinitions>
 
-		<ListBox x:Name="listBoxPlaylists" Grid.Row="0">
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<CheckBox Content="{Binding Name, Mode=OneWay}" IsChecked="{Binding IsChecked, Mode=TwoWay}" />
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
+        <ListBox x:Name="listBoxPlaylists" Grid.Row="0">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <CheckBox Content="{Binding Name, Mode=OneWay}" IsChecked="{Binding IsChecked, Mode=TwoWay}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
-		<StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-			<Button Content="선택" Width="60" Height="25" Click="ButtonClose_Click" />
-		</StackPanel>
-	</Grid>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <Button Content="선택" Width="60" Height="25" Click="ButtonClose_Click" />
+        </StackPanel>
+    </Grid>
 </Window>

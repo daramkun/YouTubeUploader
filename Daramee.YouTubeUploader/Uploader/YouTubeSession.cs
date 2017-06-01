@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,17 +16,26 @@ using Google.Apis.YouTube.v3;
 
 namespace Daramee.YouTubeUploader.Uploader
 {
-	public sealed class YouTubeSession : IDisposable
+	public sealed class YouTubeSession : INotifyPropertyChanged, IDisposable
 	{
+		public static YouTubeSession SharedYouTubeSession { get; private set; }
+
 		public YouTubeService YouTubeService { get; private set; }
 
 		public YouTubeSession ( string sessionSaveDirectory = null )
 		{
 			if ( sessionSaveDirectory != null )
 				GoogleWebAuthorizationBroker.Folder = sessionSaveDirectory;
-			
+
 			ServicePointManager.DefaultConnectionLimit = int.MaxValue;
+
+			YouTubeService = null;
+
+			SharedYouTubeSession = this;
 		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+		private void PC ( [CallerMemberName] string propName = "" ) { PropertyChanged?.Invoke ( this, new PropertyChangedEventArgs ( propName ) ); }
 
 		public void Dispose ()
 		{
@@ -73,6 +84,9 @@ namespace Daramee.YouTubeUploader.Uploader
 			} );
 			YouTubeService.HttpClient.Timeout = TimeSpan.FromMinutes ( 5 );
 
+			PC ( nameof ( IsAuthorized ) );
+			PC ( nameof ( IsAlreadyAuthorized ) );
+
 			return true;
 		}
 
@@ -82,11 +96,20 @@ namespace Daramee.YouTubeUploader.Uploader
 			if ( YouTubeService != null )
 				YouTubeService.Dispose ();
 			YouTubeService = null;
+
+			PC ( nameof ( IsAuthorized ) );
+			PC ( nameof ( IsAlreadyAuthorized ) );
 		}
+
+		public bool IsAuthorized { get { return YouTubeService != null; } }
 
 		public bool IsAlreadyAuthorized
 		{
-			get { return File.Exists ( Path.Combine ( GoogleWebAuthorizationBroker.Folder, "Google.Apis.Auth.OAuth2.Responses.TokenResponse-user" ) ); }
+			get
+			{
+				if ( IsAuthorized ) return true;
+				return File.Exists ( Path.Combine ( GoogleWebAuthorizationBroker.Folder, "Google.Apis.Auth.OAuth2.Responses.TokenResponse-user" ) );
+			}
 		}
 
 		class MyHttpClientFactory : IHttpClientFactory
@@ -98,7 +121,7 @@ namespace Daramee.YouTubeUploader.Uploader
 				{
 					ApplicationName = args.ApplicationName
 				};
-				
+
 				var client = new ConfigurableHttpClient ( configurableHandler );
 				foreach ( var initializer in args.Initializers )
 				{
@@ -107,14 +130,14 @@ namespace Daramee.YouTubeUploader.Uploader
 
 				return client;
 			}
-			
+
 			protected virtual HttpMessageHandler CreateHandler ( CreateHttpClientArgs args )
 			{
 				var handler = new HttpClientHandler ();
-				
+
 				if ( handler.SupportsRedirectConfiguration )
 					handler.AllowAutoRedirect = false;
-				
+
 				if ( handler.SupportsAutomaticDecompression && args.GZipEnabled )
 					handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 

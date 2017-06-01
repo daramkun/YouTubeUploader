@@ -9,90 +9,91 @@
 		mc:Ignorable="d" Icon="./Resources/MainIcon.ico"
 		ResizeMode="CanMinimize"
         Title="다람 유튜브 업로더" Height="600" Width="860" Loaded="Window_Loaded" Closing="Window_Closing">
-	<Window.Resources>
-		<conv:PrivacyStatusToIntegerConverter x:Key="privacyStatusToIntegerConverter" />
-		<conv:UploadingStatusToStringConverter x:Key="uploadingStatusToStringConverter" />
-		<conv:UploadingStatusToBooleanForEditableConverter x:Key="uploadingStatusToBooleanForEditableConverter" />
-		<conv:UploadingStatusToBooleanForRemoveConverter x:Key="uploadingStatusToBooleanForRemoveConverter" />
+    <Window.Resources>
+        <conv:PrivacyStatusToIntegerConverter x:Key="privacyStatusToIntegerConverter" />
+        <conv:UploadingStatusToStringConverter x:Key="uploadingStatusToStringConverter" />
+        <conv:UploadingStatusToBooleanForEditableConverter x:Key="uploadingStatusToBooleanForEditableConverter" />
+        <conv:UploadingStatusToBooleanForRemoveConverter x:Key="uploadingStatusToBooleanForRemoveConverter" />
         <conv:UploadingStatusToBooleanForPlaylistEditConverter x:Key="uploadingStatusToBooleanForPlaylistEditConverter" />
         <conv:UploadingStatusToColorConverter x:Key="uploadingStatusToColorConverter" />
+        <conv:BooleanLogicalNotConverter x:Key="booleanLogicalNotConverter" />
 
-		<!-- 툴바 버튼 이미지 속성 -->
-		<Style x:Key="toolBarImages" TargetType="Image">
-			<Style.Triggers>
-				<Trigger Property="IsEnabled" Value="False">
-					<Setter Property="Opacity" Value="0.5" />
-				</Trigger>
-			</Style.Triggers>
-		</Style>
+        <!-- 툴바 버튼 이미지 속성 -->
+        <Style x:Key="toolBarImages" TargetType="Image">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
-		<!-- 리스트박스 아이템 템플릿 -->
-		<DataTemplate x:Key="listBoxItem">
-			<Border BorderThickness="1" BorderBrush="LightGray" Margin="5">
-				<Grid Height="160" Margin="5">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="220" />
-						<ColumnDefinition Width="560" />
-						<ColumnDefinition Width="20" />
-					</Grid.ColumnDefinitions>
+        <!-- 리스트박스 아이템 템플릿 -->
+        <DataTemplate x:Key="listBoxItem">
+            <Border BorderThickness="1" BorderBrush="LightGray" Margin="5">
+                <Grid Height="160" Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="220" />
+                        <ColumnDefinition Width="560" />
+                        <ColumnDefinition Width="20" />
+                    </Grid.ColumnDefinitions>
 
-					<!-- 영상 프리뷰 화면 -->
-					<Grid>
-						<Grid.RowDefinitions>
-							<RowDefinition />
-							<RowDefinition Height="16" />
-						</Grid.RowDefinitions>
+                    <!-- 영상 프리뷰 화면 -->
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="16" />
+                        </Grid.RowDefinitions>
 
-						<Rectangle Fill="Black" Width="214" Height="120" VerticalAlignment="Center" HorizontalAlignment="Left" />
-						<MediaElement Source="{Binding FileName}" IsMuted="True"
+                        <Rectangle Fill="Black" Width="214" Height="120" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                        <MediaElement Source="{Binding FileName}" IsMuted="True"
 										Width="214" Height="120" LoadedBehavior="Manual" UnloadedBehavior="Close"
 										VerticalAlignment="Center" HorizontalAlignment="Left" />
 
-						<StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-							<Button Margin="0,0,5,0" Click="ButtonPlayItem_Click" ToolTip="재생">
-								<Image Source="./Resources/control_play_blue.png" />
-							</Button>
-							<Button Click="ButtonStopItem_Click">
-								<Image Source="./Resources/control_stop_blue.png" ToolTip="정지" />
-							</Button>
-						</StackPanel>
-					</Grid>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button Margin="0,0,5,0" Click="ButtonPlayItem_Click" ToolTip="재생">
+                                <Image Source="./Resources/control_play_blue.png" />
+                            </Button>
+                            <Button Click="ButtonStopItem_Click">
+                                <Image Source="./Resources/control_stop_blue.png" ToolTip="정지" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
 
-					<!-- 항목 편집 화면 -->
-					<Grid Grid.Column="1" Margin="0,0,10,0">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="60" />
-							<ColumnDefinition />
-							<ColumnDefinition Width="60" />
-							<ColumnDefinition />
-							<ColumnDefinition Width="160" />
-						</Grid.ColumnDefinitions>
-						<Grid.RowDefinitions>
-							<RowDefinition />
-							<RowDefinition />
-							<RowDefinition />
-							<RowDefinition />
-							<RowDefinition />
-							<RowDefinition />
-							<RowDefinition Height="12" />
-						</Grid.RowDefinitions>
+                    <!-- 항목 편집 화면 -->
+                    <Grid Grid.Column="1" Margin="0,0,10,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="160" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition Height="12" />
+                        </Grid.RowDefinitions>
 
-						<!-- 1열 텍스트 -->
-						<TextBlock Text="제목: " Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" />
-						<TextBlock Text="설명: " Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" />
-						<TextBlock Text="공개: " Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" />
-						<TextBlock Text="분류: " Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" />
-						<TextBlock Text="기타: " Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" />
-						<TextBlock Text="상태: " Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" />
-						<!-- 2열 텍스트 -->
-						<StackPanel Grid.Row="0" Grid.Column="4" Orientation="Horizontal">
-							<TextBlock Text="썸네일: " VerticalAlignment="Center" Margin="0,0,5,0" />
-							<TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
+                        <!-- 1열 텍스트 -->
+                        <TextBlock Text="제목: " Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" />
+                        <TextBlock Text="설명: " Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" />
+                        <TextBlock Text="공개: " Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" />
+                        <TextBlock Text="분류: " Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" />
+                        <TextBlock Text="기타: " Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" />
+                        <TextBlock Text="상태: " Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" />
+                        <!-- 2열 텍스트 -->
+                        <StackPanel Grid.Row="0" Grid.Column="4" Orientation="Horizontal">
+                            <TextBlock Text="썸네일: " VerticalAlignment="Center" Margin="0,0,5,0" />
+                            <TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
 								<Hyperlink Click="HyperlinkBrowse_Click"
 										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
 									파일
 								</Hyperlink>
-							</TextBlock>
+                            </TextBlock>
                             <TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
 								<Hyperlink Click="HyperlinkClipboard_Click"
 										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
@@ -101,120 +102,120 @@
                             </TextBlock>
                         </StackPanel>
 
-						<!-- 1열 편집 -->
-						<TextBox Text="{Binding Title}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
+                        <!-- 1열 편집 -->
+                        <TextBox Text="{Binding Title}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
 									VerticalAlignment="Center" Margin="0,0,10,0"
 									IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" />
-						<TextBox Text="{Binding Description}" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3"
+                        <TextBox Text="{Binding Description}" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3"
 									TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
 									MaxLines="16" Margin="0,0,10,0"
 									IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}"  />
-						<ComboBox Grid.Row="3" Grid.Column="1" Margin="0,0,10,0"
+                        <ComboBox Grid.Row="3" Grid.Column="1" Margin="0,0,10,0"
 									VerticalAlignment="Center" SelectedIndex="{Binding PrivacyStatus, Converter={StaticResource privacyStatusToIntegerConverter}}"
 									IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" >
-							<ComboBoxItem Content="공개" />
-							<ComboBoxItem Content="미등록" />
-							<ComboBoxItem Content="비공개" />
-						</ComboBox>
-						<ComboBox Grid.Row="3" Grid.Column="3" Margin="0,0,10,0" SelectionChanged="ItemCategoryComboBox_SelectionChanged"
+                            <ComboBoxItem Content="공개" />
+                            <ComboBoxItem Content="미등록" />
+                            <ComboBoxItem Content="비공개" />
+                        </ComboBox>
+                        <ComboBox Grid.Row="3" Grid.Column="3" Margin="0,0,10,0" SelectionChanged="ItemCategoryComboBox_SelectionChanged"
 									VerticalAlignment="Center" ItemsSource="{x:Static uploader:Categories.DetectedCategories}" SelectedIndex="0"
 									IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
-							<ComboBox.ItemTemplate>
-								<DataTemplate>
-									<TextBlock Text="{Binding Name}" />
-								</DataTemplate>
-							</ComboBox.ItemTemplate>
-						</ComboBox>
-						<StackPanel Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,0,10,0" VerticalAlignment="Center">
-							<TextBlock Margin="0,0,5,0">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <StackPanel Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,0,10,0" VerticalAlignment="Center">
+                            <TextBlock Margin="0,0,5,0">
 								<Hyperlink IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" Click="HyperlinkEditTags_Click">
 									태그 편집
 								</Hyperlink>
-							</TextBlock>
-							<TextBlock Margin="0,0,5,0">
+                            </TextBlock>
+                            <TextBlock Margin="0,0,5,0">
 								<Hyperlink IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForPlaylistEditConverter}}" Click="HyperlinkAddPlaylists_Click">
 									재생목록 추가
 								</Hyperlink>
-							</TextBlock>
-						</StackPanel>
-						<!-- 1열 상태 표기 -->
-						<TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,0,10,0" VerticalAlignment="Center"
+                            </TextBlock>
+                        </StackPanel>
+                        <!-- 1열 상태 표기 -->
+                        <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,0,10,0" VerticalAlignment="Center"
 										   Text="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToStringConverter}}"
 										   Foreground="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToColorConverter}}" />
 
-						<!-- 2열 이미지 -->
-						<Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="5" Source="./Resources/blank.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
-						<Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="5" Source="{Binding Thumbnail}" />
+                        <!-- 2열 이미지 -->
+                        <Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="5" Source="./Resources/blank.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+                        <Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="5" Source="{Binding Thumbnail}" />
 
-						<!-- 마지막 행 진행 상태 표기 -->
-						<ProgressBar Grid.Row="6" Grid.ColumnSpan="5" Maximum="1" Value="{Binding Progress, Mode=OneWay}" />
-						<TextBlock Grid.Row="6" Grid.ColumnSpan="5" Text="{Binding TimeRemaining}" FontSize="8" HorizontalAlignment="Center" />
-					</Grid>
+                        <!-- 마지막 행 진행 상태 표기 -->
+                        <ProgressBar Grid.Row="6" Grid.ColumnSpan="5" Maximum="1" Value="{Binding Progress, Mode=OneWay}" />
+                        <TextBlock Grid.Row="6" Grid.ColumnSpan="5" Text="{Binding TimeRemaining}" FontSize="8" HorizontalAlignment="Center" />
+                    </Grid>
 
-					<!-- 업로드, 제거 버튼 화면 -->
-					<StackPanel Grid.Column="2" Orientation="Vertical">
-						<Button Click="ButtonUpload_Click" Margin="0,0,0,5"
+                    <!-- 업로드, 제거 버튼 화면 -->
+                    <StackPanel Grid.Column="2" Orientation="Vertical">
+                        <Button Click="ButtonUpload_Click" Margin="0,0,0,5"
 									 IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" >
-							<Image Source="./Resources/application_get.png" />
-							<Button.ToolTip>
-								<ToolTip Content="업로드" />
-							</Button.ToolTip>
-						</Button>
-						<Button Click="ButtonRemoveItem_Click"
+                            <Image Source="./Resources/application_get.png" />
+                            <Button.ToolTip>
+                                <ToolTip Content="업로드" />
+                            </Button.ToolTip>
+                        </Button>
+                        <Button Click="ButtonRemoveItem_Click"
 									 IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForRemoveConverter}}" >
-							<Image Source="./Resources/delete.png" />
-							<Button.ToolTip>
-								<ToolTip Content="삭제" />
-							</Button.ToolTip>
-						</Button>
-					</StackPanel>
-				</Grid>
-			</Border>
-		</DataTemplate>
-	</Window.Resources>
+                            <Image Source="./Resources/delete.png" />
+                            <Button.ToolTip>
+                                <ToolTip Content="삭제" />
+                            </Button.ToolTip>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </Window.Resources>
 
-	<!-- 최상위 그리드 -->
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="26" />
-			<RowDefinition />
-		</Grid.RowDefinitions>
+    <!-- 최상위 그리드 -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="26" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
-		<!-- 툴바 -->
-		<ToolBarTray ClipToBounds="False">
-			<ToolBar Focusable="True" ToolBarTray.IsLocked="True">
-				<Button x:Name="buttonOpen" Click="ButtonOpen_Click" IsEnabled="False" ToolTip="열기">
-					<Image Source="./Resources/folder_add.png" Style="{StaticResource toolBarImages}" />
-				</Button>
+        <!-- 툴바 -->
+        <ToolBarTray ClipToBounds="False" DataContext="{x:Static local:MainWindow.SharedWindow}">
+            <ToolBar Focusable="True" ToolBarTray.IsLocked="True">
+                <Button x:Name="buttonOpen" Click="ButtonOpen_Click" IsEnabled="{Binding YouTubeSession.IsAuthorized}" ToolTip="열기">
+                    <Image Source="./Resources/folder_add.png" Style="{StaticResource toolBarImages}" />
+                </Button>
 
-				<Separator />
+                <Separator />
 
-				<Button x:Name="buttonConnect" Click="ButtonConnect_Click" IsEnabled="True" ToolTip="유튜브 계정 연결">
-					<Image Source="./Resources/connect.png" Style="{StaticResource toolBarImages}" />
-				</Button>
-				<Button x:Name="buttonDisconnect" Click="ButtonDisconnect_Click" IsEnabled="False" ToolTip="유튜브 계정 연결 해제">
-					<Image Source="./Resources/disconnect.png" Style="{StaticResource toolBarImages}" />
-				</Button>
+                <Button x:Name="buttonConnect" Click="ButtonConnect_Click" IsEnabled="{Binding YouTubeSession.IsAuthorized, Converter={StaticResource booleanLogicalNotConverter}}" ToolTip="유튜브 계정 연결">
+                    <Image Source="./Resources/connect.png" Style="{StaticResource toolBarImages}" />
+                </Button>
+                <Button x:Name="buttonDisconnect" Click="ButtonDisconnect_Click" IsEnabled="{Binding YouTubeSession.IsAuthorized}" ToolTip="유튜브 계정 연결 해제">
+                    <Image Source="./Resources/disconnect.png" Style="{StaticResource toolBarImages}" />
+                </Button>
 
-				<Separator />
-				<ComboBox x:Name="comboBoxDefaultPrivacyStatus" Grid.Row="3" Grid.Column="1" Margin="0,0,10,0" IsEnabled="False" VerticalAlignment="Center" SelectedIndex="0">
-					<ComboBoxItem Content="공개" />
-					<ComboBoxItem Content="미등록" />
-					<ComboBoxItem Content="비공개" />
-				</ComboBox>
-				<Button x:Name="buttonAllUpload" Click="ButtonAllUpload_Click" IsEnabled="False" ToolTip="모든 파일 업로드">
-					<Image Source="./Resources/application_cascade_get.png" Style="{StaticResource toolBarImages}" />
-				</Button>
+                <Separator />
+                <ComboBox x:Name="comboBoxDefaultPrivacyStatus" Grid.Row="3" Grid.Column="1" Margin="0,0,10,0" IsEnabled="{Binding YouTubeSession.IsAuthorized}" VerticalAlignment="Center" SelectedIndex="0">
+                    <ComboBoxItem Content="공개" />
+                    <ComboBoxItem Content="미등록" />
+                    <ComboBoxItem Content="비공개" />
+                </ComboBox>
+                <Button x:Name="buttonAllUpload" Click="ButtonAllUpload_Click" IsEnabled="{Binding YouTubeSession.IsAuthorized}" ToolTip="모든 파일 업로드">
+                    <Image Source="./Resources/application_cascade_get.png" Style="{StaticResource toolBarImages}" />
+                </Button>
 
-				<Separator />
+                <Separator />
 
-				<CheckBox x:Name="haltWhenCompleteCheckBox" Content="완료 후 종료" IsEnabled="False"
+                <CheckBox x:Name="haltWhenCompleteCheckBox" Content="완료 후 종료" IsEnabled="{Binding YouTubeSession.IsAuthorized}"
 						  DataContext="{x:Static local:MainWindow.SharedWindow}"
 						  IsChecked="{Binding HaltWhenAllCompleted}" Checked="HaltWhenCompleteCheckBox_Checked" />
 
-				<!--<Separator />
+                <!--<Separator />
 
-				<Button x:Name="buttonManagePlaylist" IsEnabled="False" ToolTip="재생목록 관리">
+				<Button x:Name="buttonManagePlaylist" IsEnabled="{Binding YouTubeSession.IsAuthorized}" ToolTip="재생목록 관리">
 					<Image Source="./Resources/report.png" Style="{StaticResource toolBarImages}" />
 				</Button>-->
 
@@ -224,22 +225,22 @@
                     <Image Source="./Resources/application_lightning.png" Style="{StaticResource toolBarImages}" />
                 </Button>
             </ToolBar>
-		</ToolBarTray>
+        </ToolBarTray>
 
-		<!-- 리스트박스 -->
-		<ListBox x:Name="uploadQueueListBox" Grid.Row="1"
+        <!-- 리스트박스 -->
+        <ListBox x:Name="uploadQueueListBox" Grid.Row="1"
 				 ScrollViewer.VerticalScrollBarVisibility="Visible"
 				 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
 				 ScrollViewer.CanContentScroll="False"
 				 ItemTemplate="{StaticResource listBoxItem}"
 				 AllowDrop="True" Drop="UploadQueueListBox_Drop" DragEnter="UploadQueueListBox_DragEnter">
-			<ListBox.ItemContainerStyle>
-				<Style TargetType="ListBoxItem">
-					<Setter Property="Padding" Value="0"/>
-					<Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-					<Setter Property="Focusable" Value="False"/>
-				</Style>
-			</ListBox.ItemContainerStyle>
-		</ListBox>
-	</Grid>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                    <Setter Property="Focusable" Value="False"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+    </Grid>
 </Window>

@@ -57,6 +57,21 @@
   <PropertyGroup>
     <ApplicationManifest>DaramYouTubeUploader.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>DaramYouTubeUploader.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>867531363B2EE4A7502563A4F7E5BEB4FD9AEE0F</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>DaramYouTubeUploader.pfx</ManifestKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Google.Apis, Version=1.26.2.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.1.26.2\lib\net45\Google.Apis.dll</HintPath>
@@ -97,6 +112,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ClipboardImageUtility.cs" />
+    <Compile Include="Converters\BooleanLogicalNotConverter.cs" />
     <Compile Include="Converters\PrivacyStatusToIntegerConverter.cs" />
     <Compile Include="Converters\UploadingStatusToBooleanForEditableConverter.cs" />
     <Compile Include="Converters\UploadingStatusToBooleanForPlaylistEditConverter.cs" />
@@ -146,7 +162,10 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <None Include="DaramYouTubeUploader.manifest" />
+    <None Include="DaramYouTubeUploader.manifest">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DaramYouTubeUploader.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

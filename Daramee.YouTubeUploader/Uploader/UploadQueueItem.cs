@@ -82,7 +82,7 @@ namespace Daramee.YouTubeUploader.Uploader
 
 		Stream mediaStream;
 		long lastSentBytes;
-		
+
 		BitmapSource thumbnail;
 		bool changedThumbnail;
 
@@ -271,7 +271,7 @@ namespace Daramee.YouTubeUploader.Uploader
 		{
 			if ( changedThumbnail == false || Thumbnail == null )
 				return;
-			
+
 			using ( MemoryStream thumbnailStream = new MemoryStream () )
 			{
 				JpegBitmapEncoder encoder = new JpegBitmapEncoder ();

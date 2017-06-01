@@ -26,6 +26,7 @@ namespace Daramee.YouTubeUploader
 		YouTubeSession youtubeSession = new YouTubeSession ( Environment.CurrentDirectory );
 		Categories categories = new Categories ();
 
+		public YouTubeSession YouTubeSession { get { return youtubeSession; } }
 		public bool HaltWhenAllCompleted { get; set; } = false;
 
 		public MainWindow ()
@@ -174,14 +175,6 @@ namespace Daramee.YouTubeUploader
 		{
 			if ( await youtubeSession.Authorization () )
 			{
-				buttonOpen.IsEnabled = true;
-				buttonConnect.IsEnabled = false;
-				buttonDisconnect.IsEnabled = true;
-				comboBoxDefaultPrivacyStatus.IsEnabled = true;
-				buttonAllUpload.IsEnabled = true;
-				haltWhenCompleteCheckBox.IsEnabled = true;
-				//buttonManagePlaylist.IsEnabled = true;
-
 				try
 				{
 					await categories.Refresh ( youtubeSession );
@@ -193,15 +186,7 @@ namespace Daramee.YouTubeUploader
 
 		private void ButtonDisconnect_Click ( object sender, RoutedEventArgs e )
 		{
-			categories = null;
 			youtubeSession.Unauthorization ();
-			buttonOpen.IsEnabled = false;
-			buttonConnect.IsEnabled = true;
-			buttonDisconnect.IsEnabled = false;
-			comboBoxDefaultPrivacyStatus.IsEnabled = false;
-			buttonAllUpload.IsEnabled = false;
-			haltWhenCompleteCheckBox.IsEnabled = false;
-			//buttonManagePlaylist.IsEnabled = false;
 		}
 
 		private void ButtonAllUpload_Click ( object sender, RoutedEventArgs e )

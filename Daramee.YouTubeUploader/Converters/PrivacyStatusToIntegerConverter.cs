@@ -11,14 +11,7 @@ namespace Daramee.YouTubeUploader.Converters
 {
 	public class PrivacyStatusToIntegerConverter : IValueConverter
 	{
-		public object Convert ( object value, Type targetType, object parameter, CultureInfo culture )
-		{
-			return ( int ) value;
-		}
-
-		public object ConvertBack ( object value, Type targetType, object parameter, CultureInfo culture )
-		{
-			return ( PrivacyStatus ) value;
-		}
+		public object Convert ( object value, Type targetType, object parameter, CultureInfo culture ) { return ( int ) value; }
+		public object ConvertBack ( object value, Type targetType, object parameter, CultureInfo culture ) { return ( PrivacyStatus ) value; }
 	}
 }

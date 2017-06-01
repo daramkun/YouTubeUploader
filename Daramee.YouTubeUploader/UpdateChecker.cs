@@ -44,7 +44,7 @@ namespace Daramee.YouTubeUploader
 						if ( checkUpdate == true )
 						{
 							if ( MessageBox.Show ( $"업데이트가 확인되었습니다.\n확인 버튼을 누르면 사이트로 이동합니다.\n\n현재 버전: {current}\n최신 버전: {version}", "안내",
-								MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.OK )
+								MessageBoxButton.OKCancel, MessageBoxImage.Information ) == MessageBoxResult.OK )
 								Process.Start ( "https://github.com/daramkun/YouTubeUploader/releases" );
 						}
 						else

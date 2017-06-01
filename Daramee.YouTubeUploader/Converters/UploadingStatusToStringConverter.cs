@@ -13,7 +13,7 @@ namespace Daramee.YouTubeUploader.Converters
 	{
 		public object Convert ( object value, Type targetType, object parameter, CultureInfo culture )
 		{
-			switch ( (UploadingStatus)value)
+			switch ( ( UploadingStatus ) value )
 			{
 				case UploadingStatus.Queued: return "업로드를 준비 중입니다.";
 				case UploadingStatus.PrepareUpload: return "업로드 시작을 준비합니다.";
