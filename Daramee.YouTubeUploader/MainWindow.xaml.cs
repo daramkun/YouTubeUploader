@@ -350,6 +350,9 @@ namespace Daramee.YouTubeUploader
 				case UploadResult.CannotStartUpload:
 					MessageBox.Show ( "업로드 작업을 시작할 수 없었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
 					break;
+				case UploadResult.FileSizeIsTooBig:
+					MessageBox.Show ( "업로드할 파일의 크기는 64GB를 넘길 수 없습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
+					break;
 			}
 		}
 	}

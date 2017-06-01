@@ -64,6 +64,7 @@ namespace Daramee.YouTubeUploader.Uploader
 		Succeed,
 		AlreadyUploading,
 		CannotAccesToFile,
+		FileSizeIsTooBig,
 		FailedUploadRequest,
 		CannotStartUpload,
 		UploadCanceled,
@@ -184,7 +185,15 @@ namespace Daramee.YouTubeUploader.Uploader
 			try
 			{
 				if ( mediaStream == null )
+				{
 					mediaStream = new FileStream ( HttpUtility.UrlDecode ( FileName.AbsolutePath ), FileMode.Open, FileAccess.Read, FileShare.Read );
+					if ( mediaStream.Length >= 68719476736 )
+					{
+						mediaStream.Dispose ();
+						mediaStream = null;
+						return UploadResult.FileSizeIsTooBig;
+					}
+				}
 			}
 			catch { UploadingStatus = UploadingStatus.UploadFailed; return UploadResult.CannotAccesToFile; }
 
