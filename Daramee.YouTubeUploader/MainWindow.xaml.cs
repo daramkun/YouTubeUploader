@@ -77,12 +77,6 @@ namespace Daramee.YouTubeUploader
 
 				if ( !incompleted )
 				{
-					/*var psi = new ProcessStartInfo ( "shutdown", "/s /t 10" )
-					{
-						CreateNoWindow = true,
-						UseShellExecute = false
-					};
-					Process.Start ( psi );*/
 					Dispatcher.BeginInvoke ( new Action ( () => { new HaltWindow ().ShowDialog (); } ) );
 				}
 			};
@@ -217,8 +211,8 @@ namespace Daramee.YouTubeUploader
 				if ( item.UploadingStatus == UploadingStatus.Queued || item.UploadingStatus == UploadingStatus.UploadFailed )
 				{
 					ThreadPool.QueueUserWorkItem ( async ( i ) => { await UploadItem ( i as UploadQueueItem ); }, item );
-					while ( item.UploadingStatus < UploadingStatus.UploadStart )
-						;
+					while ( item.UploadingStatus < UploadingStatus.Uploading )
+						Thread.Sleep ( 1 );
 				}
 			}
 		}
