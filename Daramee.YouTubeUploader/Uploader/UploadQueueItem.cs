@@ -118,7 +118,6 @@ namespace Daramee.YouTubeUploader.Uploader
 			youtubeSession = new WeakReference<YouTubeSession> ( session );
 
 			FileName = new Uri ( filename, UriKind.Absolute );
-			var fileInfo = new FileInfo ( filename );
 
 			video = new Google.Apis.YouTube.v3.Data.Video ()
 			{

@@ -189,17 +189,20 @@ namespace Daramee.YouTubeUploader
 			youtubeSession.Unauthorization ();
 		}
 
-		private void ButtonAllUpload_Click ( object sender, RoutedEventArgs e )
+		private async void ButtonAllUpload_Click ( object sender, RoutedEventArgs e )
 		{
-			foreach ( var item in uploadQueueListBox.ItemsSource as ObservableCollection<UploadQueueItem> )
+			await Task.Run ( new Action ( () =>
 			{
-				if ( item.UploadingStatus == UploadingStatus.Queued || item.UploadingStatus == UploadingStatus.UploadFailed )
+				foreach ( var item in uploadQueueListBox.ItemsSource as ObservableCollection<UploadQueueItem> )
 				{
-					ThreadPool.QueueUserWorkItem ( async ( i ) => { await UploadItem ( i as UploadQueueItem ); }, item );
-					while ( item.UploadingStatus < UploadingStatus.Uploading )
-						Thread.Sleep ( 1 );
+					if ( item.UploadingStatus == UploadingStatus.Queued || item.UploadingStatus == UploadingStatus.UploadFailed )
+					{
+						ThreadPool.QueueUserWorkItem ( async ( i ) => { await UploadItem ( i as UploadQueueItem ); }, item );
+						while ( item.UploadingStatus < UploadingStatus.Uploading )
+							Thread.Sleep ( 1 );
+					}
 				}
-			}
+			} ) );
 		}
 
 		private async void ButtonCheckUpdate_Click ( object sender, RoutedEventArgs e )
