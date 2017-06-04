@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -28,6 +29,7 @@ namespace Daramee.YouTubeUploader
 
 		public YouTubeSession YouTubeSession { get { return youtubeSession; } }
 		public bool HaltWhenAllCompleted { get; set; } = false;
+		public bool DeleteWhenComplete { get; set; } = false;
 
 		public MainWindow ()
 		{
@@ -39,83 +41,6 @@ namespace Daramee.YouTubeUploader
 			TaskbarItemInfo = new TaskbarItemInfo ();
 
 			uploadQueueListBox.ItemsSource = new ObservableCollection<UploadQueueItem> ();
-		}
-
-		private void AddItem ( string filename )
-		{
-			if ( !youtubeSession.IsAlreadyAuthorized )
-				return;
-
-			bool alreadyAdded = false;
-			Uri filenameUri = new Uri ( filename );
-			foreach ( var item in uploadQueueListBox.ItemsSource as IList<UploadQueueItem> )
-			{
-				if ( item.FileName.AbsolutePath == filenameUri.AbsolutePath )
-				{
-					alreadyAdded = true;
-					break;
-				}
-			}
-
-			if ( alreadyAdded )
-				return;
-
-			var queueItem = new UploadQueueItem ( youtubeSession, filename ) { PrivacyStatus = ( PrivacyStatus ) comboBoxDefaultPrivacyStatus.SelectedIndex };
-			queueItem.Completed += ( sender, e ) =>
-			{
-				if ( !HaltWhenAllCompleted )
-					return;
-
-				var list = uploadQueueListBox.ItemsSource as IList<UploadQueueItem>;
-				bool incompleted = false;
-				foreach ( var i in list )
-				{
-					if ( i.UploadingStatus == UploadingStatus.UploadCompleted || i.UploadingStatus == UploadingStatus.UpdateComplete )
-						continue;
-					incompleted = true;
-					break;
-				}
-
-				if ( !incompleted )
-				{
-					Dispatcher.BeginInvoke ( new Action ( () => { new HaltWindow ().ShowDialog (); } ) );
-				}
-			};
-			queueItem.Failed += async ( sender, e ) =>
-			{
-				if ( !HaltWhenAllCompleted )
-					return;
-
-				Thread.Sleep ( 1000 * 60 * 15 );
-
-				if ( !HaltWhenAllCompleted )
-					return;
-
-				await ( sender as UploadQueueItem ).UploadStart ();
-			};
-			queueItem.Uploading += ( sender, e ) =>
-			{
-				Dispatcher.BeginInvoke ( new Action ( () =>
-				{
-					double totalProgress = 0;
-					bool thereIsFailedItem = false;
-					int totalCount = 0;
-
-					foreach ( var item in uploadQueueListBox.ItemsSource as ObservableCollection<UploadQueueItem> )
-					{
-						if ( item.UploadingStatus == UploadingStatus.UploadFailed || item.UploadingStatus == UploadingStatus.UpdateFailed )
-							thereIsFailedItem = true;
-						else if ( item.UploadingStatus == UploadingStatus.Queued )
-							continue;
-						totalProgress += item.Progress;
-						++totalCount;
-					}
-
-					TaskbarItemInfo.ProgressState = thereIsFailedItem ? TaskbarItemProgressState.Paused : TaskbarItemProgressState.Normal;
-					TaskbarItemInfo.ProgressValue = totalProgress / totalCount;
-				} ) );
-			};
-			( uploadQueueListBox.ItemsSource as IList<UploadQueueItem> ).Add ( queueItem );
 		}
 
 		private async void Window_Loaded ( object sender, RoutedEventArgs e )
@@ -316,8 +241,7 @@ namespace Daramee.YouTubeUploader
 
 		private void HaltWhenCompleteCheckBox_Checked ( object sender, RoutedEventArgs e )
 		{
-			MessageBox.Show ( @"
-모든 업로드가 성공적으로 완료되면 30초 후
+			MessageBox.Show ( @"모든 업로드가 성공적으로 완료되면 30초 후
 자동으로 컴퓨터를 종료하는 기능입니다.
 
 이 기능이 켜져있으면서 업로드에 실패한 경우
@@ -329,6 +253,98 @@ namespace Daramee.YouTubeUploader
 종료 시점에 이 프로그램 외에 다른 프로그램이
 켜져있다면 강제 종료 전에는 컴퓨터가 제대로
 종료되지 않을 수 있습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Information );
+		}
+
+		private void DeleteWhenCompleteCheckBox_Checked ( object sender, RoutedEventArgs e )
+		{
+			MessageBox.Show ( @"영상 업로드가 성공적으로 완료되면 자동으로
+해당 영상 파일을 삭제하는 기능입니다.
+
+삭제할 영상이 휴지통으로 가지 않고 곧바로
+완전히 삭제되므로 이 기능을 사용할 때는
+주의해주세요.", "안내", MessageBoxButton.OK, MessageBoxImage.Information );
+		}
+
+		private void AddItem ( string filename )
+		{
+			if ( !youtubeSession.IsAlreadyAuthorized )
+				return;
+
+			bool alreadyAdded = false;
+			Uri filenameUri = new Uri ( filename );
+			foreach ( var item in uploadQueueListBox.ItemsSource as IList<UploadQueueItem> )
+			{
+				if ( item.FileName.AbsolutePath == filenameUri.AbsolutePath )
+				{
+					alreadyAdded = true;
+					break;
+				}
+			}
+
+			if ( alreadyAdded )
+				return;
+
+			var queueItem = new UploadQueueItem ( youtubeSession, filename ) { PrivacyStatus = ( PrivacyStatus ) comboBoxDefaultPrivacyStatus.SelectedIndex };
+			queueItem.Completed += ( sender, e ) =>
+			{
+				if ( DeleteWhenComplete )
+				{
+					File.Delete ( System.Web.HttpUtility.UrlDecode ( ( sender as UploadQueueItem ).FileName.AbsolutePath ) );
+				}
+
+				if ( HaltWhenAllCompleted )
+				{
+					var list = uploadQueueListBox.ItemsSource as IList<UploadQueueItem>;
+					bool incompleted = false;
+					foreach ( var i in list )
+					{
+						if ( i.UploadingStatus == UploadingStatus.UploadCompleted || i.UploadingStatus == UploadingStatus.UpdateComplete )
+							continue;
+						incompleted = true;
+						break;
+					}
+
+					if ( !incompleted )
+					{
+						Dispatcher.BeginInvoke ( new Action ( () => { new HaltWindow ().ShowDialog (); } ) );
+					}
+				}
+			};
+			queueItem.Failed += async ( sender, e ) =>
+			{
+				if ( !HaltWhenAllCompleted )
+					return;
+
+				Thread.Sleep ( 1000 * 60 * 15 );
+
+				if ( !HaltWhenAllCompleted )
+					return;
+
+				await ( sender as UploadQueueItem ).UploadStart ();
+			};
+			queueItem.Uploading += ( sender, e ) =>
+			{
+				Dispatcher.BeginInvoke ( new Action ( () =>
+				{
+					double totalProgress = 0;
+					bool thereIsFailedItem = false;
+					int totalCount = 0;
+
+					foreach ( var item in uploadQueueListBox.ItemsSource as ObservableCollection<UploadQueueItem> )
+					{
+						if ( item.UploadingStatus == UploadingStatus.UploadFailed || item.UploadingStatus == UploadingStatus.UpdateFailed )
+							thereIsFailedItem = true;
+						else if ( item.UploadingStatus == UploadingStatus.Queued )
+							continue;
+						totalProgress += item.Progress;
+						++totalCount;
+					}
+
+					TaskbarItemInfo.ProgressState = thereIsFailedItem ? TaskbarItemProgressState.Paused : TaskbarItemProgressState.Normal;
+					TaskbarItemInfo.ProgressValue = totalProgress / totalCount;
+				} ) );
+			};
+			( uploadQueueListBox.ItemsSource as IList<UploadQueueItem> ).Add ( queueItem );
 		}
 
 		private async Task UploadItem ( UploadQueueItem uploadQueueItem )

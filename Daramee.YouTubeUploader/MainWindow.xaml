@@ -209,6 +209,10 @@
 
                 <Separator />
 
+                <CheckBox x:Name="deleteWhenCompleteCheckBox" Content="완료 후 삭제" IsEnabled="{Binding YouTubeSession.IsAuthorized}"
+						  DataContext="{x:Static local:MainWindow.SharedWindow}"
+						  IsChecked="{Binding DeleteWhenComplete}" Checked="DeleteWhenCompleteCheckBox_Checked" />
+
                 <CheckBox x:Name="haltWhenCompleteCheckBox" Content="완료 후 종료" IsEnabled="{Binding YouTubeSession.IsAuthorized}"
 						  DataContext="{x:Static local:MainWindow.SharedWindow}"
 						  IsChecked="{Binding HaltWhenAllCompleted}" Checked="HaltWhenCompleteCheckBox_Checked" />
