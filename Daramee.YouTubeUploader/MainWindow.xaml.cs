@@ -55,7 +55,7 @@ namespace Daramee.YouTubeUploader
 				ButtonConnect_Click ( sender, e );
 
 			if ( await UpdateChecker.CheckUpdate () == true )
-				Title += " - 업데이트 있음";
+				NotifyManager.Notify ( "업데이트 확인", "Daram YouTube Uploader의 최신 버전이 있습니다.", NotifyType.Information );
 		}
 
 		private void Window_Closing ( object sender, System.ComponentModel.CancelEventArgs e )
@@ -171,8 +171,8 @@ namespace Daramee.YouTubeUploader
 			var item = ( sender as Button ).DataContext as UploadQueueItem;
 			if ( item.UploadingStatus == UploadingStatus.UploadFailed )
 			{
-				if ( MessageBox.Show ( "이 항목을 지우면 업로드를 이어서 하지 못하게 됩니다.\n정말로 이 항목을 목록에서 제거하시겠습니까?",
-					"안내", MessageBoxButton.YesNo, MessageBoxImage.Asterisk ) == MessageBoxResult.No )
+				if ( App.TaskDialogShow ( "이 항목을 목록에서 제거하시겠습니까?", "이 항목을 지우면 업로드를 이어서 하지 못하게 됩니다.",
+					"안내", VistaTaskDialogIcon.Warning, "예", "아니오" ).CustomButtonResult == 1 )
 					return;
 			}
 
@@ -202,7 +202,8 @@ namespace Daramee.YouTubeUploader
 
 			if ( Math.Abs ( ( bitmapSource.Width / ( double ) bitmapSource.Height ) - ( 16 / 9.0 ) ) >= float.Epsilon )
 			{
-				MessageBox.Show ( "이미지 크기가 16:9 비율이어야 합니다.", "알림", MessageBoxButton.OK, MessageBoxImage.Exclamation );
+				App.TaskDialogShow ( "이미지 크기가 16:9 비율이어야 합니다.", "클립보드 이미지 크기 비율이 16:9인지 확인해주세요. YouTube 권장 크기는 1280 * 720입니다.",
+					"알림", VistaTaskDialogIcon.Error, "확인" );
 				return;
 			}
 
