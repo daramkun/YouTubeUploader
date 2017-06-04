@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -63,6 +65,20 @@ namespace Daramee.YouTubeUploader.Notify
 
 	public sealed class Win8Notifier : INotifier
 	{
+		string tempPath = Path.Combine ( Path.GetTempPath (), "DaramYouTubeUploaderCache" );
+
+		public Win8Notifier ()
+		{
+			string [] temps = new [] { "WarningIcon", "InformationIcon", "ErrorIcon", "SucceedIcon" };
+			Directory.CreateDirectory ( tempPath );
+			foreach ( var tempName in temps )
+			{
+				string filename = Path.Combine ( tempPath, $"{tempName}.png" );
+				if ( !File.Exists ( filename ) )
+					File.WriteAllBytes ( filename, Resources.ResourceManager.GetObject ( tempName ) as byte [] );
+			}
+		}
+
 		public void Dispose ()
 		{
 
@@ -78,24 +94,30 @@ namespace Daramee.YouTubeUploader.Notify
 
 			if ( type != NotifyType.Message )
 			{
-				string imagePath = "file:///" + Path.GetFullPath ( "toastImageAndText.png" );
 				XmlNodeList imageElements = toastXml.GetElementsByTagName ( "image" );
 				imageElements [ 0 ].Attributes.GetNamedItem ( "src" ).NodeValue = GetIconPath ( type );
 			}
 
 			ToastNotification toast = new ToastNotification ( toastXml );
+			toast.Activated += ( sender, e ) =>
+			{
+				System.Windows.Application.Current.Dispatcher.BeginInvoke ( new Action ( () =>
+				{
+					System.Windows.Application.Current.MainWindow.Activate ();
+				} ) );
+			};
 			
 			ToastNotificationManager.CreateToastNotifier ( "Daram YouTube Uploader" ).Show ( toast );
 		}
 
-		private object GetIconPath ( NotifyType type )
+		private string GetIconPath ( NotifyType type )
 		{
 			switch ( type )
 			{
-				case NotifyType.Warning: return "https://github.com/daramkun/YouTubeUploader/blob/master/DocumentResources/WarningIcon.png";
-				case NotifyType.Information: return "https://github.com/daramkun/YouTubeUploader/blob/master/DocumentResources/InformationIcon.png";
-				case NotifyType.Error: return "https://github.com/daramkun/YouTubeUploader/blob/master/DocumentResources/ErrorIcon.png";
-				case NotifyType.Succeed: return "https://github.com/daramkun/YouTubeUploader/blob/master/DocumentResources/SucceedIcon.png";
+				case NotifyType.Warning: return new Uri ( Path.GetFullPath ( Path.Combine ( tempPath, "WarningIcon.png" ) ) ).AbsoluteUri;
+				case NotifyType.Information: return new Uri ( Path.GetFullPath ( Path.Combine ( tempPath, "InformationIcon.png" ) ) ).AbsoluteUri;
+				case NotifyType.Error: return new Uri ( Path.GetFullPath ( Path.Combine ( tempPath, "ErrorIcon.png" ) ) ).AbsoluteUri;
+				case NotifyType.Succeed: return new Uri ( Path.GetFullPath ( Path.Combine ( tempPath, "SucceedIcon.png" ) ) ).AbsoluteUri;
 				default: return null;
 			}
 		}
@@ -107,7 +129,7 @@ namespace Daramee.YouTubeUploader.Notify
 
 		public static void Initialize ()
 		{
-			if ( Environment.OSVersion.Version.Major <= 8 )
+			if ( Environment.OSVersion.Version.Major >= 8 )
 				notifier = new Win8Notifier ();
 			else
 				notifier = new LegacyNotifier ();

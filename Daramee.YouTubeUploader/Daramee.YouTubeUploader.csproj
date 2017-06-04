@@ -532,6 +532,10 @@
     <None Include="DaramYouTubeUploader.pfx" />
     <None Include="ExternalLibs\Json.NET\LICENSE.md" />
     <None Include="ExternalLibs\Json.NET\README.md" />
+    <None Include="Resources\ErrorIcon" />
+    <None Include="Resources\InformationIcon" />
+    <None Include="Resources\SucceedIcon" />
+    <None Include="Resources\WarningIcon" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
