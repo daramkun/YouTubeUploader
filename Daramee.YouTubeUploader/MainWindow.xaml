@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Daramee.YouTubeUploader"
         xmlns:conv="clr-namespace:Daramee.YouTubeUploader.Converters"
 		xmlns:uploader="clr-namespace:Daramee.YouTubeUploader.Uploader"
+        xmlns:notify="clr-namespace:Daramee.YouTubeUploader.Notify"
 		mc:Ignorable="d" Icon="./Resources/MainIcon.ico"
 		ResizeMode="CanMinimize"
         Title="다람 유튜브 업로더" Height="600" Width="860"
@@ -210,6 +211,10 @@
 
                 <Separator />
 
+                <CheckBox x:Name="notificationToggleCheckBox" Content="알림" IsEnabled="{Binding YouTubeSession.IsAuthorized}"
+                          DataContext="{x:Static notify:NotifyManager.Notifier}"
+						  IsChecked="{Binding IsEnabledNotification, Mode=TwoWay}" />
+                
                 <CheckBox x:Name="deleteWhenCompleteCheckBox" Content="완료 후 삭제" IsEnabled="{Binding YouTubeSession.IsAuthorized}"
 						  DataContext="{x:Static local:MainWindow.SharedWindow}"
 						  IsChecked="{Binding DeleteWhenComplete}" Checked="DeleteWhenCompleteCheckBox_Checked" />

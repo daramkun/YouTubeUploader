@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -24,12 +26,15 @@ namespace Daramee.YouTubeUploader.Notify
 
 	public interface INotifier : IDisposable
 	{
+		bool IsEnabledNotification { get; set; }
 		void Notify ( string title, string text, NotifyType type );
 	}
 
 	public sealed class LegacyNotifier : INotifier
 	{
 		NotifyIcon notifyIcon;
+
+		public bool IsEnabledNotification { get; set; } = true;
 
 		public LegacyNotifier ()
 		{
@@ -38,6 +43,13 @@ namespace Daramee.YouTubeUploader.Notify
 				Icon = Resources.MainIcon,
 				Text = "다람 유튜브 업로더",
 				Visible = true,
+			};
+			notifyIcon.BalloonTipClicked += ( sender, e ) =>
+			{
+				System.Windows.Application.Current.Dispatcher.BeginInvoke ( new Action ( () =>
+				{
+					System.Windows.Application.Current.MainWindow.Activate ();
+				} ) );
 			};
 		}
 
@@ -48,6 +60,7 @@ namespace Daramee.YouTubeUploader.Notify
 
 		public void Notify ( string title, string text, NotifyType type )
 		{
+			if ( !IsEnabledNotification ) return;
 			notifyIcon.ShowBalloonTip ( 10, title, text, ConvertIcon ( type ) );
 		}
 
@@ -65,7 +78,9 @@ namespace Daramee.YouTubeUploader.Notify
 
 	public sealed class Win8Notifier : INotifier
 	{
-		string tempPath = Path.Combine ( Path.GetTempPath (), "DaramYouTubeUploaderCache" );
+		static readonly string tempPath = Path.Combine ( Path.GetTempPath (), "DaramYouTubeUploaderCache" );
+
+		public bool IsEnabledNotification { get; set; } = true;
 
 		public Win8Notifier ()
 		{
@@ -86,8 +101,10 @@ namespace Daramee.YouTubeUploader.Notify
 
 		public void Notify ( string title, string text, NotifyType type )
 		{
+			if ( !IsEnabledNotification ) return;
+
 			XmlDocument toastXml = ToastNotificationManager.GetTemplateContent ( type != NotifyType.Message ? ToastTemplateType.ToastImageAndText04 : ToastTemplateType.ToastText04 );
-			
+
 			XmlNodeList stringElements = toastXml.GetElementsByTagName ( "text" );
 			stringElements [ 0 ].AppendChild ( toastXml.CreateTextNode ( title ) );
 			stringElements [ 1 ].AppendChild ( toastXml.CreateTextNode ( text ) );
@@ -106,7 +123,7 @@ namespace Daramee.YouTubeUploader.Notify
 					System.Windows.Application.Current.MainWindow.Activate ();
 				} ) );
 			};
-			
+
 			ToastNotificationManager.CreateToastNotifier ( "Daram YouTube Uploader" ).Show ( toast );
 		}
 
@@ -125,24 +142,24 @@ namespace Daramee.YouTubeUploader.Notify
 
 	public static class NotifyManager
 	{
-		static INotifier notifier;
+		public static INotifier Notifier { get; private set; }
 
 		public static void Initialize ()
 		{
 			if ( Environment.OSVersion.Version.Major >= 8 )
-				notifier = new Win8Notifier ();
+				Notifier = new Win8Notifier ();
 			else
-				notifier = new LegacyNotifier ();
+				Notifier = new LegacyNotifier ();
 		}
 
 		public static void Uninitialize ()
 		{
-			notifier.Dispose ();
+			Notifier.Dispose ();
 		}
 
 		public static void Notify ( string title, string text, NotifyType type )
 		{
-			notifier.Notify ( title, text, type );
+			Notifier.Notify ( title, text, type );
 		}
 	}
 }

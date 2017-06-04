@@ -49,6 +49,7 @@ namespace Daramee.YouTubeUploader
 		private async void Window_Loaded ( object sender, RoutedEventArgs e )
 		{
 			NotifyManager.Initialize ();
+			notificationToggleCheckBox.DataContext = NotifyManager.Notifier;
 
 			if ( youtubeSession.IsAlreadyAuthorized )
 				ButtonConnect_Click ( sender, e );
