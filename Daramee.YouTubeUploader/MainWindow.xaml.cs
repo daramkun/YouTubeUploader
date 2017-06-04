@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -12,8 +13,10 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shell;
+using Daramee.YouTubeUploader.Notify;
 using Daramee.YouTubeUploader.Uploader;
 using Microsoft.Win32;
+using TaskDialogInterop;
 
 namespace Daramee.YouTubeUploader
 {
@@ -45,6 +48,8 @@ namespace Daramee.YouTubeUploader
 
 		private async void Window_Loaded ( object sender, RoutedEventArgs e )
 		{
+			NotifyManager.Initialize ();
+
 			if ( youtubeSession.IsAlreadyAuthorized )
 				ButtonConnect_Click ( sender, e );
 
@@ -66,13 +71,19 @@ namespace Daramee.YouTubeUploader
 
 			if ( incompleted )
 			{
-				var result = MessageBox.Show ( "아직 업로드가 끝나지 않았습니다.\n그대로 종료하시겠습니까?", "안내", MessageBoxButton.YesNo, MessageBoxImage.Asterisk );
-				if ( result == MessageBoxResult.No )
+				var result = App.TaskDialogShow ( "종료하시겠습니까?", "아직 업로드가 완전히 끝나지 않았습니다. 종료하실 경우 이어서 업로드 하기가 불가능합니다.", "안내",
+					VistaTaskDialogIcon.Warning, "예", "아니오" );
+				if ( result.CustomButtonResult == 1 )
 				{
 					e.Cancel = true;
 					return;
 				}
 			}
+		}
+
+		private void Window_Closed ( object sender, EventArgs e )
+		{
+			NotifyManager.Uninitialize ();
 		}
 
 		public void Dispose ()
@@ -84,7 +95,7 @@ namespace Daramee.YouTubeUploader
 		{
 			OpenFileDialog ofd = new OpenFileDialog ()
 			{
-				Filter = "All Available Files(*.mp4;*.mkv;*.webm;*.avi;*.mov;*.flv;*.wmv;*.3gp)|*.mp4;*.mkv;*.webm;*.avi;*.mov;*.flv;*.wmv;*.3gp",
+				Filter = "가능한 모든 파일(*.mp4;*.mkv;*.webm;*.avi;*.mov;*.flv;*.wmv;*.3gp)|*.mp4;*.mkv;*.webm;*.avi;*.mov;*.flv;*.wmv;*.3gp",
 				Multiselect = true
 			};
 			if ( ofd.ShowDialog () == false )
@@ -241,28 +252,18 @@ namespace Daramee.YouTubeUploader
 
 		private void HaltWhenCompleteCheckBox_Checked ( object sender, RoutedEventArgs e )
 		{
-			MessageBox.Show ( @"모든 업로드가 성공적으로 완료되면 30초 후
-자동으로 컴퓨터를 종료하는 기능입니다.
+			App.TaskDialogShow ( "이 기능은 모든 업로드 성공적 완료 30초 후에 자동으로 컴퓨터를 종료합니다.",
+				@"이 기능이 켜져있으면서 업로드에 실패한 경우 15분 후 실패한 업로드를 재업로드 시도합니다.
 
-이 기능이 켜져있으면서 업로드에 실패한 경우
-15분 후 실패한 업로드를 재업로드 시도합니다.
+30초 후에는 추가 안내 없이 종료를 시작하므로 주의하십시오.
 
-30초 후에는 추가 안내 없이 종료를 시작하므로
-주의하십시오.
-
-종료 시점에 이 프로그램 외에 다른 프로그램이
-켜져있다면 강제 종료 전에는 컴퓨터가 제대로
-종료되지 않을 수 있습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Information );
+종료 시점에 이 프로그램 외에 다른 프로그램이 켜져있다면 강제 종료 전에는 컴퓨터가 제대로 종료되지 않을 수 있습니다.", "안내", VistaTaskDialogIcon.Information, "확인" );
 		}
 
 		private void DeleteWhenCompleteCheckBox_Checked ( object sender, RoutedEventArgs e )
 		{
-			MessageBox.Show ( @"영상 업로드가 성공적으로 완료되면 자동으로
-해당 영상 파일을 삭제하는 기능입니다.
-
-삭제할 영상이 휴지통으로 가지 않고 곧바로
-완전히 삭제되므로 이 기능을 사용할 때는
-주의해주세요.", "안내", MessageBoxButton.OK, MessageBoxImage.Information );
+			App.TaskDialogShow ( "이 기능은 업로드 완료 후 해당 파일을 삭제합니다.",
+				"삭제할 영상이 휴지통으로 가지 않고 곧바로 완전히 삭제되므로 이 기능을 사용할 때는 주의해주세요.", "안내", VistaTaskDialogIcon.Information, "확인" );
 		}
 
 		private void AddItem ( string filename )
@@ -351,26 +352,36 @@ namespace Daramee.YouTubeUploader
 		{
 			if ( uploadQueueItem.Title.Trim ().Length == 0 )
 			{
-				MessageBox.Show ( "영상 제목은 반드시 채워져야 합니다.", "오류", MessageBoxButton.OK, MessageBoxImage.Error );
+				App.TaskDialogShow ( "입력에 오류가 있습니다.", "영상 제목은 반드시 채워져야 합니다.", "오류", VistaTaskDialogIcon.Error, "확인" );
 				return;
 			}
 
 			switch ( await uploadQueueItem.UploadStart () )
 			{
+				case UploadResult.Succeed:
+					NotifyManager.Notify ( "안내",
+						$"{uploadQueueItem.Title}({Path.GetFileName ( HttpUtility.UrlDecode ( uploadQueueItem.FileName.AbsolutePath ) )})에 대한 업로드를 성공했습니다.",
+						NotifyType.Succeed );
+					break;
+				case UploadResult.UpdateFailed:
+					NotifyManager.Notify ( "안내",
+						$"{uploadQueueItem.Title}({Path.GetFileName ( HttpUtility.UrlDecode ( uploadQueueItem.FileName.AbsolutePath ) )})에 대한 업로드를 실패했습니다.\n이어서 업로드가 가능합니다.",
+						NotifyType.Warning );
+					break;
 				case UploadResult.AlreadyUploading:
-					MessageBox.Show ( "이미 업로드가 시작되었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
+					NotifyManager.Notify ( "오류", "이미 업로드가 시작되었습니다.", NotifyType.Error );
 					break;
 				case UploadResult.CannotAccesToFile:
-					MessageBox.Show ( "영상 파일에 접근할 수 없었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
+					NotifyManager.Notify ( "오류", "영상 파일에 접근할 수 없었습니다.", NotifyType.Error );
 					break;
 				case UploadResult.FailedUploadRequest:
-					MessageBox.Show ( "업로드 요청을 시작할 수 없었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
+					NotifyManager.Notify ( "오류", "업로드 요청을 시작할 수 없었습니다.", NotifyType.Error );
 					break;
 				case UploadResult.CannotStartUpload:
-					MessageBox.Show ( "업로드 작업을 시작할 수 없었습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
+					NotifyManager.Notify ( "오류", "업로드 작업을 시작할 수 없었습니다.", NotifyType.Error );
 					break;
 				case UploadResult.FileSizeIsTooBig:
-					MessageBox.Show ( "업로드할 파일의 크기는 64GB를 넘길 수 없습니다.", "안내", MessageBoxButton.OK, MessageBoxImage.Error );
+					NotifyManager.Notify ( "오류", "업로드할 파일의 크기는 64GB를 넘길 수 없습니다.", NotifyType.Error );
 					break;
 			}
 		}

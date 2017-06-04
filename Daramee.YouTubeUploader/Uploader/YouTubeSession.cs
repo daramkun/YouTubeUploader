@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -76,8 +77,8 @@ namespace Daramee.YouTubeUploader.Uploader
 
 			YouTubeService = new YouTubeService ( new BaseClientService.Initializer ()
 			{
-				ApiKey = "AIzaSyCvMp_S7s1vNhrfCZuOEUtSk7tcEuuKcpE",
-				ApplicationName = "YouTube Uploader",
+				ApiKey = File.Exists ( "api_key.txt" ) ? File.ReadAllText ( "api_key.txt" ) : "AIzaSyCvMp_S7s1vNhrfCZuOEUtSk7tcEuuKcpE",
+				ApplicationName = "DaramYouTubeUploader",
 				GZipEnabled = true,
 				HttpClientInitializer = credential,
 				HttpClientFactory = new MyHttpClientFactory (),
@@ -123,6 +124,7 @@ namespace Daramee.YouTubeUploader.Uploader
 				};
 
 				var client = new ConfigurableHttpClient ( configurableHandler );
+				client.DefaultRequestHeaders.Referrer = new Uri ( "https://youtubeuploader.daram.me" );
 				foreach ( var initializer in args.Initializers )
 				{
 					initializer.Initialize ( client );

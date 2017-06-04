@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using TaskDialogInterop;
 
 namespace Daramee.YouTubeUploader
 {
@@ -40,7 +41,8 @@ namespace Daramee.YouTubeUploader
 
 			if ( Math.Abs ( ( bitmapSource.PixelWidth / ( double ) bitmapSource.PixelHeight ) - ( 16 / 9.0 ) ) >= float.Epsilon )
 			{
-				MessageBox.Show ( "이미지 크기가 16:9 비율이어야 합니다.", "알림", MessageBoxButton.OK, MessageBoxImage.Exclamation );
+				App.TaskDialogShow ( "이미지 크기가 16:9 비율이어야 합니다.", "클립보드 이미지 크기 비율이 16:9인지 확인해주세요. YouTube 권장 크기는 1280 * 720입니다.",
+					"알림", VistaTaskDialogIcon.Error, "확인" );
 				return null;
 			}
 
