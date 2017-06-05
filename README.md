@@ -1,4 +1,4 @@
-# Daram YouTube Uploader [![version](https://img.shields.io/badge/version-1.05-orange.svg)](https://shields.io)
+# Daram YouTube Uploader [![version](https://img.shields.io/badge/version-1.07-orange.svg)](https://shields.io)
 YouTube Uploader Application. Only Korean written.
 
 ![v1.05](./DocumentResources/DaramYouTubeUploader_v105.png)
@@ -11,6 +11,9 @@ YouTube Uploader Application. Only Korean written.
 이 프로그램은 다음과 같은 기능을 가지고 있습니다.
 
 * 여러 개의 동영상 동시 업로드
-* 모든 동영상 업로드 완료 후 시스템 자동 종료
 * 적용할 썸네일 이미지를 클립보드에서 가져오는 기능
 * 업로드 할 동영상 작게 미리보기
+* 업로드 완료까지 남은 시간 보기
+* 업로드 완료 또는 실패 시 알림 옵션
+* 업로드 완료 후 파일 자동 삭제 옵션
+* 모든 동영상 업로드 완료 후 시스템 자동 종료 옵션
