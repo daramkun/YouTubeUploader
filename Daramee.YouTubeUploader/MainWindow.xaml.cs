@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shell;
-using Daramee.YouTubeUploader.Notify;
+using Daramee.DaramCommonLib;
 using Daramee.YouTubeUploader.Uploader;
 using Microsoft.Win32;
 using TaskDialogInterop;
@@ -27,6 +28,7 @@ namespace Daramee.YouTubeUploader
 	{
 		public static MainWindow SharedWindow { get; private set; }
 
+		UpdateChecker updateChecker;
 		YouTubeSession youtubeSession = new YouTubeSession ( Environment.CurrentDirectory );
 		Categories categories = new Categories ();
 
@@ -39,6 +41,7 @@ namespace Daramee.YouTubeUploader
 			SharedWindow = this;
 
 			RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
+			updateChecker = new UpdateChecker ( "v{0}.{1}{2}" );
 
 			InitializeComponent ();
 			TaskbarItemInfo = new TaskbarItemInfo ();
@@ -48,14 +51,43 @@ namespace Daramee.YouTubeUploader
 
 		private async void Window_Loaded ( object sender, RoutedEventArgs e )
 		{
-			NotifyManager.Initialize ();
-			notificationToggleCheckBox.DataContext = NotifyManager.Notifier;
+			InitializeNotificatorImages ();
+			NotificatorManager.Initialize ( new NotificatorInitializer ()
+			{
+				Title = "다람 유튜브 업로더",
+				Icon = Properties.Resources.MainIcon,
+
+				WarningTypeImagePath = Path.Combine ( tempPath, "WarningIcon.png" ),
+				InformationTypeImagePath = Path.Combine ( tempPath, "InformationIcon.png" ),
+				ErrorTypeImagePath = Path.Combine ( tempPath, "ErrorIcon.png" ),
+				CustomTypeImagePath1 = Path.Combine ( tempPath, "SucceedIcon.png" ),
+			} );
+
+			notificationToggleCheckBox.DataContext = NotificatorManager.Notificator;
+			// IsChecked = "{Binding IsEnabledNotification, Mode=TwoWay}"
+			notificationToggleCheckBox.SetBinding ( CheckBox.IsCheckedProperty, new Binding ( nameof ( NotificatorManager.Notificator.IsEnabledNotification ) )
+			{
+				Mode = BindingMode.TwoWay,
+			} );
 
 			if ( youtubeSession.IsAlreadyAuthorized )
 				ButtonConnect_Click ( sender, e );
 
-			if ( await UpdateChecker.CheckUpdate () == true )
-				NotifyManager.Notify ( "업데이트 확인", "Daram YouTube Uploader의 최신 버전이 있습니다.", NotifyType.Information );
+			if ( await updateChecker.CheckUpdate () == true )
+				NotificatorManager.Notify ( "업데이트 확인", "Daram YouTube Uploader의 최신 버전이 있습니다.", NotifyType.Information );
+		}
+
+		static readonly string tempPath = Path.Combine ( Path.GetTempPath (), "DaramYouTubeUploaderCache" );
+		private void InitializeNotificatorImages ()
+		{
+			string [] temps = new [] { "WarningIcon", "InformationIcon", "ErrorIcon", "SucceedIcon" };
+			Directory.CreateDirectory ( tempPath );
+			foreach ( var tempName in temps )
+			{
+				string filename = Path.Combine ( tempPath, $"{tempName}.png" );
+				if ( !File.Exists ( filename ) )
+					File.WriteAllBytes ( filename, Properties.Resources.ResourceManager.GetObject ( tempName ) as byte [] );
+			}
 		}
 
 		private void Window_Closing ( object sender, System.ComponentModel.CancelEventArgs e )
@@ -84,7 +116,7 @@ namespace Daramee.YouTubeUploader
 
 		private void Window_Closed ( object sender, EventArgs e )
 		{
-			NotifyManager.Uninitialize ();
+			NotificatorManager.Uninitialize ();
 		}
 
 		public void Dispose ()
@@ -144,7 +176,19 @@ namespace Daramee.YouTubeUploader
 
 		private async void ButtonCheckUpdate_Click ( object sender, RoutedEventArgs e )
 		{
-			await UpdateChecker.CheckUpdate ( true );
+			if ( await updateChecker.CheckUpdate () == true )
+			{
+				if ( App.TaskDialogShow ( $"업데이트가 확인되었습니다.",
+					$"현재 버전: {updateChecker.ThisVersion}\n최신 버전: {await updateChecker.GetNewestVersion ()}", "안내",
+					VistaTaskDialogIcon.Information, "확인", "업데이트" ).CustomButtonResult == 1 )
+					updateChecker.ShowDownloadPage ();
+			}
+			else
+			{
+				App.TaskDialogShow ( "현재 버전이 최신 버전입니다.",
+					$"현재 버전: {updateChecker.ThisVersion}\n최신 버전: {await updateChecker.GetNewestVersion ()}", "안내",
+					VistaTaskDialogIcon.Information, "확인" );
+			}
 		}
 
 		private void ButtonPlayItem_Click ( object sender, RoutedEventArgs e )
@@ -194,26 +238,29 @@ namespace Daramee.YouTubeUploader
 			if ( ofd.ShowDialog () == false )
 				return;
 
-			BitmapImage bitmapSource = new BitmapImage ();
-			bitmapSource.BeginInit ();
-			bitmapSource.UriSource = new Uri ( ofd.FileName );
-			bitmapSource.EndInit ();
-			bitmapSource.Freeze ();
+			BitmapSource bitmapSource = ImageSourceHelper.GetImageFromFile ( ofd.FileName );
+			SetThumbnailImage ( ( sender as Hyperlink ).DataContext as UploadQueueItem, bitmapSource );
+		}
 
-			if ( Math.Abs ( ( bitmapSource.Width / ( double ) bitmapSource.Height ) - ( 16 / 9.0 ) ) >= float.Epsilon )
+		private void HyperlinkClipboard_Click ( object sender, RoutedEventArgs e )
+		{
+			BitmapSource bitmapSource = ImageSourceHelper.GetClipboardImage ();
+			SetThumbnailImage ( ( sender as Hyperlink ).DataContext as UploadQueueItem, bitmapSource );
+		}
+
+		private void SetThumbnailImage ( UploadQueueItem uploadQueueItem, BitmapSource bitmapSource )
+		{
+			if ( bitmapSource == null || uploadQueueItem == null )
+				return;
+
+			if ( Math.Abs ( ( bitmapSource.Width / bitmapSource.Height ) - ( 16 / 9.0 ) ) >= float.Epsilon )
 			{
 				App.TaskDialogShow ( "이미지 크기가 16:9 비율이어야 합니다.", "클립보드 이미지 크기 비율이 16:9인지 확인해주세요. YouTube 권장 크기는 1280 * 720입니다.",
 					"알림", VistaTaskDialogIcon.Error, "확인" );
 				return;
 			}
 
-			( ( sender as Hyperlink ).DataContext as UploadQueueItem ).Thumbnail = bitmapSource;
-		}
-
-		private void HyperlinkClipboard_Click ( object sender, RoutedEventArgs e )
-		{
-			BitmapSource bitmapSource = ClipboardImageUtility.GetClipboardImage ();
-			( ( sender as Hyperlink ).DataContext as UploadQueueItem ).Thumbnail = bitmapSource;
+			uploadQueueItem.Thumbnail = bitmapSource;
 		}
 
 		private void HyperlinkEditTags_Click ( object sender, RoutedEventArgs e )
@@ -361,29 +408,29 @@ namespace Daramee.YouTubeUploader
 			switch ( await uploadQueueItem.UploadStart () )
 			{
 				case UploadResult.Succeed:
-					NotifyManager.Notify ( "안내",
+					NotificatorManager.Notify ( "안내",
 						$"{uploadQueueItem.Title}({Path.GetFileName ( HttpUtility.UrlDecode ( uploadQueueItem.FileName.AbsolutePath ) )})에 대한 업로드를 성공했습니다.",
-						NotifyType.Succeed );
+						NotifyType.CustomType1 );
 					break;
 				case UploadResult.UpdateFailed:
-					NotifyManager.Notify ( "안내",
+					NotificatorManager.Notify ( "안내",
 						$"{uploadQueueItem.Title}({Path.GetFileName ( HttpUtility.UrlDecode ( uploadQueueItem.FileName.AbsolutePath ) )})에 대한 업로드를 실패했습니다.\n이어서 업로드가 가능합니다.",
 						NotifyType.Warning );
 					break;
 				case UploadResult.AlreadyUploading:
-					NotifyManager.Notify ( "오류", "이미 업로드가 시작되었습니다.", NotifyType.Error );
+					NotificatorManager.Notify ( "오류", "이미 업로드가 시작되었습니다.", NotifyType.Error );
 					break;
 				case UploadResult.CannotAccesToFile:
-					NotifyManager.Notify ( "오류", "영상 파일에 접근할 수 없었습니다.", NotifyType.Error );
+					NotificatorManager.Notify ( "오류", "영상 파일에 접근할 수 없었습니다.", NotifyType.Error );
 					break;
 				case UploadResult.FailedUploadRequest:
-					NotifyManager.Notify ( "오류", "업로드 요청을 시작할 수 없었습니다.", NotifyType.Error );
+					NotificatorManager.Notify ( "오류", "업로드 요청을 시작할 수 없었습니다.", NotifyType.Error );
 					break;
 				case UploadResult.CannotStartUpload:
-					NotifyManager.Notify ( "오류", "업로드 작업을 시작할 수 없었습니다.", NotifyType.Error );
+					NotificatorManager.Notify ( "오류", "업로드 작업을 시작할 수 없었습니다.", NotifyType.Error );
 					break;
 				case UploadResult.FileSizeIsTooBig:
-					NotifyManager.Notify ( "오류", "업로드할 파일의 크기는 64GB를 넘길 수 없습니다.", NotifyType.Error );
+					NotificatorManager.Notify ( "오류", "업로드할 파일의 크기는 64GB를 넘길 수 없습니다.", NotifyType.Error );
 					break;
 			}
 		}

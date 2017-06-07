@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Daramee.YouTubeUploader"
         xmlns:conv="clr-namespace:Daramee.YouTubeUploader.Converters"
 		xmlns:uploader="clr-namespace:Daramee.YouTubeUploader.Uploader"
-        xmlns:notify="clr-namespace:Daramee.YouTubeUploader.Notify"
+        xmlns:dcl="clr-namespace:Daramee.DaramCommonLib.Converters;assembly=Daramee.DaramCommonLib"
 		mc:Ignorable="d" Icon="./Resources/MainIcon.ico"
 		ResizeMode="CanMinimize"
         Title="다람 유튜브 업로더" Height="600" Width="860"
@@ -18,16 +18,7 @@
         <conv:UploadingStatusToBooleanForRemoveConverter x:Key="uploadingStatusToBooleanForRemoveConverter" />
         <conv:UploadingStatusToBooleanForPlaylistEditConverter x:Key="uploadingStatusToBooleanForPlaylistEditConverter" />
         <conv:UploadingStatusToColorConverter x:Key="uploadingStatusToColorConverter" />
-        <conv:BooleanLogicalNotConverter x:Key="booleanLogicalNotConverter" />
-
-        <!-- 툴바 버튼 이미지 속성 -->
-        <Style x:Key="toolBarImages" TargetType="Image">
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Opacity" Value="0.5" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+        <dcl:BooleanInvertConverter x:Key="booleanInvertConverter" />
 
         <!-- 리스트박스 아이템 템플릿 -->
         <DataTemplate x:Key="listBoxItem">
@@ -187,16 +178,16 @@
         <ToolBarTray ClipToBounds="False" DataContext="{x:Static local:MainWindow.SharedWindow}">
             <ToolBar Focusable="True" ToolBarTray.IsLocked="True">
                 <Button x:Name="buttonOpen" Click="ButtonOpen_Click" IsEnabled="{Binding YouTubeSession.IsAuthorized}" ToolTip="열기">
-                    <Image Source="./Resources/folder_add.png" Style="{StaticResource toolBarImages}" />
+                    <Image Source="./Resources/folder_add.png" Style="{StaticResource ToolBarButtonImageStyle}" />
                 </Button>
 
                 <Separator />
 
-                <Button x:Name="buttonConnect" Click="ButtonConnect_Click" IsEnabled="{Binding YouTubeSession.IsAuthorized, Converter={StaticResource booleanLogicalNotConverter}}" ToolTip="유튜브 계정 연결">
-                    <Image Source="./Resources/connect.png" Style="{StaticResource toolBarImages}" />
+                <Button x:Name="buttonConnect" Click="ButtonConnect_Click" IsEnabled="{Binding YouTubeSession.IsAuthorized, Converter={StaticResource booleanInvertConverter}}" ToolTip="유튜브 계정 연결">
+                    <Image Source="./Resources/connect.png" Style="{StaticResource ToolBarButtonImageStyle}" />
                 </Button>
                 <Button x:Name="buttonDisconnect" Click="ButtonDisconnect_Click" IsEnabled="{Binding YouTubeSession.IsAuthorized}" ToolTip="유튜브 계정 연결 해제">
-                    <Image Source="./Resources/disconnect.png" Style="{StaticResource toolBarImages}" />
+                    <Image Source="./Resources/disconnect.png" Style="{StaticResource ToolBarButtonImageStyle}" />
                 </Button>
 
                 <Separator />
@@ -206,14 +197,12 @@
                     <ComboBoxItem Content="비공개" />
                 </ComboBox>
                 <Button x:Name="buttonAllUpload" Click="ButtonAllUpload_Click" IsEnabled="{Binding YouTubeSession.IsAuthorized}" ToolTip="모든 파일 업로드">
-                    <Image Source="./Resources/application_cascade_get.png" Style="{StaticResource toolBarImages}" />
+                    <Image Source="./Resources/application_cascade_get.png" Style="{StaticResource ToolBarButtonImageStyle}" />
                 </Button>
 
                 <Separator />
 
-                <CheckBox x:Name="notificationToggleCheckBox" Content="알림" IsEnabled="{Binding YouTubeSession.IsAuthorized}"
-                          DataContext="{x:Static notify:NotifyManager.Notifier}"
-						  IsChecked="{Binding IsEnabledNotification, Mode=TwoWay}" />
+                <CheckBox x:Name="notificationToggleCheckBox" Content="알림" />
                 
                 <CheckBox x:Name="deleteWhenCompleteCheckBox" Content="완료 후 삭제" IsEnabled="{Binding YouTubeSession.IsAuthorized}"
 						  DataContext="{x:Static local:MainWindow.SharedWindow}"
@@ -232,7 +221,7 @@
                 <Separator />
 
                 <Button ToolTip="업데이트 확인" Click="ButtonCheckUpdate_Click">
-                    <Image Source="./Resources/application_lightning.png" Style="{StaticResource toolBarImages}" />
+                    <Image Source="./Resources/application_lightning.png" Style="{StaticResource ToolBarButtonImageStyle}" />
                 </Button>
             </ToolBar>
         </ToolBarTray>

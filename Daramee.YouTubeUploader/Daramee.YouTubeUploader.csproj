@@ -36,7 +36,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;HAVE_ASYNC;HAVE_BINARY_FORMATTER;HAVE_BINARY_SERIALIZATION;HAVE_CHAR_TO_LOWER_WITH_CULTURE;HAVE_CHAR_TO_STRING_WITH_CULTURE;HAVE_COMPONENT_MODEL;HAVE_CONCURRENT_COLLECTIONS;HAVE_COVARIANT_GENERICS;HAVE_DATA_CONTRACTS;HAVE_DATE_TIME_OFFSET;HAVE_DYNAMIC;HAVE_EMPTY_TYPES;HAVE_ENTITY_FRAMEWORK;HAVE_EXPRESSIONS;HAVE_FSHARP_TYPES;HAVE_FULL_REFLECTION;HAVE_GUID_TRY_PARSE;HAVE_HASH_SET;HAVE_ICLONEABLE;HAVE_ICONVERTIBLE;HAVE_IGNORE_DATA_MEMBER_ATTRIBUTE;HAVE_IMMUTABLE_COLLECTIONS;HAVE_INOTIFY_COLLECTION_CHANGED;HAVE_INOTIFY_PROPERTY_CHANGING;HAVE_ISET;HAVE_LINQ;HAVE_MEMORY_BARRIER;HAVE_METHOD_IMPL_ATTRIBUTE;HAVE_NON_SERIALIZED_ATTRIBUTE;HAVE_READ_ONLY_COLLECTIONS;HAVE_REFLECTION_EMIT;HAVE_SECURITY_SAFE_CRITICAL_ATTRIBUTE;HAVE_SERIALIZATION_BINDER_BIND_TO_NAME;HAVE_STREAM_READER_WRITER_CLOSE;HAVE_STRING_JOIN_WITH_ENUMERABLE;HAVE_TIME_SPAN_PARSE_WITH_CULTURE;HAVE_TIME_SPAN_TO_STRING_WITH_CULTURE;HAVE_TIME_ZONE_INFO;HAVE_TRACE_WRITER;HAVE_TYPE_DESCRIPTOR;HAVE_UNICODE_SURROGATE_DETECTION;HAVE_VARIANT_TYPE_PARAMETERS;HAVE_VERSION_TRY_PARSE;NET45</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -47,7 +47,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;HAVE_ASYNC;HAVE_BINARY_FORMATTER;HAVE_BINARY_SERIALIZATION;HAVE_CHAR_TO_LOWER_WITH_CULTURE;HAVE_CHAR_TO_STRING_WITH_CULTURE;HAVE_COMPONENT_MODEL;HAVE_CONCURRENT_COLLECTIONS;HAVE_COVARIANT_GENERICS;HAVE_DATA_CONTRACTS;HAVE_DATE_TIME_OFFSET;HAVE_DYNAMIC;HAVE_EMPTY_TYPES;HAVE_ENTITY_FRAMEWORK;HAVE_EXPRESSIONS;HAVE_FSHARP_TYPES;HAVE_FULL_REFLECTION;HAVE_GUID_TRY_PARSE;HAVE_HASH_SET;HAVE_ICLONEABLE;HAVE_ICONVERTIBLE;HAVE_IGNORE_DATA_MEMBER_ATTRIBUTE;HAVE_IMMUTABLE_COLLECTIONS;HAVE_INOTIFY_COLLECTION_CHANGED;HAVE_INOTIFY_PROPERTY_CHANGING;HAVE_ISET;HAVE_LINQ;HAVE_MEMORY_BARRIER;HAVE_METHOD_IMPL_ATTRIBUTE;HAVE_NON_SERIALIZED_ATTRIBUTE;HAVE_READ_ONLY_COLLECTIONS;HAVE_REFLECTION_EMIT;HAVE_SECURITY_SAFE_CRITICAL_ATTRIBUTE;HAVE_SERIALIZATION_BINDER_BIND_TO_NAME;HAVE_STREAM_READER_WRITER_CLOSE;HAVE_STRING_JOIN_WITH_ENUMERABLE;HAVE_TIME_SPAN_PARSE_WITH_CULTURE;HAVE_TIME_SPAN_TO_STRING_WITH_CULTURE;HAVE_TIME_ZONE_INFO;HAVE_TRACE_WRITER;HAVE_TYPE_DESCRIPTOR;HAVE_UNICODE_SURROGATE_DETECTION;HAVE_VARIANT_TYPE_PARAMETERS;HAVE_VERSION_TRY_PARSE;NET45</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -75,6 +75,27 @@
     <ManifestKeyFile>DaramYouTubeUploader.pfx</ManifestKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Google.Apis, Version=1.27.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.27.1\lib\net45\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth, Version=1.27.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.27.1\lib\net45\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.27.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.27.1\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Core, Version=1.27.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Core.1.27.1\lib\net45\Google.Apis.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.PlatformServices, Version=1.27.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.27.1\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.YouTube.v3, Version=1.27.1.760, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.YouTube.v3.1.27.1.760\lib\net45\Google.Apis.YouTube.v3.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -101,369 +122,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ClipboardImageUtility.cs" />
-    <Compile Include="Converters\BooleanLogicalNotConverter.cs" />
     <Compile Include="Converters\PrivacyStatusToIntegerConverter.cs" />
     <Compile Include="Converters\UploadingStatusToBooleanForEditableConverter.cs" />
     <Compile Include="Converters\UploadingStatusToBooleanForPlaylistEditConverter.cs" />
     <Compile Include="Converters\UploadingStatusToBooleanForRemoveConverter.cs" />
     <Compile Include="Converters\UploadingStatusToColorConverter.cs" />
     <Compile Include="Converters\UploadingStatusToStringConverter.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\GoogleJsonWebSignature.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\InvalidJwtException.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\JsonWebSignature.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\JsonWebToken.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\AuthorizationCodeInstalledApp.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\BearerToken.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\ClientSecrets.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\ComputeCredential.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\DefaultCredentialProvider.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Flows\AuthorizationCodeFlow.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Flows\GoogleAuthorizationCodeFlow.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Flows\IAuthorizationCodeFlow.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\GoogleAuthConsts.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\GoogleClientSecrets.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\GoogleCredential.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\GoogleWebAuthorizationBroker.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\IAccessMethod.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\IAuthorizationCodeInstalledApp.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\ICodeReceiver.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\ICredential.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\ITokenAccess.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\JsonCredentialParameters.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\LocalServerCodeReceiver.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Pkcs8.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\PromptCodeReceiver.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Requests\AuthorizationCodeRequestUrl.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Requests\AuthorizationCodeTokenRequest.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Requests\AuthorizationRequestUrl.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Requests\GoogleAssertionTokenRequest.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Requests\GoogleAuthorizationCodeRequestUrl.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Requests\GoogleRevokeTokenRequest.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Requests\RefreshTokenRequest.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Requests\TokenRequest.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Requests\TokenRequestExtenstions.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Responses\AuthorizationCodeResponseUrl.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Responses\TokenErrorResponse.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Responses\TokenResponse.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Responses\TokenResponseException.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\ServiceAccountCredential.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\ServiceCredential.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\UserCredential.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Web\AuthorizationCodeWebApp.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Auth\OAuth2\Web\AuthWebUtility.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\ApplicationContext.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Discovery\DiscoveryVersion.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Discovery\Features.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Discovery\IParameter.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Discovery\Parameter.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\GoogleApiException.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Http\BackOffHandler.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Http\ConfigurableHttpClient.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Http\ConfigurableMessageHandler.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Http\ExponentialBackOffInitializer.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Http\HttpClientFactory.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Http\HttpConsts.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Http\HttpExtenstions.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Http\IConfigurableHttpClientInitializer.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Http\IHttpClientFactory.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Http\IHttpExceptionHandler.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Http\IHttpExecuteInterceptor.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Http\IHttpUnsuccessfulResponseHandler.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Http\MaxUrlLengthInterceptor.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\ISerializer.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Json\IJsonSerializer.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Json\JsonExplicitNull.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Json\JsonExplicitNullAttribute.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Json\NewtonsoftJsonSerializer.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Logging\BaseLogger.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Logging\ConsoleLogger.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Logging\ILogger.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Logging\LogLevel.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Logging\MemoryLogger.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Logging\NullLogger.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Requests\Parameters\ParameterCollection.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Requests\Parameters\ParameterUtils.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Requests\Parameters\ParameterValidator.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Requests\RequestBuilder.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Requests\RequestError.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Requests\SingleError.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Testing\VisibleForTestOnly.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Util\ExponentialBackOff.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Util\IBackOff.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Util\IClock.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Util\Repeatable.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Util\RequestParameterAttribute.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Util\StandardResponse.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Util\Store\IDataStore.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Util\StringValueAttribute.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Util\UriPatcher.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.Core\Util\Utilities.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis.YouTube.v3\Google.Apis.YouTube.v3.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Download\IDownloadProgress.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Download\IMediaDownloader.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Download\MediaDownloader.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\ETagAction.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Media\MediaApiErrorHandling.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Requests\BatchRequest.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Requests\ClientServiceRequest.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Requests\HttpRequestMessageExtenstions.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Requests\IClientServiceRequest.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Requests\IDirectResponseSchema.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Requests\PageStreamer.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Services\BaseClientService.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Services\IClientService.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Upload\IUploadProgress.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Upload\IUploadSessionData.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Upload\ResumableUpload.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Upload\ResumableUploadOptions.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Util\Store\FileDataStore.cs" />
-    <Compile Include="ExternalLibs\GoogleAPIs\Google.Apis\Util\Store\NullDataStore.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Bson\BsonBinaryType.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Bson\BsonBinaryWriter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Bson\BsonObjectId.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Bson\BsonReader.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Bson\BsonToken.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Bson\BsonType.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Bson\BsonWriter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\ConstructorHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Converters\BinaryConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Converters\BsonObjectIdConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Converters\CustomCreationConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Converters\DataSetConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Converters\DataTableConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Converters\DateTimeConverterBase.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Converters\DiscriminatedUnionConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Converters\EntityKeyMemberConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Converters\ExpandoObjectConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Converters\IsoDateTimeConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Converters\JavaScriptDateTimeConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Converters\KeyValuePairConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Converters\RegexConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Converters\StringEnumConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Converters\VersionConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Converters\XmlNodeConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\DateFormatHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\DateParseHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\DateTimeZoneHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\DefaultValueHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\FloatFormatHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\FloatParseHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\FormatterAssemblyStyle.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Formatting.cs" />
-    <Compile Include="ExternalLibs\Json.NET\IArrayPool.cs" />
-    <Compile Include="ExternalLibs\Json.NET\IJsonLineInfo.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonArrayAttribute.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonConstructorAttribute.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonContainerAttribute.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonConvert.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonConverterAttribute.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonConverterCollection.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonDictionaryAttribute.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonException.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonExtensionDataAttribute.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonIgnoreAttribute.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonObjectAttribute.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonPosition.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonPropertyAttribute.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonReader.Async.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonReader.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonReaderException.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonRequiredAttribute.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonSerializationException.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonSerializer.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonSerializerSettings.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonTextReader.Async.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonTextReader.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonTextWriter.Async.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonTextWriter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonToken.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonValidatingReader.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonWriter.Async.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonWriter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\JsonWriterException.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\CommentHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\Extensions.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\IJEnumerable.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JArray.Async.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JArray.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JConstructor.Async.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JConstructor.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JContainer.Async.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JContainer.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JEnumerable.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JObject.Async.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JObject.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JProperty.Async.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JProperty.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JPropertyDescriptor.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JPropertyKeyedCollection.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JRaw.Async.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JRaw.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JsonLoadSettings.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JsonMergeSettings.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JsonPath\ArrayIndexFilter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JsonPath\ArrayMultipleIndexFilter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JsonPath\ArraySliceFilter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JsonPath\FieldFilter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JsonPath\FieldMultipleFilter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JsonPath\JPath.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JsonPath\PathFilter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JsonPath\QueryExpression.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JsonPath\QueryFilter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JsonPath\QueryScanFilter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JsonPath\RootFilter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JsonPath\ScanFilter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JsonPath\ScanMultipleFilter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JToken.Async.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JToken.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JTokenEqualityComparer.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JTokenReader.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JTokenType.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JTokenWriter.Async.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JTokenWriter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JValue.Async.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\JValue.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\MergeArrayHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Linq\MergeNullValueHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\MemberSerialization.cs" />
-    <Compile Include="ExternalLibs\Json.NET\MetadataPropertyHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\MissingMemberHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\NullValueHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\ObjectCreationHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\PreserveReferencesHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\ReferenceLoopHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Required.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Schema\Extensions.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Schema\JsonSchema.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Schema\JsonSchemaBuilder.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Schema\JsonSchemaConstants.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Schema\JsonSchemaException.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Schema\JsonSchemaGenerator.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Schema\JsonSchemaModel.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Schema\JsonSchemaModelBuilder.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Schema\JsonSchemaNode.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Schema\JsonSchemaNodeCollection.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Schema\JsonSchemaResolver.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Schema\JsonSchemaType.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Schema\JsonSchemaWriter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Schema\UndefinedSchemaIdHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Schema\ValidationEventArgs.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Schema\ValidationEventHandler.cs" />
-    <Compile Include="ExternalLibs\Json.NET\SerializationBinder.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\CachedAttributeGetter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\CamelCaseNamingStrategy.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\CamelCasePropertyNamesContractResolver.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\DefaultContractResolver.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\DefaultNamingStrategy.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\DefaultReferenceResolver.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\DefaultSerializationBinder.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\DiagnosticsTraceWriter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\DynamicValueProvider.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\ErrorContext.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\ErrorEventArgs.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\ExpressionValueProvider.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\FormatterConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\IAttributeProvider.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\IContractResolver.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\IReferenceResolver.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\ISerializationBinder.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\ITraceWriter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\IValueProvider.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonArrayContract.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonContainerContract.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonContract.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonDictionaryContract.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonDynamicContract.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonFormatterConverter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonISerializableContract.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonLinqContract.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonObjectContract.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonPrimitiveContract.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonProperty.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonPropertyCollection.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonSerializerInternalBase.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonSerializerInternalReader.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonSerializerInternalWriter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonSerializerProxy.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonStringContract.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\JsonTypeReflector.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\MemoryTraceWriter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\NamingStrategy.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\ObjectConstructor.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\OnErrorAttribute.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\ReflectionAttributeProvider.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\ReflectionValueProvider.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\SerializationBinderAdapter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\SnakeCaseNamingStrategy.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\TraceJsonReader.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Serialization\TraceJsonWriter.cs" />
-    <Compile Include="ExternalLibs\Json.NET\StringEscapeHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\TraceLevel.cs" />
-    <Compile Include="ExternalLibs\Json.NET\TypeNameAssemblyFormatHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\TypeNameHandling.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\AsyncUtils.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\Base64Encoder.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\BidirectionalDictionary.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\CollectionUtils.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\CollectionWrapper.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\ConvertUtils.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\DateTimeParser.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\DateTimeUtils.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\DictionaryWrapper.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\DynamicProxy.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\DynamicProxyMetaObject.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\DynamicReflectionDelegateFactory.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\DynamicUtils.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\EnumUtils.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\EnumValue.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\ExpressionReflectionDelegateFactory.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\FSharpUtils.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\ILGeneratorExtensions.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\ImmutableCollectionsUtils.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\JavaScriptUtils.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\JsonTokenUtils.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\LateBoundReflectionDelegateFactory.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\LinqBridge.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\MathUtils.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\MethodBinder.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\MethodCall.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\MiscellaneousUtils.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\PropertyNameTable.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\ReflectionDelegateFactory.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\ReflectionObject.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\ReflectionUtils.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\StringBuffer.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\StringReference.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\StringUtils.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\ThreadSafeStore.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\TypeExtensions.cs" />
-    <Compile Include="ExternalLibs\Json.NET\Utilities\ValidationUtils.cs" />
-    <Compile Include="ExternalLibs\Json.NET\WriteState.cs" />
-    <Compile Include="ExternalLibs\TaskDialog\CommandLink.xaml.cs">
-      <DependentUpon>CommandLink.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ExternalLibs\TaskDialog\Converters.cs" />
-    <Compile Include="ExternalLibs\TaskDialog\NativeMethods.cs" />
-    <Compile Include="ExternalLibs\TaskDialog\RelayCommand.cs" />
-    <Compile Include="ExternalLibs\TaskDialog\Resources.Designer.cs" />
-    <Compile Include="ExternalLibs\TaskDialog\SafeNativeMethods.cs" />
-    <Compile Include="ExternalLibs\TaskDialog\TaskDialog.cs" />
-    <Compile Include="ExternalLibs\TaskDialog\TaskDialog.xaml.cs">
-      <DependentUpon>TaskDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ExternalLibs\TaskDialog\TaskDialogEvents.cs" />
-    <Compile Include="ExternalLibs\TaskDialog\TaskDialogInterop.cs" />
-    <Compile Include="ExternalLibs\TaskDialog\TaskDialogResult.cs" />
-    <Compile Include="ExternalLibs\TaskDialog\TaskDialogTypes.cs" />
-    <Compile Include="ExternalLibs\TaskDialog\TaskDialogViewModel.cs" />
-    <Compile Include="ExternalLibs\TaskDialog\UnsafeNativeMethods.cs" />
-    <Compile Include="ExternalLibs\TaskDialog\VistaActiveTaskDialog.cs" />
     <Compile Include="HaltWindow.xaml.cs">
       <DependentUpon>HaltWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Notify\NotifyManager.cs" />
     <Compile Include="PlaylistWindow.xaml.cs">
       <DependentUpon>PlaylistWindow.xaml</DependentUpon>
     </Compile>
@@ -475,23 +142,10 @@
     <Compile Include="TagEditorWindow.xaml.cs">
       <DependentUpon>TagEditorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UpdateChecker.cs" />
     <Compile Include="Uploader\Categories.cs" />
     <Compile Include="Uploader\Playlists.cs" />
     <Compile Include="Uploader\UploadQueueItem.cs" />
     <Compile Include="Uploader\YouTubeSession.cs" />
-    <Page Include="ExternalLibs\TaskDialog\CommandLink.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ExternalLibs\TaskDialog\ResourceDictionaries\Common.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ExternalLibs\TaskDialog\TaskDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="HaltWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -529,8 +183,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="DaramYouTubeUploader.pfx" />
-    <None Include="ExternalLibs\Json.NET\LICENSE.md" />
-    <None Include="ExternalLibs\Json.NET\README.md" />
     <None Include="packages.config" />
     <None Include="Resources\ErrorIcon" />
     <None Include="Resources\InformationIcon" />
@@ -587,24 +239,20 @@
     <Resource Include="Resources\application_lightning.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ExternalLibs\TaskDialog\Resources.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ExternalLibs\TaskDialog\Resources\cmdarr1.png" />
-    <Resource Include="ExternalLibs\TaskDialog\Resources\cmdarr2.png" />
-    <Resource Include="ExternalLibs\TaskDialog\Resources\cmdarr3.png" />
-    <Resource Include="ExternalLibs\TaskDialog\Resources\exparr-down1.png" />
-    <Resource Include="ExternalLibs\TaskDialog\Resources\exparr-down2.png" />
-    <Resource Include="ExternalLibs\TaskDialog\Resources\exparr-down3.png" />
-    <Resource Include="ExternalLibs\TaskDialog\Resources\exparr-up1.png" />
-    <Resource Include="ExternalLibs\TaskDialog\Resources\exparr-up2.png" />
-    <Resource Include="ExternalLibs\TaskDialog\Resources\exparr-up3.png" />
-    <Resource Include="ExternalLibs\TaskDialog\Resources\shield-16.png" />
-    <Resource Include="ExternalLibs\TaskDialog\Resources\shield-32.png" />
+    <ProjectReference Include="..\..\DaramCommonLib\Daramee.DaramCommonLib\Daramee.DaramCommonLib.csproj">
+      <Project>{b33b6a90-7cd7-4351-b32e-fc0102984180}</Project>
+      <Name>Daramee.DaramCommonLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\WPF-Task-Dialog\TaskDialog\TaskDialog.csproj">
+      <Project>{37fd53f7-8a8f-4427-8ff4-6299e2933a7e}</Project>
+      <Name>TaskDialog</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
