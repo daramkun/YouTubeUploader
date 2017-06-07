@@ -68,7 +68,6 @@ namespace Daramee.YouTubeUploader.Uploader
 		FailedUploadRequest,
 		CannotStartUpload,
 		UploadCanceled,
-		UpdateFailed,
 	}
 
 	public sealed class UploadQueueItem : INotifyPropertyChanged, IDisposable
@@ -172,7 +171,7 @@ namespace Daramee.YouTubeUploader.Uploader
 					UploadingStatus = UploadingStatus.UpdateFailed;
 					PC ( nameof ( UploadingStatus ) );
 					Failed?.Invoke ( this, EventArgs.Empty );
-					return UploadResult.UpdateFailed;
+					return UploadResult.Succeed;
 				}
 			}
 

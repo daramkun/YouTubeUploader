@@ -64,7 +64,6 @@ namespace Daramee.YouTubeUploader
 			} );
 
 			notificationToggleCheckBox.DataContext = NotificatorManager.Notificator;
-			// IsChecked = "{Binding IsEnabledNotification, Mode=TwoWay}"
 			notificationToggleCheckBox.SetBinding ( CheckBox.IsCheckedProperty, new Binding ( nameof ( NotificatorManager.Notificator.IsEnabledNotification ) )
 			{
 				Mode = BindingMode.TwoWay,
@@ -405,32 +404,55 @@ namespace Daramee.YouTubeUploader
 				return;
 			}
 
+			string itemName = $"{uploadQueueItem.Title}({Path.GetFileName ( HttpUtility.UrlDecode ( uploadQueueItem.FileName.AbsolutePath ) )})";
 			switch ( await uploadQueueItem.UploadStart () )
 			{
 				case UploadResult.Succeed:
-					NotificatorManager.Notify ( "안내",
-						$"{uploadQueueItem.Title}({Path.GetFileName ( HttpUtility.UrlDecode ( uploadQueueItem.FileName.AbsolutePath ) )})에 대한 업로드를 성공했습니다.",
-						NotifyType.CustomType1 );
+					{
+						switch ( uploadQueueItem.UploadingStatus )
+						{
+							case UploadingStatus.UploadCompleted:
+								NotificatorManager.Notify ( "안내",
+									$"{itemName}에 대한 업로드를 성공했습니다.",
+									NotifyType.CustomType1 );
+								break;
+							case UploadingStatus.UpdateComplete:
+								NotificatorManager.Notify ( "안내",
+									$"{itemName}에 대한 업데이트를 성공했습니다.",
+									NotifyType.CustomType1 );
+								break;
+							case UploadingStatus.UploadFailed:
+								NotificatorManager.Notify ( "안내",
+									$"{itemName}에 대한 업로드를 실패했습니다.\n이어서 업로드가 가능합니다.",
+									NotifyType.Warning );
+								break;
+							case UploadingStatus.UpdateFailed:
+								NotificatorManager.Notify ( "안내",
+									$"{itemName}에 대한 업데이트를 실패했습니다.",
+									NotifyType.Warning );
+								break;
+						}
+					}
 					break;
-				case UploadResult.UpdateFailed:
+				case UploadResult.UploadCanceled:
 					NotificatorManager.Notify ( "안내",
-						$"{uploadQueueItem.Title}({Path.GetFileName ( HttpUtility.UrlDecode ( uploadQueueItem.FileName.AbsolutePath ) )})에 대한 업로드를 실패했습니다.\n이어서 업로드가 가능합니다.",
+						$"{itemName}에 대한 업로드가 취소되었습니다.",
 						NotifyType.Warning );
 					break;
 				case UploadResult.AlreadyUploading:
-					NotificatorManager.Notify ( "오류", "이미 업로드가 시작되었습니다.", NotifyType.Error );
+					NotificatorManager.Notify ( "오류", $"{itemName}은 이미 업로드가 시작되었습니다.", NotifyType.Error );
 					break;
 				case UploadResult.CannotAccesToFile:
-					NotificatorManager.Notify ( "오류", "영상 파일에 접근할 수 없었습니다.", NotifyType.Error );
+					NotificatorManager.Notify ( "오류", $"{itemName}의 영상 파일에 접근할 수 없었습니다.", NotifyType.Error );
 					break;
 				case UploadResult.FailedUploadRequest:
-					NotificatorManager.Notify ( "오류", "업로드 요청을 시작할 수 없었습니다.", NotifyType.Error );
+					NotificatorManager.Notify ( "오류", $"{itemName}의 업로드 요청을 시작할 수 없었습니다.", NotifyType.Error );
 					break;
 				case UploadResult.CannotStartUpload:
-					NotificatorManager.Notify ( "오류", "업로드 작업을 시작할 수 없었습니다.", NotifyType.Error );
+					NotificatorManager.Notify ( "오류", $"{itemName}의 업로드 작업을 시작할 수 없었습니다.", NotifyType.Error );
 					break;
 				case UploadResult.FileSizeIsTooBig:
-					NotificatorManager.Notify ( "오류", "업로드할 파일의 크기는 64GB를 넘길 수 없습니다.", NotifyType.Error );
+					NotificatorManager.Notify ( "오류", $"{itemName}의 업로드할 파일의 크기는 64GB를 넘길 수 없습니다.", NotifyType.Error );
 					break;
 			}
 		}
