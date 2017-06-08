@@ -301,7 +301,7 @@ namespace Daramee.YouTubeUploader
 		private void HaltWhenCompleteCheckBox_Checked ( object sender, RoutedEventArgs e )
 		{
 			App.TaskDialogShow ( "이 기능은 모든 업로드 성공적 완료 30초 후에 자동으로 컴퓨터를 종료합니다.",
-				@"이 기능이 켜져있으면서 업로드에 실패한 경우 15분 후 실패한 업로드를 재업로드 시도합니다.
+				@"이 기능이 켜져있으면서 업로드에 실패한 경우 15초 후 실패한 업로드를 재업로드 시도합니다.
 
 30초 후에는 추가 안내 없이 종료를 시작하므로 주의하십시오.
 
@@ -364,7 +364,7 @@ namespace Daramee.YouTubeUploader
 				if ( !HaltWhenAllCompleted )
 					return;
 
-				Thread.Sleep ( 1000 * 60 * 15 );
+				Thread.Sleep ( 1000 * 15 );
 
 				if ( !HaltWhenAllCompleted )
 					return;
