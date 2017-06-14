@@ -1,7 +1,7 @@
 # Daram YouTube Uploader [![version](https://img.shields.io/badge/version-1.07-orange.svg)](https://shields.io)
 YouTube Uploader Application. Only Korean written.
 
-![v1.05](./DocumentResources/DaramYouTubeUploader_v105.png)
+![v1.09](./DocumentResources/DaramYouTubeUploader_v109.png)
 
 이 프로그램은 [Google YouTube API v3](https://developers.google.com/youtube/v3/docs)를 이용하여 동영상을 업로드하는 프로그램입니다.
 

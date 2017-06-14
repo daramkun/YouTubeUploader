@@ -148,7 +148,26 @@ namespace Daramee.YouTubeUploader
 					await categories.Refresh ( youtubeSession );
 					await Playlists.Refresh ( youtubeSession );
 				}
-				catch { ButtonDisconnect_Click ( this, e ); }
+				catch ( Exception ex )
+				{
+					if ( ex is Google.GoogleApiException )
+					{
+						if ( ( ex as Google.GoogleApiException ).Error.Message.IndexOf ( "Daily Limit Exceeded." ) >= 0 )
+						{
+							if ( App.TaskDialogShow ( "Google API 호출 제한",
+								"금일 또는 100초 내 Google API 최대 호출량을 넘어서서 현재 이용이 불가능합니다. 100초 이후 또는 금일이 지나면 다시 이용이 가능하나, 지금 바로 이용하시려면 자세한 내용은 해결법 버튼을 눌러 확인해주세요.",
+								"안내", VistaTaskDialogIcon.Error, "확인", "해결법" ).CustomButtonResult == 1 )
+								Process.Start ( "https://github.com/daramkun/YouTubeUploader/wiki/사용자-지정-키-사용하기" );
+						}
+						else if ( ( ex as Google.GoogleApiException ).Error.Message.IndexOf ( "Invalid Credentials" ) >= 0 )
+						{
+							App.TaskDialogShow ( "Google API 인증 오류",
+								"api_key.txt 파일 또는 client_secrets.json 파일 중 하나가 적용이 되지 않거나 YouTube Data API 사용 설정이 제대로 되지 않아 문제가 발생했습니다. 다시 한번 확인해주세요.",
+								"안내", VistaTaskDialogIcon.Error, "확인" );
+						}
+					}
+					ButtonDisconnect_Click ( this, e );
+				}
 			}
 		}
 
