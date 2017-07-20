@@ -228,6 +228,22 @@ namespace Daramee.YouTubeUploader
 			item.Category = ( e.AddedItems [ 0 ] as VideoCategory ).Id;
 		}
 
+		private async void ButtonUpload_Click ( object sender, RoutedEventArgs e )
+		{
+			var uploadQueueItem = ( ( sender as Button ).DataContext as UploadQueueItem );
+			await UploadItem ( uploadQueueItem );
+		}
+
+		private void ButtonReInitialize_Click ( object sender, RoutedEventArgs e )
+		{
+			if ( App.TaskDialogShow ( "이 항목의 업로드 상태를 초기화하시겠습니까?", "업로드 상태를 초기화하면 업로드를 이어하지 않고 새로 업로드를 시작합니다.",
+				"안내", VistaTaskDialogIcon.Warning, "예", "아니오" ).CustomButtonResult == 1 )
+				return;
+
+			var item = ( sender as Button ).DataContext as UploadQueueItem;
+			item.StatusReset ();
+		}
+
 		private void ButtonRemoveItem_Click ( object sender, RoutedEventArgs e )
 		{
 			var item = ( sender as Button ).DataContext as UploadQueueItem;
@@ -239,12 +255,6 @@ namespace Daramee.YouTubeUploader
 			}
 
 			( uploadQueueListBox.ItemsSource as IList<UploadQueueItem> ).Remove ( item );
-		}
-
-		private async void ButtonUpload_Click ( object sender, RoutedEventArgs e )
-		{
-			var uploadQueueItem = ( ( sender as Button ).DataContext as UploadQueueItem );
-			await UploadItem ( uploadQueueItem );
 		}
 
 		private void HyperlinkBrowse_Click ( object sender, RoutedEventArgs e )
@@ -271,9 +281,9 @@ namespace Daramee.YouTubeUploader
 			if ( bitmapSource == null || uploadQueueItem == null )
 				return;
 
-			if ( Math.Abs ( ( bitmapSource.Width / bitmapSource.Height ) - ( 16 / 9.0 ) ) >= float.Epsilon )
+			if ( Math.Abs ( ( bitmapSource.PixelWidth / ( double ) bitmapSource.PixelHeight ) - ( 16 / 9.0 ) ) >= float.Epsilon )
 			{
-				App.TaskDialogShow ( "이미지 크기가 16:9 비율이어야 합니다.", "클립보드 이미지 크기 비율이 16:9인지 확인해주세요. YouTube 권장 크기는 1280 * 720입니다.",
+				App.TaskDialogShow ( "이미지 크기가 16:9 비율이어야 합니다.", "클립보드 이미지 크기 비율이 16:9인지 확인해주세요.\nYouTube 권장 크기는 1280 * 720입니다.",
 					"알림", VistaTaskDialogIcon.Error, "확인" );
 				return;
 			}
@@ -442,7 +452,7 @@ namespace Daramee.YouTubeUploader
 								break;
 							case UploadingStatus.UploadFailed:
 								NotificatorManager.Notify ( "안내",
-									$"{itemName}에 대한 업로드를 실패했습니다.\n이어서 업로드가 가능합니다.",
+									$"{itemName}에 대한 업로드를 실패했습니다.",
 									NotifyType.Warning );
 								break;
 							case UploadingStatus.UpdateFailed:
@@ -455,7 +465,7 @@ namespace Daramee.YouTubeUploader
 					break;
 				case UploadResult.UploadCanceled:
 					NotificatorManager.Notify ( "안내",
-						$"{itemName}에 대한 업로드가 취소되었습니다.",
+						$"{itemName}에 대한 업로드가 취소되었습니다.\n이어서 업로드가 가능합니다.",
 						NotifyType.Warning );
 					break;
 				case UploadResult.AlreadyUploading:

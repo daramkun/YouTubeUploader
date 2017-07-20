@@ -147,19 +147,19 @@
 
                     <!-- 업로드, 제거 버튼 화면 -->
                     <StackPanel Grid.Column="2" Orientation="Vertical">
-                        <Button Click="ButtonUpload_Click" Margin="0,0,0,5"
-									 IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" >
+                        <Button Click="ButtonUpload_Click" ToolTip="업로드" Margin="0,0,0,5"
+							    IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" >
                             <Image Source="./Resources/application_get.png" />
-                            <Button.ToolTip>
-                                <ToolTip Content="업로드" />
-                            </Button.ToolTip>
                         </Button>
-                        <Button Click="ButtonRemoveItem_Click"
-									 IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForRemoveConverter}}" >
+
+                        <Button Click="ButtonReInitialize_Click" ToolTip="업로드 상태 초기화" Margin="0,0,0,5"
+							    IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" >
+                            <Image Source="./Resources/link_break.png" />
+                        </Button>
+
+                        <Button Click="ButtonRemoveItem_Click" ToolTip="삭제"
+						        IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForRemoveConverter}}" >
                             <Image Source="./Resources/delete.png" />
-                            <Button.ToolTip>
-                                <ToolTip Content="삭제" />
-                            </Button.ToolTip>
                         </Button>
                     </StackPanel>
                 </Grid>

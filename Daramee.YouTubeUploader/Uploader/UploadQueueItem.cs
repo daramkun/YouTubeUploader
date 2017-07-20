@@ -57,6 +57,7 @@ namespace Daramee.YouTubeUploader.Uploader
 		UpdateStart,
 		UpdateComplete,
 		UpdateFailed,
+		UploadCanceled,
 	}
 
 	public enum UploadResult : int
@@ -142,9 +143,34 @@ namespace Daramee.YouTubeUploader.Uploader
 			mediaStream = null;
 		}
 
+		public void StatusReset ()
+		{
+			mediaStream.Dispose ();
+			mediaStream = null;
+
+			Progress = 0;
+			UploadingStatus = UploadingStatus.Queued;
+
+			changedThumbnail = true;
+
+			videoInsertRequest = null;
+		}
+
 		public async Task<UploadResult> UploadStart ()
 		{
 			youtubeSession.TryGetTarget ( out YouTubeSession session );
+
+			if ( UploadingStatus == UploadingStatus.UploadCanceled )
+			{
+				UploadingStatus = UploadingStatus.Queued;
+				video.Id = null;
+				if ( mediaStream != null )
+					mediaStream.Dispose ();
+				mediaStream = null;
+				Progress = 0;
+				TimeRemaining = new TimeSpan ();
+				videoInsertRequest = null;
+			}
 
 			if ( video.Id != null && (
 					UploadingStatus == UploadingStatus.UploadFailed ||
