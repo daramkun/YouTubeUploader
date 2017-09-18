@@ -54,6 +54,8 @@ namespace Daramee.YouTubeUploader
 			InitializeNotificatorImages ();
 			NotificatorManager.Initialize ( new NotificatorInitializer ()
 			{
+				AppId = "Daramee.YouTubeUploader",
+
 				Title = "다람 유튜브 업로더",
 				Icon = Properties.Resources.MainIcon,
 
@@ -62,6 +64,16 @@ namespace Daramee.YouTubeUploader
 				ErrorTypeImagePath = Path.Combine ( tempPath, "ErrorIcon.png" ),
 				CustomTypeImagePath1 = Path.Combine ( tempPath, "SucceedIcon.png" ),
 			} );
+			NotificatorManager.Notificator.Clicked += ( sender2, e2 ) =>
+			{
+				Dispatcher.BeginInvoke ( new Action ( () =>
+				{
+					if ( WindowState == WindowState.Minimized )
+						WindowState = WindowState.Normal;
+					//Focus ();
+					Activate ();
+				} ) );
+			};
 
 			notificationToggleCheckBox.DataContext = NotificatorManager.Notificator;
 			notificationToggleCheckBox.SetBinding ( CheckBox.IsCheckedProperty, new Binding ( nameof ( NotificatorManager.Notificator.IsEnabledNotification ) )
