@@ -39,8 +39,7 @@ namespace Daramee.YouTubeUploader
 		public MainWindow ()
 		{
 			SharedWindow = this;
-
-			RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
+			
 			updateChecker = new UpdateChecker ( "v{0}.{1}{2}" );
 
 			InitializeComponent ();
@@ -295,9 +294,46 @@ namespace Daramee.YouTubeUploader
 
 			if ( Math.Abs ( ( bitmapSource.PixelWidth / ( double ) bitmapSource.PixelHeight ) - ( 16 / 9.0 ) ) >= float.Epsilon )
 			{
-				App.TaskDialogShow ( "이미지 크기가 16:9 비율이어야 합니다.", "클립보드 이미지 크기 비율이 16:9인지 확인해주세요.\nYouTube 권장 크기는 1280 * 720입니다.",
-					"알림", VistaTaskDialogIcon.Error, "확인" );
-				return;
+				var result = App.TaskDialogShow ( "이미지 크기가 16:9 비율이어야 합니다.",
+					"클립보드 이미지 크기 비율이 16:9인지 확인해주세요.\nYouTube 권장 크기는 1280 * 720입니다.",
+					"알림", VistaTaskDialogIcon.Warning, "확인", "레터박스 추가", "잘라내기", "늘리기" ).CustomButtonResult;
+				if ( result != 0 )
+				{
+					var blackBrush = new SolidColorBrush ( Colors.Black );
+					blackBrush.Freeze ();
+
+					RenderTargetBitmap bmp = new RenderTargetBitmap ( 1280, 720, 96, 96, PixelFormats.Default );
+					
+					Grid container = new Grid ()
+					{
+						Width = 1280,
+						Height = 720,
+						Background = blackBrush
+					};
+					Image image = new Image ()
+					{
+						Source = bitmapSource,
+						HorizontalAlignment = HorizontalAlignment.Center,
+						VerticalAlignment = VerticalAlignment.Center,
+					};
+
+					switch ( result )
+					{
+						case 1: image.Stretch = Stretch.Uniform; break;
+						case 2: image.Stretch = Stretch.UniformToFill; break;
+						case 3: image.Stretch = Stretch.Fill; break;
+					}
+
+					container.Children.Add ( image );
+					container.Measure ( new Size ( 1280, 720 ) );
+					container.Arrange ( new Rect ( 0, 0, 1280, 720 ) );
+					
+					bmp.Render ( container );
+					bmp.Freeze ();
+
+					bitmapSource = bmp;
+				}
+				else return;
 			}
 
 			uploadQueueItem.Thumbnail = bitmapSource;
@@ -339,6 +375,12 @@ namespace Daramee.YouTubeUploader
 				e.Effects = DragDropEffects.None;
 		}
 
+		private void DeleteWhenCompleteCheckBox_Checked ( object sender, RoutedEventArgs e )
+		{
+			App.TaskDialogShow ( "이 기능은 업로드 완료 후 해당 파일을 삭제합니다.",
+				"삭제할 영상이 휴지통으로 가지 않고 곧바로 완전히 삭제되므로 이 기능을 사용할 때는 주의해주세요.", "안내", VistaTaskDialogIcon.Information, "확인" );
+		}
+
 		private void HaltWhenCompleteCheckBox_Checked ( object sender, RoutedEventArgs e )
 		{
 			App.TaskDialogShow ( "이 기능은 모든 업로드 성공적 완료 30초 후에 자동으로 컴퓨터를 종료합니다.",
@@ -347,12 +389,6 @@ namespace Daramee.YouTubeUploader
 30초 후에는 추가 안내 없이 종료를 시작하므로 주의하십시오.
 
 종료 시점에 이 프로그램 외에 다른 프로그램이 켜져있다면 강제 종료 전에는 컴퓨터가 제대로 종료되지 않을 수 있습니다.", "안내", VistaTaskDialogIcon.Information, "확인" );
-		}
-
-		private void DeleteWhenCompleteCheckBox_Checked ( object sender, RoutedEventArgs e )
-		{
-			App.TaskDialogShow ( "이 기능은 업로드 완료 후 해당 파일을 삭제합니다.",
-				"삭제할 영상이 휴지통으로 가지 않고 곧바로 완전히 삭제되므로 이 기능을 사용할 때는 주의해주세요.", "안내", VistaTaskDialogIcon.Information, "확인" );
 		}
 
 		private void AddItem ( string filename )
