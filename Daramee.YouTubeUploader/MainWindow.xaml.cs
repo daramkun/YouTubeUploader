@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -51,18 +52,21 @@ namespace Daramee.YouTubeUploader
 		private async void Window_Loaded ( object sender, RoutedEventArgs e )
 		{
 			InitializeNotificatorImages ();
+			
+			Stream iconStream = Application.GetResourceStream ( new Uri ( "pack://application:,,,/DaramYouTubeUploader;component/Resources/MainIcon.ico" ) ).Stream;
 			NotificatorManager.Initialize ( new NotificatorInitializer ()
 			{
 				AppId = "Daramee.YouTubeUploader",
 
 				Title = "다람 유튜브 업로더",
-				Icon = Properties.Resources.MainIcon,
+				Icon = new System.Drawing.Icon ( iconStream, 16, 16 ),
 
 				WarningTypeImagePath = Path.Combine ( tempPath, "WarningIcon.png" ),
 				InformationTypeImagePath = Path.Combine ( tempPath, "InformationIcon.png" ),
 				ErrorTypeImagePath = Path.Combine ( tempPath, "ErrorIcon.png" ),
 				CustomTypeImagePath1 = Path.Combine ( tempPath, "SucceedIcon.png" ),
 			} );
+			iconStream.Dispose ();
 			NotificatorManager.Notificator.Clicked += ( sender2, e2 ) =>
 			{
 				Dispatcher.BeginInvoke ( new Action ( () =>
@@ -87,16 +91,38 @@ namespace Daramee.YouTubeUploader
 				NotificatorManager.Notify ( "업데이트 확인", "Daram YouTube Uploader의 최신 버전이 있습니다.", NotifyType.Information );
 		}
 
-		static readonly string tempPath = Path.Combine ( Path.GetTempPath (), "DaramYouTubeUploaderCache" );
+		static readonly string tempPath = Path.Combine ( Path.GetTempPath (), "DARAM WORLD", "DaramYouTubeUploaderCache" );
 		private void InitializeNotificatorImages ()
 		{
-			string [] temps = new [] { "WarningIcon", "InformationIcon", "ErrorIcon", "SucceedIcon" };
+			var resDict = Resources [ "notifyIcons" ] as ResourceDictionary;
+			var transparentBrush = new SolidColorBrush ( Colors.Transparent );
+			transparentBrush.Freeze ();
+
 			Directory.CreateDirectory ( tempPath );
-			foreach ( var tempName in temps )
+			foreach ( var tempName in new [] { "WarningIcon", "InformationIcon", "ErrorIcon", "SucceedIcon" } )
 			{
 				string filename = Path.Combine ( tempPath, $"{tempName}.png" );
 				if ( !File.Exists ( filename ) )
-					File.WriteAllBytes ( filename, Properties.Resources.ResourceManager.GetObject ( tempName ) as byte [] );
+				{
+					var path = resDict [ tempName ] as System.Windows.Shapes.Path;
+					RenderTargetBitmap rtb = new RenderTargetBitmap ( 128, 128, 96, 96, PixelFormats.Pbgra32 );
+					Grid grid = new Grid
+					{
+						Background = transparentBrush
+					};
+					grid.Children.Add ( path );
+					grid.Measure ( new Size ( 128, 128 ) );
+					grid.Arrange ( new Rect ( 0, 0, 128, 128 ) );
+					rtb.Render ( grid );
+					rtb.Freeze ();
+
+					PngBitmapEncoder encoder = new PngBitmapEncoder ();
+					BitmapFrame frame = BitmapFrame.Create ( rtb );
+					encoder.Frames.Add ( frame );
+
+					using ( var stream = File.Open ( filename, FileMode.Create ) )
+						encoder.Save ( stream );
+				}
 			}
 		}
 
@@ -513,7 +539,7 @@ namespace Daramee.YouTubeUploader
 					break;
 				case UploadResult.UploadCanceled:
 					NotificatorManager.Notify ( "안내",
-						$"{itemName}에 대한 업로드가 취소되었습니다.\n이어서 업로드가 가능합니다.",
+						$"{itemName}에 대한 업로드가 중단됐습니다.\n이어서 업로드가 가능합니다.",
 						NotifyType.Warning );
 					break;
 				case UploadResult.AlreadyUploading:

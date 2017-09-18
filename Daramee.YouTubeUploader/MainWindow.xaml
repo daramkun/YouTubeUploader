@@ -19,196 +19,7 @@
         <conv:UploadingStatusToColorConverter x:Key="uploadingStatusToColorConverter" />
         <dcl:BooleanInvertConverter x:Key="booleanInvertConverter" />
 
-        <!-- 리스트박스 아이템 템플릿 -->
-        <DataTemplate x:Key="listBoxItem">
-            <Border BorderThickness="1" BorderBrush="LightGray" Margin="5">
-                <Grid Height="160" Margin="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="220" />
-                        <ColumnDefinition Width="560*" />
-                        <ColumnDefinition Width="20" />
-                    </Grid.ColumnDefinitions>
-
-                    <!-- 영상 프리뷰 화면 -->
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition Height="16" />
-                        </Grid.RowDefinitions>
-
-                        <Rectangle Fill="Black" Width="214" Height="120" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                        <MediaElement Source="{Binding FileName}" IsMuted="True"
-										Width="214" Height="120" LoadedBehavior="Manual" UnloadedBehavior="Close"
-										VerticalAlignment="Center" HorizontalAlignment="Left" />
-
-                        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Button Margin="0,0,5,0" Click="ButtonPlayItem_Click" ToolTip="재생" Width="16" Height="16" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-                                <Path Data="M0,0L16,8 32,16 16,24 0,32 0,16z" Stretch="Uniform" Fill="Black" Width="8" Height="8" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-                                    <Path.RenderTransform>
-                                        <TransformGroup>
-                                            <TransformGroup.Children>
-                                                <RotateTransform Angle="0" />
-                                                <ScaleTransform ScaleX="1" ScaleY="1" />
-                                            </TransformGroup.Children>
-                                        </TransformGroup>
-                                    </Path.RenderTransform>
-                                </Path>
-                            </Button>
-                            <Button Click="ButtonStopItem_Click" ToolTip="정지" Width="16" Height="16" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-                                <Path Data="M0,0L32,0 32,32 0,32z" Stretch="Uniform" Fill="Black" Width="8" Height="8" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-                                    <Path.RenderTransform>
-                                        <TransformGroup>
-                                            <TransformGroup.Children>
-                                                <RotateTransform Angle="0" />
-                                                <ScaleTransform ScaleX="1" ScaleY="1" />
-                                            </TransformGroup.Children>
-                                        </TransformGroup>
-                                    </Path.RenderTransform>
-                                </Path>
-                            </Button>
-                        </StackPanel>
-                    </Grid>
-
-                    <!-- 항목 편집 화면 -->
-                    <Grid Grid.Column="1" Margin="0,0,10,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="60" />
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="60" />
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="160" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition Height="12" />
-                        </Grid.RowDefinitions>
-
-                        <!-- 1열 텍스트 -->
-                        <TextBlock Text="제목: " Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" />
-                        <TextBlock Text="설명: " Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" />
-                        <TextBlock Text="공개: " Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" />
-                        <TextBlock Text="분류: " Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" />
-                        <TextBlock Text="기타: " Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" />
-                        <TextBlock Text="상태: " Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" />
-                        <!-- 2열 텍스트 -->
-                        <StackPanel Grid.Row="0" Grid.Column="4" Orientation="Horizontal">
-                            <TextBlock Text="썸네일: " VerticalAlignment="Center" Margin="0,0,5,0" />
-                            <TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
-								<Hyperlink Click="HyperlinkBrowse_Click"
-										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
-									파일
-								</Hyperlink>
-                            </TextBlock>
-                            <TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
-								<Hyperlink Click="HyperlinkClipboard_Click"
-										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
-									클립보드
-								</Hyperlink>
-                            </TextBlock>
-                        </StackPanel>
-
-                        <!-- 1열 편집 -->
-                        <TextBox Text="{Binding Title}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
-									VerticalAlignment="Center" Margin="0,0,10,0"
-									IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" />
-                        <TextBox Text="{Binding Description}" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3"
-									TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
-									MaxLines="16" Margin="0,0,10,0"
-									IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}"  />
-                        <ComboBox Grid.Row="3" Grid.Column="1" Margin="0,0,10,0"
-									VerticalAlignment="Center" SelectedIndex="{Binding PrivacyStatus, Converter={StaticResource privacyStatusToIntegerConverter}}"
-									IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" >
-                            <ComboBoxItem Content="공개" />
-                            <ComboBoxItem Content="미등록" />
-                            <ComboBoxItem Content="비공개" />
-                        </ComboBox>
-                        <ComboBox Grid.Row="3" Grid.Column="3" Margin="0,0,10,0" SelectionChanged="ItemCategoryComboBox_SelectionChanged"
-									VerticalAlignment="Center" ItemsSource="{x:Static uploader:Categories.DetectedCategories}" SelectedIndex="0"
-									IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Name}" />
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                        <StackPanel Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,0,10,0" VerticalAlignment="Center">
-                            <TextBlock Margin="0,0,5,0">
-								<Hyperlink IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" Click="HyperlinkEditTags_Click">
-									태그 편집
-								</Hyperlink>
-                            </TextBlock>
-                            <TextBlock Margin="0,0,5,0">
-								<Hyperlink IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForPlaylistEditConverter}}" Click="HyperlinkAddPlaylists_Click">
-									재생목록 추가
-								</Hyperlink>
-                            </TextBlock>
-                        </StackPanel>
-                        <!-- 1열 상태 표기 -->
-                        <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,0,10,0" VerticalAlignment="Center"
-										   Text="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToStringConverter}}"
-										   Foreground="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToColorConverter}}" />
-
-                        <!-- 2열 이미지 -->
-                        <Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="5" Source="./Resources/blank.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
-                        <Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="5" Source="{Binding Thumbnail}" />
-
-                        <!-- 마지막 행 진행 상태 표기 -->
-                        <ProgressBar Grid.Row="6" Grid.ColumnSpan="5" Maximum="1" Value="{Binding Progress, Mode=OneWay}" />
-                        <TextBlock Grid.Row="6" Grid.ColumnSpan="5" Text="{Binding TimeRemaining}" FontSize="8" HorizontalAlignment="Center" />
-                    </Grid>
-
-                    <!-- 업로드, 제거 버튼 화면 -->
-                    <StackPanel Grid.Column="2" Orientation="Vertical">
-                        <Button Click="ButtonUpload_Click" ToolTip="업로드" Margin="0,0,0,5" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-							    IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" >
-                            <Path Data="M0,20.29997L2.7000122,20.29997 2.7000122,26.799965 29.400024,26.799965 29.400024,20.29997 32,20.29997 32,29.399999 0,29.399999z M16,0L17.600037,1.5999747 24.300049,8.2999809 24.200012,8.4000175 21.200012,8.4000175 17.100037,4.2999843 17.100037,18.999985 14.900024,18.999985 14.900024,4.2000087 10.800049,8.2999809 7.8000488,8.2999809 7.7000122,8.2999809z" Stretch="Uniform" Fill="#FF000000" Width="14" Height="14" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-                                <Path.RenderTransform>
-                                    <TransformGroup>
-                                        <TransformGroup.Children>
-                                            <RotateTransform Angle="0" />
-                                            <ScaleTransform ScaleX="1" ScaleY="1" />
-                                        </TransformGroup.Children>
-                                    </TransformGroup>
-                                </Path.RenderTransform>
-                            </Path>
-                        </Button>
-
-                        <Button Click="ButtonReInitialize_Click" ToolTip="업로드 상태 초기화" Margin="0,0,0,5" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-							    IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" >
-                            <Path Data="M18.133995,0C21.839996,-5.2434189E-08 25.320999,1.7499996 27.937996,4.9229727 30.556999,8.090025 32,12.310972 32,16.797971 32,18.403012 31.805,19.976987 31.443001,21.478999L26.917,21.478999C27.446999,20.018979 27.734001,18.439023 27.734001,16.797971 27.734001,13.690976 26.736,10.773008 24.918999,8.5739728 23.109001,6.3759752 20.697998,5.1710196 18.133995,5.1710196 15.569,5.1710196 13.158997,6.3759752 11.346001,8.5739728 10.001999,10.203001 9.1110001,12.231993 8.7360001,14.435971L13.334,20.672971 0,20.672971 1.0649948,4.0330191 5.4629974,9.9920025C6.1439972,8.1259747 7.0999985,6.4060045 8.3300018,4.9229727 10.946999,1.7499996 14.43,-5.2434189E-08 18.133995,0z" Stretch="Uniform" Fill="#FF000000" Width="14" Height="14" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-                                <Path.RenderTransform>
-                                    <TransformGroup>
-                                        <TransformGroup.Children>
-                                            <RotateTransform Angle="0" />
-                                            <ScaleTransform ScaleX="1" ScaleY="1" />
-                                        </TransformGroup.Children>
-                                    </TransformGroup>
-                                </Path.RenderTransform>
-                            </Path>
-                        </Button>
-
-                        <Button Click="ButtonRemoveItem_Click" ToolTip="삭제" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-						        IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForRemoveConverter}}" >
-                            <Path Data="M0,12.568994L23.662999,12.568994 20.910989,31.999999 2.7520113,31.999999z M8.0689915,1.6269979L8.0689915,4.6679968 15.594984,4.6679968 15.594984,1.6269979z M6.4420097,0L17.221997,0 17.221997,4.6679968 23.662999,4.6679968 23.662999,8.7949938 0,8.7949938 0,4.6679968 6.4420097,4.6679968z" Stretch="Uniform" Fill="#FF000000" Width="14" Height="14" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-                                <Path.RenderTransform>
-                                    <TransformGroup>
-                                        <TransformGroup.Children>
-                                            <RotateTransform Angle="0" />
-                                            <ScaleTransform ScaleX="1" ScaleY="1" />
-                                        </TransformGroup.Children>
-                                    </TransformGroup>
-                                </Path.RenderTransform>
-                            </Path>
-                        </Button>
-                    </StackPanel>
-                </Grid>
-            </Border>
-        </DataTemplate>
+        <ResourceDictionary x:Key="notifyIcons" Source="./NotifyIconDictionary.xaml" />
     </Window.Resources>
 
     <!-- 최상위 그리드 -->
@@ -222,43 +33,16 @@
         <ToolBarTray ClipToBounds="False" DataContext="{x:Static local:MainWindow.SharedWindow}">
             <ToolBar Focusable="True" ToolBarTray.IsLocked="True" Height="30">
                 <Button x:Name="buttonOpen" Click="ButtonOpen_Click" IsEnabled="{Binding YouTubeSession.IsAuthorized}" ToolTip="열기">
-                    <Path Data="M7.5160018,7.0210069L32,7.0210069 26.112001,21.280001 2.2460016,21.280001z M0,0L9.2969996,0 11.158,4.0930236 26.091997,4.0930236 26.087999,5.3469933 6.3500015,5.3469933 0.46300124,21.280001 0,21.280001z" Stretch="Uniform" Fill="#FF000000" Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-                        <Path.RenderTransform>
-                            <TransformGroup>
-                                <TransformGroup.Children>
-                                    <RotateTransform Angle="0" />
-                                    <ScaleTransform ScaleX="1" ScaleY="1" />
-                                </TransformGroup.Children>
-                            </TransformGroup>
-                        </Path.RenderTransform>
-                    </Path>
+                    <Path Data="M7.5160018,7.0210069L32,7.0210069 26.112001,21.280001 2.2460016,21.280001z M0,0L9.2969996,0 11.158,4.0930236 26.091997,4.0930236 26.087999,5.3469933 6.3500015,5.3469933 0.46300124,21.280001 0,21.280001z" Stretch="Uniform" Fill="#FF000000" Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
                 </Button>
 
                 <Separator />
 
                 <Button x:Name="buttonConnect" Click="ButtonConnect_Click" IsEnabled="{Binding YouTubeSession.IsAuthorized, Converter={StaticResource booleanInvertConverter}}" ToolTip="유튜브 계정 연결">
-                    <Path Data="M8,4L24,4 24,8 8,8z M18,0L26,0C29.399994,0 32,2.5999756 32,6 32,9.3999634 29.399994,12 26,12L18,12 18,10 26,10C28.199982,10 30,8.2000122 30,6 30,3.7999878 28.199982,2 26,2L18,2z M6,0L14,0 14,2 6,2C3.7999878,2 2,3.7999878 2,6 2,8.2000122 3.7999878,10 6,10L14,10 14,12 6,12C2.6000061,12 0,9.3999634 0,6 0,2.5999756 2.6000061,0 6,0z" Stretch="Uniform" Fill="#FF000000" Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-                        <Path.RenderTransform>
-                            <TransformGroup>
-                                <TransformGroup.Children>
-                                    <RotateTransform Angle="0" />
-                                    <ScaleTransform ScaleX="1" ScaleY="1" />
-                                </TransformGroup.Children>
-                            </TransformGroup>
-                        </Path.RenderTransform>
-                    </Path>
+                    <Path Data="M8,4L24,4 24,8 8,8z M18,0L26,0C29.399994,0 32,2.5999756 32,6 32,9.3999634 29.399994,12 26,12L18,12 18,10 26,10C28.199982,10 30,8.2000122 30,6 30,3.7999878 28.199982,2 26,2L18,2z M6,0L14,0 14,2 6,2C3.7999878,2 2,3.7999878 2,6 2,8.2000122 3.7999878,10 6,10L14,10 14,12 6,12C2.6000061,12 0,9.3999634 0,6 0,2.5999756 2.6000061,0 6,0z" Stretch="Uniform" Fill="#FF000000" Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
                 </Button>
                 <Button x:Name="buttonDisconnect" Click="ButtonDisconnect_Click" IsEnabled="{Binding YouTubeSession.IsAuthorized}" ToolTip="유튜브 계정 연결 해제">
-                    <Path Data="M21.450012,3.937973L26,3.937973C29.400024,3.937973 32,6.5379486 32,9.937973 32,13.337936 29.400024,15.937973 26,15.937973L18,15.937973 18,13.937973 26,13.937973C28.200012,13.937973 30,12.137924 30,9.937973 30,7.7379608 28.200012,5.937973 26,5.937973L20.512024,5.937973z M6,3.9379506L14,3.9379506 14,5.9379511 6,5.9379511C3.8000002,5.937951 2,7.737951 2,9.9379511 2,12.137951 3.8000002,13.937951 6,13.937951L10.55,13.937951 9.6120005,15.937951 6,15.937951C2.6000004,15.937951 0,13.337951 0,9.9379511 0,6.537951 2.6000004,3.937951 6,3.9379506z M19.087998,0L21.296,0 17.572998,7.9379897 22,7.9379897 22,11.937984 15.697997,11.937984 12.003995,19.813974 9.7939939,19.813974 13.487996,11.937984 9.9999933,11.937984 9.9999933,7.9379897 15.364996,7.9379897z" Stretch="Uniform" Fill="#FF000000" Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-                        <Path.RenderTransform>
-                            <TransformGroup>
-                                <TransformGroup.Children>
-                                    <RotateTransform Angle="0" />
-                                    <ScaleTransform ScaleX="1" ScaleY="1" />
-                                </TransformGroup.Children>
-                            </TransformGroup>
-                        </Path.RenderTransform>
-                    </Path>
+                    <Path Data="M21.450012,3.937973L26,3.937973C29.400024,3.937973 32,6.5379486 32,9.937973 32,13.337936 29.400024,15.937973 26,15.937973L18,15.937973 18,13.937973 26,13.937973C28.200012,13.937973 30,12.137924 30,9.937973 30,7.7379608 28.200012,5.937973 26,5.937973L20.512024,5.937973z M6,3.9379506L14,3.9379506 14,5.9379511 6,5.9379511C3.8000002,5.937951 2,7.737951 2,9.9379511 2,12.137951 3.8000002,13.937951 6,13.937951L10.55,13.937951 9.6120005,15.937951 6,15.937951C2.6000004,15.937951 0,13.337951 0,9.9379511 0,6.537951 2.6000004,3.937951 6,3.9379506z M19.087998,0L21.296,0 17.572998,7.9379897 22,7.9379897 22,11.937984 15.697997,11.937984 12.003995,19.813974 9.7939939,19.813974 13.487996,11.937984 9.9999933,11.937984 9.9999933,7.9379897 15.364996,7.9379897z" Stretch="Uniform" Fill="#FF000000" Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
                 </Button>
 
                 <Separator />
@@ -268,82 +52,31 @@
                     <ComboBoxItem Content="비공개" />
                 </ComboBox>
                 <Button x:Name="buttonAllUpload" Click="ButtonAllUpload_Click" IsEnabled="{Binding YouTubeSession.IsAuthorized}" ToolTip="모든 파일 업로드">
-                    <Path Data="M6.2443588,11.999997L9.3443267,11.999997 3.9443839,16.200008 9.6443269,16.200008C9.844321,16.200008,9.9443109,16.299984,10.044315,16.39999L11.344303,19.999996 20.944176,19.999996 22.24418,16.39999C22.344153,16.299984,22.444157,16.200008,22.644168,16.200008L28.344079,16.200008 22.744172,11.999997 25.844109,11.999997 30.944054,15.39999C31.744063,15.89999,32.144053,16.89999,31.944041,17.700008L31.044059,22.6C30.844048,23.399988,29.944066,24.1,29.044083,24.1L2.9443958,24.1C2.0444133,24.1,1.1444303,23.399988,0.94442047,22.6L0.04443765,17.700008C-0.15555683,16.89999,0.34443705,15.799984,1.0444253,15.39999z M16.044242,0L17.644229,1.6000062 20.844172,4.7999868 20.844172,7.999998 17.244241,4.3999929 17.244241,11.999997 15.044254,11.999997 15.044254,4.2999868 11.244298,7.999998 11.244298,4.7999868 14.444256,1.6000062z" Stretch="Uniform" Fill="#FF000000" Width="14" Height="14" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-                        <Path.RenderTransform>
-                            <TransformGroup>
-                                <TransformGroup.Children>
-                                    <RotateTransform Angle="0" />
-                                    <ScaleTransform ScaleX="1" ScaleY="1" />
-                                </TransformGroup.Children>
-                            </TransformGroup>
-                        </Path.RenderTransform>
-                    </Path>
+                    <Path Data="M6.2443588,11.999997L9.3443267,11.999997 3.9443839,16.200008 9.6443269,16.200008C9.844321,16.200008,9.9443109,16.299984,10.044315,16.39999L11.344303,19.999996 20.944176,19.999996 22.24418,16.39999C22.344153,16.299984,22.444157,16.200008,22.644168,16.200008L28.344079,16.200008 22.744172,11.999997 25.844109,11.999997 30.944054,15.39999C31.744063,15.89999,32.144053,16.89999,31.944041,17.700008L31.044059,22.6C30.844048,23.399988,29.944066,24.1,29.044083,24.1L2.9443958,24.1C2.0444133,24.1,1.1444303,23.399988,0.94442047,22.6L0.04443765,17.700008C-0.15555683,16.89999,0.34443705,15.799984,1.0444253,15.39999z M16.044242,0L17.644229,1.6000062 20.844172,4.7999868 20.844172,7.999998 17.244241,4.3999929 17.244241,11.999997 15.044254,11.999997 15.044254,4.2999868 11.244298,7.999998 11.244298,4.7999868 14.444256,1.6000062z" Stretch="Uniform" Fill="#FF000000" Width="14" Height="14" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
                 </Button>
 
                 <Separator />
 
                 <CheckBox x:Name="notificationToggleCheckBox" ToolTip="알림">
-                    <Path Data="M21,19.799928C21.200012,22.099923 19.599976,24.299913 17.200012,24.599914 14.799988,24.8999 12.700012,23.299916 12.299988,20.899915L13.5,20.69992C13.799988,22.399909 15.299988,23.499911 17,23.299916 18.700012,23.099919 19.899963,21.599925 19.700012,19.899919z M0.89996338,16.799939L3.2000122,21.999917 2.2999878,22.399909 0,17.099935z M22.399963,1.1999922L29.700012,17.599933 4.5,21.199918 2.0999756,15.699938z M24.700012,0L32,16.799939 31.099976,17.199933 23.799988,0.40000011z" Stretch="Uniform" Fill="#FF000000" Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-                        <Path.RenderTransform>
-                            <TransformGroup>
-                                <TransformGroup.Children>
-                                    <RotateTransform Angle="0" />
-                                    <ScaleTransform ScaleX="1" ScaleY="1" />
-                                </TransformGroup.Children>
-                            </TransformGroup>
-                        </Path.RenderTransform>
-                    </Path>
+                    <Path Data="M21,19.799928C21.200012,22.099923 19.599976,24.299913 17.200012,24.599914 14.799988,24.8999 12.700012,23.299916 12.299988,20.899915L13.5,20.69992C13.799988,22.399909 15.299988,23.499911 17,23.299916 18.700012,23.099919 19.899963,21.599925 19.700012,19.899919z M0.89996338,16.799939L3.2000122,21.999917 2.2999878,22.399909 0,17.099935z M22.399963,1.1999922L29.700012,17.599933 4.5,21.199918 2.0999756,15.699938z M24.700012,0L32,16.799939 31.099976,17.199933 23.799988,0.40000011z" Stretch="Uniform" Fill="#FF000000" Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
                 </CheckBox>
 
                 <CheckBox x:Name="deleteWhenCompleteCheckBox" ToolTip="완료 후 삭제" IsEnabled="{Binding YouTubeSession.IsAuthorized}"
 						  DataContext="{x:Static local:MainWindow.SharedWindow}"
 						  IsChecked="{Binding DeleteWhenComplete}" Checked="DeleteWhenCompleteCheckBox_Checked">
-                    <Path Data="M10.300001,9.0999935L11.700001,19.999985 20.200001,19.999985 21.600001,9.0999935z M14.300001,4.2999969L14.300001,5.7999959 9.3000011,5.7999959 9.3000011,7.2999947 22.500001,7.2999947 22.500001,5.7999959 17.700001,5.7999959 17.700001,4.2999969z M0,0L32.000001,0 32.000001,24.199982 11.100001,24.199982 5.2000008,31.899977 5.2000008,24.199982 0,24.199982z" Stretch="Uniform" Fill="#FF000000" Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-                        <Path.RenderTransform>
-                            <TransformGroup>
-                                <TransformGroup.Children>
-                                    <RotateTransform Angle="0" />
-                                    <ScaleTransform ScaleX="1" ScaleY="1" />
-                                </TransformGroup.Children>
-                            </TransformGroup>
-                        </Path.RenderTransform>
-                    </Path>
+                    <Path Data="M10.300001,9.0999935L11.700001,19.999985 20.200001,19.999985 21.600001,9.0999935z M14.300001,4.2999969L14.300001,5.7999959 9.3000011,5.7999959 9.3000011,7.2999947 22.500001,7.2999947 22.500001,5.7999959 17.700001,5.7999959 17.700001,4.2999969z M0,0L32.000001,0 32.000001,24.199982 11.100001,24.199982 5.2000008,31.899977 5.2000008,24.199982 0,24.199982z" Stretch="Uniform" Fill="#FF000000" Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
                 </CheckBox>
 
                 <CheckBox x:Name="haltWhenCompleteCheckBox" ToolTip="완료 후 종료" IsEnabled="{Binding YouTubeSession.IsAuthorized}"
 						  DataContext="{x:Static local:MainWindow.SharedWindow}"
 						  IsChecked="{Binding HaltWhenAllCompleted}" Checked="HaltWhenCompleteCheckBox_Checked">
-                    <Path Data="M14.800018,3.900021L14.800018,12.800008 10.200012,12.800008 17.100006,19.699996 24,12.800008 19.399994,12.800008 19.399994,3.900021z M0,0L32,0 32,24.199992 11.100006,24.199992 5.2000122,31.899999 5.2000122,24.199992 0,24.199992z" Stretch="Uniform" Fill="Black" Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-                        <Path.RenderTransform>
-                            <TransformGroup>
-                                <TransformGroup.Children>
-                                    <RotateTransform Angle="0" />
-                                    <ScaleTransform ScaleX="1" ScaleY="1" />
-                                </TransformGroup.Children>
-                            </TransformGroup>
-                        </Path.RenderTransform>
-                    </Path>
+                    <Path Data="M14.800018,3.900021L14.800018,12.800008 10.200012,12.800008 17.100006,19.699996 24,12.800008 19.399994,12.800008 19.399994,3.900021z M0,0L32,0 32,24.199992 11.100006,24.199992 5.2000122,31.899999 5.2000122,24.199992 0,24.199992z" Stretch="Uniform" Fill="Black" Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
                 </CheckBox>
-
-                <!--<Separator />
-
-				<Button x:Name="buttonManagePlaylist" IsEnabled="{Binding YouTubeSession.IsAuthorized}" ToolTip="재생목록 관리">
-					<Image Source="./Resources/report.png" Style="{StaticResource toolBarImages}" />
-				</Button>-->
 
                 <Separator />
 
                 <Button ToolTip="업데이트 확인" Click="ButtonCheckUpdate_Click">
-                    <Path Data="M30.593,9.0030207L31.999985,10.361021 18.957978,23.868021 12.459985,18.72902 13.672999,17.195025 18.780976,21.234022z M11.02401,4.3140163L16.644027,9.8050042 15.185022,11.299001 12.120014,8.3043607 12.120014,17.747007 10.032026,17.747007 10.032026,8.2238792 6.8630276,11.340018 5.3860273,9.8650156 10.873961,4.4676647z M10.825997,0L10.958,0C16.948114,0 21.839207,4.8259993 21.910208,10.831998 21.946209,13.876997 20.735186,16.664997 18.753148,18.684997L17.091116,17.384997C17.140118,17.336997 17.194118,17.294997 17.242119,17.245996 18.935152,15.533997 19.851169,13.264997 19.822168,10.856998 19.765167,6.020999 15.788092,2.0879998 10.958,2.0879998L10.824998,2.0879998C8.5059533,2.0879998 6.318912,3.0069995 4.6688805,4.6769991 2.9768486,6.3899989 2.0608311,8.6579986 2.0888319,11.065998 2.1448326,15.797997 5.955905,19.655996 10.644994,19.819997L11.247005,20.262997 13.096041,21.724997C12.444028,21.849996,11.774016,21.922997,11.086002,21.922997L10.953,21.922997C4.9628859,21.922997 0.071793556,17.096997 0.00079154968,11.090998 -0.071209908,5.0409992 4.7758827,0 10.825997,0z" Stretch="Uniform" Fill="#FF000000" Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-                        <Path.RenderTransform>
-                            <TransformGroup>
-                                <TransformGroup.Children>
-                                    <RotateTransform Angle="0" />
-                                    <ScaleTransform ScaleX="1" ScaleY="1" />
-                                </TransformGroup.Children>
-                            </TransformGroup>
-                        </Path.RenderTransform>
-                    </Path>
+                    <Path Data="M30.593,9.0030207L31.999985,10.361021 18.957978,23.868021 12.459985,18.72902 13.672999,17.195025 18.780976,21.234022z M11.02401,4.3140163L16.644027,9.8050042 15.185022,11.299001 12.120014,8.3043607 12.120014,17.747007 10.032026,17.747007 10.032026,8.2238792 6.8630276,11.340018 5.3860273,9.8650156 10.873961,4.4676647z M10.825997,0L10.958,0C16.948114,0 21.839207,4.8259993 21.910208,10.831998 21.946209,13.876997 20.735186,16.664997 18.753148,18.684997L17.091116,17.384997C17.140118,17.336997 17.194118,17.294997 17.242119,17.245996 18.935152,15.533997 19.851169,13.264997 19.822168,10.856998 19.765167,6.020999 15.788092,2.0879998 10.958,2.0879998L10.824998,2.0879998C8.5059533,2.0879998 6.318912,3.0069995 4.6688805,4.6769991 2.9768486,6.3899989 2.0608311,8.6579986 2.0888319,11.065998 2.1448326,15.797997 5.955905,19.655996 10.644994,19.819997L11.247005,20.262997 13.096041,21.724997C12.444028,21.849996,11.774016,21.922997,11.086002,21.922997L10.953,21.922997C4.9628859,21.922997 0.071793556,17.096997 0.00079154968,11.090998 -0.071209908,5.0409992 4.7758827,0 10.825997,0z" Stretch="Uniform" Fill="#FF000000" Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
                 </Button>
             </ToolBar>
         </ToolBarTray>
@@ -353,7 +86,6 @@
 				 ScrollViewer.VerticalScrollBarVisibility="Visible"
 				 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
 				 ScrollViewer.CanContentScroll="False"
-				 ItemTemplate="{StaticResource listBoxItem}"
 				 AllowDrop="True" Drop="UploadQueueListBox_Drop" DragEnter="UploadQueueListBox_DragEnter">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
@@ -362,6 +94,153 @@
                     <Setter Property="Focusable" Value="False"/>
                 </Style>
             </ListBox.ItemContainerStyle>
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderThickness="1" BorderBrush="LightGray" Margin="5">
+                        <Grid Height="160" Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="220" />
+                                <ColumnDefinition Width="560*" />
+                                <ColumnDefinition Width="20" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- 영상 프리뷰 화면 -->
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition Height="16" />
+                                </Grid.RowDefinitions>
+
+                                <Rectangle Fill="Black" Width="214" Height="120" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <MediaElement Source="{Binding FileName}" IsMuted="True"
+										      Width="214" Height="120" LoadedBehavior="Manual" UnloadedBehavior="Close"
+										      VerticalAlignment="Center" HorizontalAlignment="Left" />
+
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Margin="0,0,5,0" Click="ButtonPlayItem_Click" ToolTip="재생" Width="16" Height="16" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                                        <Path Data="M0,0L16,8 32,16 16,24 0,32 0,16z" Stretch="Uniform" Fill="Black" Width="8" Height="8" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
+                                    </Button>
+                                    <Button Click="ButtonStopItem_Click" ToolTip="정지" Width="16" Height="16" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                                        <Path Data="M0,0L32,0 32,32 0,32z" Stretch="Uniform" Fill="Black" Width="8" Height="8" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- 항목 편집 화면 -->
+                            <Grid Grid.Column="1" Margin="0,0,10,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="160" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition Height="12" />
+                                </Grid.RowDefinitions>
+
+                                <!-- 1열 텍스트 -->
+                                <TextBlock Text="제목: " Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" />
+                                <TextBlock Text="설명: " Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" />
+                                <TextBlock Text="공개: " Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" />
+                                <TextBlock Text="분류: " Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" />
+                                <TextBlock Text="기타: " Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" />
+                                <TextBlock Text="상태: " Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" />
+                                <!-- 2열 텍스트 -->
+                                <StackPanel Grid.Row="0" Grid.Column="4" Orientation="Horizontal">
+                                    <TextBlock Text="썸네일: " VerticalAlignment="Center" Margin="0,0,5,0" />
+                                    <TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
+								<Hyperlink Click="HyperlinkBrowse_Click"
+										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
+									파일
+								</Hyperlink>
+                                    </TextBlock>
+                                    <TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
+								<Hyperlink Click="HyperlinkClipboard_Click"
+										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
+									클립보드
+								</Hyperlink>
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <!-- 1열 편집 -->
+                                <TextBox Text="{Binding Title}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
+									     VerticalAlignment="Center" Margin="0,0,10,0"
+									     IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" />
+                                <TextBox Text="{Binding Description}" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3"
+									     TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
+									     MaxLines="16" Margin="0,0,10,0"
+									     IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}"  />
+                                <ComboBox Grid.Row="3" Grid.Column="1" Margin="0,0,10,0"
+									      VerticalAlignment="Center" SelectedIndex="{Binding PrivacyStatus, Converter={StaticResource privacyStatusToIntegerConverter}}"
+									      IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" >
+                                    <ComboBoxItem Content="공개" />
+                                    <ComboBoxItem Content="미등록" />
+                                    <ComboBoxItem Content="비공개" />
+                                </ComboBox>
+                                <ComboBox Grid.Row="3" Grid.Column="3" Margin="0,0,10,0" SelectionChanged="ItemCategoryComboBox_SelectionChanged"
+									      VerticalAlignment="Center" ItemsSource="{x:Static uploader:Categories.DetectedCategories}" SelectedIndex="0"
+									      IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <StackPanel Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,0,10,0" VerticalAlignment="Center">
+                                    <TextBlock Margin="0,0,5,0">
+								<Hyperlink IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" Click="HyperlinkEditTags_Click">
+									태그 편집
+								</Hyperlink>
+                                    </TextBlock>
+                                    <TextBlock Margin="0,0,5,0">
+								<Hyperlink IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForPlaylistEditConverter}}" Click="HyperlinkAddPlaylists_Click">
+									재생목록 추가
+								</Hyperlink>
+                                    </TextBlock>
+                                </StackPanel>
+                                <!-- 1열 상태 표기 -->
+                                <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,0,10,0" VerticalAlignment="Center"
+										   Text="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToStringConverter}}"
+										   Foreground="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToColorConverter}}" />
+
+                                <!-- 2열 이미지 -->
+                                <Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="5" Source="./Resources/blank.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+                                <Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="5" Source="{Binding Thumbnail}" />
+
+                                <!-- 마지막 행 진행 상태 표기 -->
+                                <ProgressBar Grid.Row="6" Grid.ColumnSpan="5" Maximum="1" Value="{Binding Progress, Mode=OneWay}" />
+                                <TextBlock Grid.Row="6" Grid.ColumnSpan="5" Text="{Binding TimeRemaining}" FontSize="8" HorizontalAlignment="Center" />
+                            </Grid>
+
+                            <!-- 업로드, 제거 버튼 화면 -->
+                            <StackPanel Grid.Column="2" Orientation="Vertical">
+                                <Button Click="ButtonUpload_Click" ToolTip="업로드" Margin="0,0,0,5" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							            IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" >
+                                    <Path Data="M0,20.29997L2.7000122,20.29997 2.7000122,26.799965 29.400024,26.799965 29.400024,20.29997 32,20.29997 32,29.399999 0,29.399999z M16,0L17.600037,1.5999747 24.300049,8.2999809 24.200012,8.4000175 21.200012,8.4000175 17.100037,4.2999843 17.100037,18.999985 14.900024,18.999985 14.900024,4.2000087 10.800049,8.2999809 7.8000488,8.2999809 7.7000122,8.2999809z" Stretch="Uniform" Fill="#FF000000" Width="14" Height="14" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
+                                </Button>
+
+                                <Button Click="ButtonReInitialize_Click" ToolTip="업로드 상태 초기화" Margin="0,0,0,5" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							            IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" >
+                                    <Path Data="M18.133995,0C21.839996,-5.2434189E-08 25.320999,1.7499996 27.937996,4.9229727 30.556999,8.090025 32,12.310972 32,16.797971 32,18.403012 31.805,19.976987 31.443001,21.478999L26.917,21.478999C27.446999,20.018979 27.734001,18.439023 27.734001,16.797971 27.734001,13.690976 26.736,10.773008 24.918999,8.5739728 23.109001,6.3759752 20.697998,5.1710196 18.133995,5.1710196 15.569,5.1710196 13.158997,6.3759752 11.346001,8.5739728 10.001999,10.203001 9.1110001,12.231993 8.7360001,14.435971L13.334,20.672971 0,20.672971 1.0649948,4.0330191 5.4629974,9.9920025C6.1439972,8.1259747 7.0999985,6.4060045 8.3300018,4.9229727 10.946999,1.7499996 14.43,-5.2434189E-08 18.133995,0z" Stretch="Uniform" Fill="#FF000000" Width="14" Height="14" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
+                                </Button>
+
+                                <Button Click="ButtonRemoveItem_Click" ToolTip="삭제" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+						                IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForRemoveConverter}}" >
+                                    <Path Data="M0,12.568994L23.662999,12.568994 20.910989,31.999999 2.7520113,31.999999z M8.0689915,1.6269979L8.0689915,4.6679968 15.594984,4.6679968 15.594984,1.6269979z M6.4420097,0L17.221997,0 17.221997,4.6679968 23.662999,4.6679968 23.662999,8.7949938 0,8.7949938 0,4.6679968 6.4420097,4.6679968z" Stretch="Uniform" Fill="#FF000000" Width="14" Height="14" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
         </ListBox>
     </Grid>
 </Window>

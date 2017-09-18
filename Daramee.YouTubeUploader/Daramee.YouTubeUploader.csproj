@@ -111,7 +111,7 @@
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Windows">
-      <HintPath>C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd</HintPath>
+      <HintPath>C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Annotated\Windows.winmd</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -133,11 +133,6 @@
     </Compile>
     <Compile Include="PlaylistWindow.xaml.cs">
       <DependentUpon>PlaylistWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="TagEditorWindow.xaml.cs">
       <DependentUpon>TagEditorWindow.xaml</DependentUpon>
@@ -162,6 +157,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NotifyIconDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PlaylistWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -184,10 +183,6 @@
     </None>
     <None Include="DaramYouTubeUploader.pfx" />
     <None Include="packages.config" />
-    <None Include="Resources\ErrorIcon" />
-    <None Include="Resources\InformationIcon" />
-    <None Include="Resources\SucceedIcon" />
-    <None Include="Resources\WarningIcon" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -209,12 +204,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\blank.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DaramCommonLib\Daramee.DaramCommonLib\Daramee.DaramCommonLib.csproj">
