@@ -34,6 +34,7 @@ namespace Daramee.YouTubeUploader
 		Categories categories = new Categories ();
 
 		public YouTubeSession YouTubeSession { get { return youtubeSession; } }
+		public bool RetryWhenCanceled { get; set; } = true;
 		public bool HaltWhenAllCompleted { get; set; } = false;
 		public bool DeleteWhenComplete { get; set; } = false;
 
@@ -464,12 +465,17 @@ namespace Daramee.YouTubeUploader
 			};
 			queueItem.Failed += async ( sender, e ) =>
 			{
-				if ( !HaltWhenAllCompleted )
+				if ( ( sender as UploadQueueItem ).UploadingStatus == UploadingStatus.UploadCompleted )
+					return;
+				if ( !HaltWhenAllCompleted && !RetryWhenCanceled )
 					return;
 
 				Thread.Sleep ( 1000 * 15 );
 
-				if ( !HaltWhenAllCompleted )
+				if ( !HaltWhenAllCompleted && !RetryWhenCanceled )
+					return;
+				var uploadState = ( sender as UploadQueueItem ).UploadingStatus;
+				if ( uploadState == UploadingStatus.Uploading || uploadState == UploadingStatus.UploadCompleted )
 					return;
 
 				await ( sender as UploadQueueItem ).UploadStart ();
