@@ -21,8 +21,8 @@
             </Grid.ColumnDefinitions>
 
             <TextBox x:Name="textBoxTag" />
-            <Button Content="추가" Grid.Column="1" Margin="5,0,0,0" Click="ButtonAdd_Click" />
-            <Button Content="제거" Grid.Column="2" Margin="5,0,0,0" Click="ButtonRemove_Click" />
+            <Button Content="추가" Style="{StaticResource ButtonStyle}" Grid.Column="1" Margin="5,0,0,0" Click="ButtonAdd_Click" />
+            <Button Content="제거" Style="{StaticResource ButtonStyle}" Grid.Column="2" Margin="5,0,0,0" Click="ButtonRemove_Click" />
         </Grid>
 
         <ListBox x:Name="listBoxTags" Grid.Row="1" SelectionMode="Multiple">
@@ -30,7 +30,7 @@
         </ListBox>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-            <Button Content="닫기" Width="60" Height="25" Click="ButtonClose_Click" />
+            <Button Content="닫기" Style="{StaticResource ButtonStyle}" Width="60" Height="25" Click="ButtonClose_Click" />
         </StackPanel>
     </Grid>
 </Window>

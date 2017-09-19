@@ -13,6 +13,6 @@
         </Grid.RowDefinitions>
 
         <ProgressBar x:Name="progressToHalt" Maximum="30" ValueChanged="progressToHalt_ValueChanged" />
-        <Button Content="취소" Width="60" Grid.Row="1" Margin="0,5,0,0" Click="Button_Click" />
+        <Button Content="취소" Style="{StaticResource ButtonStyle}" Width="60" Grid.Row="1" Margin="0,5,0,0" Click="Button_Click" />
     </Grid>
 </Window>

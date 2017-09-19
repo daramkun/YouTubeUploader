@@ -21,7 +21,7 @@
         </ListBox>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-            <Button Content="선택" Width="60" Height="25" Click="ButtonClose_Click" />
+            <Button Content="선택" Width="60" Height="25" Style="{StaticResource ButtonStyle}" Click="ButtonClose_Click" />
         </StackPanel>
     </Grid>
 </Window>

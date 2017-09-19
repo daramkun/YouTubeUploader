@@ -174,95 +174,102 @@
 
                             <!-- 항목 편집 화면 -->
                             <Grid Grid.Column="1" Margin="0,0,10,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="60" />
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="60" />
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="160" />
-                                </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                    <RowDefinition />
                                     <RowDefinition />
                                     <RowDefinition Height="12" />
                                 </Grid.RowDefinitions>
 
-                                <!-- 1열 텍스트 -->
-                                <TextBlock Text="제목: " Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" />
-                                <TextBlock Text="설명: " Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" />
-                                <TextBlock Text="공개: " Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" />
-                                <TextBlock Text="분류: " Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" />
-                                <TextBlock Text="기타: " Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" />
-                                <TextBlock Text="상태: " Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" />
-                                <!-- 2열 텍스트 -->
-                                <StackPanel Grid.Row="0" Grid.Column="4" Orientation="Horizontal">
-                                    <TextBlock Text="썸네일: " VerticalAlignment="Center" Margin="0,0,5,0" />
-                                    <TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="60" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="60" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="160" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+
+                                    <!-- 1열 텍스트 -->
+                                    <TextBlock Text="제목: " Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" />
+                                    <TextBlock Text="설명: " Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" />
+                                    <TextBlock Text="공개: " Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" />
+                                    <TextBlock Text="분류: " Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" />
+                                    <TextBlock Text="기타: " Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" />
+                                    <TextBlock Text="상태: " Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" />
+                                    <!-- 2열 텍스트 -->
+                                    <StackPanel Grid.Row="0" Grid.Column="4" Orientation="Horizontal">
+                                        <TextBlock Text="썸네일: " VerticalAlignment="Center" Margin="0,0,5,0" />
+                                        <TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
 								<Hyperlink Click="HyperlinkBrowse_Click"
 										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
 									파일
 								</Hyperlink>
-                                    </TextBlock>
-                                    <TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
+                                        </TextBlock>
+                                        <TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
 								<Hyperlink Click="HyperlinkClipboard_Click"
 										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
 									클립보드
 								</Hyperlink>
-                                    </TextBlock>
-                                </StackPanel>
+                                        </TextBlock>
+                                    </StackPanel>
 
-                                <!-- 1열 편집 -->
-                                <TextBox Text="{Binding Title}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
+                                    <!-- 1열 편집 -->
+                                    <TextBox Text="{Binding Title}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
 									     VerticalAlignment="Center" Margin="0,0,10,0"
 									     IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" />
-                                <TextBox Text="{Binding Description}" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3"
+                                    <TextBox Text="{Binding Description}" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3"
 									     TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
 									     MaxLines="16" Margin="0,0,10,0"
 									     IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}"  />
-                                <ComboBox Grid.Row="3" Grid.Column="1" Margin="0,0,10,0"
+                                    <ComboBox Grid.Row="3" Grid.Column="1" Margin="0,0,10,0"
 									      VerticalAlignment="Center" SelectedIndex="{Binding PrivacyStatus, Converter={StaticResource privacyStatusToIntegerConverter}}"
 									      IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" >
-                                    <ComboBoxItem Content="공개" />
-                                    <ComboBoxItem Content="미등록" />
-                                    <ComboBoxItem Content="비공개" />
-                                </ComboBox>
-                                <ComboBox Grid.Row="3" Grid.Column="3" Margin="0,0,10,0" SelectionChanged="ItemCategoryComboBox_SelectionChanged"
+                                        <ComboBoxItem Content="공개" />
+                                        <ComboBoxItem Content="미등록" />
+                                        <ComboBoxItem Content="비공개" />
+                                    </ComboBox>
+                                    <ComboBox Grid.Row="3" Grid.Column="3" Margin="0,0,10,0" SelectionChanged="ItemCategoryComboBox_SelectionChanged"
 									      VerticalAlignment="Center" ItemsSource="{x:Static uploader:Categories.DetectedCategories}" SelectedIndex="0"
 									      IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding Name}" />
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
-                                </ComboBox>
-                                <StackPanel Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,0,10,0" VerticalAlignment="Center">
-                                    <TextBlock Margin="0,0,5,0">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Name}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                    <StackPanel Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,0,10,0" VerticalAlignment="Center">
+                                        <TextBlock Margin="0,0,5,0">
 								<Hyperlink IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" Click="HyperlinkEditTags_Click">
 									태그 편집
 								</Hyperlink>
-                                    </TextBlock>
-                                    <TextBlock Margin="0,0,5,0">
+                                        </TextBlock>
+                                        <TextBlock Margin="0,0,5,0">
 								<Hyperlink IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForPlaylistEditConverter}}" Click="HyperlinkAddPlaylists_Click">
 									재생목록 추가
 								</Hyperlink>
-                                    </TextBlock>
-                                </StackPanel>
-                                <!-- 1열 상태 표기 -->
-                                <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,0,10,0" VerticalAlignment="Center"
+                                        </TextBlock>
+                                    </StackPanel>
+                                    <!-- 1열 상태 표기 -->
+                                    <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,0,10,0" VerticalAlignment="Center"
 										   Text="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToStringConverter}}"
 										   Foreground="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToColorConverter}}" />
 
-                                <!-- 2열 이미지 -->
-                                <Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="5" Source="./Resources/blank.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
-                                <Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="5" Source="{Binding Thumbnail}" />
-
+                                    <!-- 2열 이미지 -->
+                                    <Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="5" Source="./Resources/blank.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+                                    <Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="5" Source="{Binding Thumbnail}" />
+                                </Grid>
                                 <!-- 마지막 행 진행 상태 표기 -->
-                                <ProgressBar Grid.Row="6" Grid.ColumnSpan="5" Maximum="1" Value="{Binding Progress, Mode=OneWay}" />
-                                <TextBlock Grid.Row="6" Grid.ColumnSpan="5" Text="{Binding TimeRemaining}" FontSize="8" HorizontalAlignment="Center" />
+                                <Grid x:Name="progressBarContainer" Grid.Row="1">
+                                    <ProgressBar Maximum="1" Value="{Binding Progress, Mode=OneWay}" Width="{Binding ElementName=progressBarContainer, Path=ActualWidth}" />
+                                    <TextBlock Text="{Binding TimeRemaining, StringFormat=hh\\:mm\\:ss}" FontSize="8" HorizontalAlignment="Center" />
+                                </Grid>
                             </Grid>
 
                             <!-- 업로드, 제거 버튼 화면 -->
