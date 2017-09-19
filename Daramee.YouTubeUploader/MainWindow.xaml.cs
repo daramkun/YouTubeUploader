@@ -472,7 +472,8 @@ namespace Daramee.YouTubeUploader
 			};
 			queueItem.Failed += async ( sender, e ) =>
 			{
-				if ( ( sender as UploadQueueItem ).UploadingStatus == UploadingStatus.UploadCompleted )
+				if ( ( sender as UploadQueueItem ).UploadingStatus == UploadingStatus.UploadCompleted ||
+				( sender as UploadQueueItem ).UploadingStatus == UploadingStatus.UpdateComplete )
 					return;
 				if ( !HaltWhenAllCompleted && !RetryWhenCanceled )
 					return;
@@ -482,7 +483,7 @@ namespace Daramee.YouTubeUploader
 				if ( !HaltWhenAllCompleted && !RetryWhenCanceled )
 					return;
 				var uploadState = ( sender as UploadQueueItem ).UploadingStatus;
-				if ( uploadState == UploadingStatus.Uploading || uploadState == UploadingStatus.UploadCompleted )
+				if ( uploadState == UploadingStatus.Uploading || uploadState == UploadingStatus.UploadCompleted || uploadState == UploadingStatus.UpdateComplete )
 					return;
 
 				await ( sender as UploadQueueItem ).UploadStart ();
