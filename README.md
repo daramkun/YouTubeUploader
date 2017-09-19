@@ -1,4 +1,4 @@
-# Daram YouTube Uploader [![version](https://img.shields.io/badge/version-1.11-orange.svg)](https://shields.io)
+# Daram YouTube Uploader [![version](https://img.shields.io/badge/version-1.12-green.svg)](https://shields.io)
 YouTube Uploader Application. Only Korean written.
 
 ![v1.11](./DocumentResources/DaramYouTubeUploader_v111.png)
