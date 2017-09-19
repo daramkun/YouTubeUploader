@@ -25,18 +25,22 @@ namespace Daramee.YouTubeUploader
 	[DataContract]
 	class SaveData
 	{
-		[DataMember]
+		[DataMember ( IsRequired = false )]
 		public bool RetryWhenCanceled { get; set; } = true;
-		[DataMember]
+		[DataMember ( IsRequired = false )]
 		public bool HaltWhenAllCompleted { get; set; } = false;
-		[DataMember]
+		[DataMember ( IsRequired = false )]
 		public bool DeleteWhenComplete { get; set; } = false;
-		[DataMember]
+		[DataMember (IsRequired = false )]
 		public bool HardwareAcceleration
 		{
 			get { return RenderOptions.ProcessRenderMode == RenderMode.Default; }
 			set { RenderOptions.ProcessRenderMode = value ? RenderMode.Default : RenderMode.SoftwareOnly; }
 		}
+		[DataMember ( IsRequired = false )]
+		public int RetryDelayIndex { get; set; } = 3;
+		[DataMember ( IsRequired = false )]
+		public int PrivacyStatusIndex { get; set; } = 0;
 	}
 
 	public sealed partial class MainWindow : Window
@@ -56,6 +60,8 @@ namespace Daramee.YouTubeUploader
 		public bool RetryWhenCanceled { get { return option.Options.RetryWhenCanceled; } set { option.Options.RetryWhenCanceled = value; } }
 		public bool HaltWhenAllCompleted { get { return option.Options.HaltWhenAllCompleted; } set { option.Options.HaltWhenAllCompleted = value; } }
 		public bool DeleteWhenComplete { get { return option.Options.DeleteWhenComplete; } set { option.Options.DeleteWhenComplete = value; } }
+		public int RetryDelayIndex { get { return option.Options.RetryDelayIndex; } set { option.Options.RetryDelayIndex = value; } }
+		public int PrivacyStatusIndex { get { return option.Options.PrivacyStatusIndex; } set { option.Options.PrivacyStatusIndex = value; } }
 
 		public bool HardwareAcceleration { get { return option.Options.HardwareAcceleration; } set { option.Options.HardwareAcceleration = value; } }
 
@@ -316,7 +322,7 @@ namespace Daramee.YouTubeUploader
 		{
 			OpenFileDialog ofd = new OpenFileDialog ()
 			{
-				Filter = "All Available Files(*.jpg;*.png)|*.jpg;*.png"
+				Filter = "가능한 모든 파일(*.jpg;*.png)|*.jpg;*.png"
 			};
 			if ( ofd.ShowDialog () == false )
 				return;
@@ -445,6 +451,7 @@ namespace Daramee.YouTubeUploader
 				return;
 
 			var queueItem = new UploadQueueItem ( youtubeSession, filename ) { PrivacyStatus = ( PrivacyStatus ) comboBoxDefaultPrivacyStatus.SelectedIndex };
+			// 업로드 성공
 			queueItem.Completed += ( sender, e ) =>
 			{
 				if ( DeleteWhenComplete )
@@ -470,6 +477,7 @@ namespace Daramee.YouTubeUploader
 					}
 				}
 			};
+			// 업로드 실패
 			queueItem.Failed += async ( sender, e ) =>
 			{
 				if ( ( sender as UploadQueueItem ).UploadingStatus == UploadingStatus.UploadCompleted ||
@@ -478,7 +486,18 @@ namespace Daramee.YouTubeUploader
 				if ( !HaltWhenAllCompleted && !RetryWhenCanceled )
 					return;
 
-				Thread.Sleep ( 1000 * 15 );
+				int sec = 0;
+				switch ( option.Options.RetryDelayIndex )
+				{
+					case 0: sec = 0; break;
+					case 1: sec = 5; break;
+					case 2: sec = 10; break;
+					case 3: sec = 15; break;
+					case 4: sec = 30; break;
+					case 5: sec = 60; break;
+				}
+				if ( sec != 0 )
+					await Task.Delay ( 1000 * sec );
 
 				if ( !HaltWhenAllCompleted && !RetryWhenCanceled )
 					return;
@@ -488,6 +507,7 @@ namespace Daramee.YouTubeUploader
 
 				await ( sender as UploadQueueItem ).UploadStart ();
 			};
+			// 업로드 중
 			queueItem.Uploading += ( sender, e ) =>
 			{
 				Dispatcher.BeginInvoke ( new Action ( () =>

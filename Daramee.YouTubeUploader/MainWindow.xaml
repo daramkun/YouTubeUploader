@@ -71,7 +71,7 @@
                 </Button>
 
                 <Separator />
-                <ComboBox x:Name="comboBoxDefaultPrivacyStatus" Grid.Row="3" Grid.Column="1" Margin="0,0,10,0" IsEnabled="{Binding YouTubeSession.IsAuthorized}" VerticalAlignment="Center" SelectedIndex="0">
+                <ComboBox x:Name="comboBoxDefaultPrivacyStatus" ToolTip="항목 추가 시 기본 공개 상태" IsEnabled="{Binding YouTubeSession.IsAuthorized}" VerticalAlignment="Center" SelectedIndex="{Binding PrivacyStatusIndex}">
                     <ComboBoxItem Content="공개" />
                     <ComboBoxItem Content="미등록" />
                     <ComboBoxItem Content="비공개" />
@@ -95,6 +95,17 @@
                           Stretch="Uniform" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CheckBox}}"
                           Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
                 </CheckBox>
+
+                <ComboBox x:Name="retryDelay" ToolTip="중단 시 재시도 대기 시간" VerticalAlignment="Center" SelectedIndex="{Binding RetryDelayIndex}">
+                    <ComboBoxItem Content="바로 재시도" />
+                    <ComboBoxItem Content="5초 뒤 재시도" />
+                    <ComboBoxItem Content="10초 뒤 재시도" />
+                    <ComboBoxItem Content="15초 뒤 재시도" />
+                    <ComboBoxItem Content="30초 뒤 재시도" />
+                    <ComboBoxItem Content="1분 뒤 재시도" />
+                </ComboBox>
+
+                <Separator />
 
                 <CheckBox x:Name="deleteWhenCompleteCheckBox" ToolTip="완료 후 삭제" IsEnabled="{Binding YouTubeSession.IsAuthorized}"
 						  DataContext="{x:Static local:MainWindow.SharedWindow}" IsChecked="{Binding DeleteWhenComplete}"
@@ -137,7 +148,9 @@
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
                     <Setter Property="Padding" Value="0"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}" />
                     <Setter Property="Focusable" Value="False"/>
                 </Style>
             </ListBox.ItemContainerStyle>
@@ -148,7 +161,7 @@
                         <Grid Height="160" Margin="5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="220" />
-                                <ColumnDefinition Width="560*" />
+                                <ColumnDefinition />
                                 <ColumnDefinition Width="20" />
                             </Grid.ColumnDefinitions>
 
@@ -214,16 +227,16 @@
                                     <StackPanel Grid.Row="0" Grid.Column="4" Orientation="Horizontal">
                                         <TextBlock Text="썸네일: " VerticalAlignment="Center" Margin="0,0,5,0" />
                                         <TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
-								<Hyperlink Click="HyperlinkBrowse_Click"
-										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
-									파일
-								</Hyperlink>
+								            <Hyperlink Click="HyperlinkBrowse_Click"
+										               IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
+									            파일
+								            </Hyperlink>
                                         </TextBlock>
                                         <TextBlock VerticalAlignment="Center" Margin="0,0,5,0">
-								<Hyperlink Click="HyperlinkClipboard_Click"
-										   IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
-									클립보드
-								</Hyperlink>
+								            <Hyperlink Click="HyperlinkClipboard_Click"
+										               IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}">
+									            클립보드
+								            </Hyperlink>
                                         </TextBlock>
                                     </StackPanel>
 
@@ -272,11 +285,10 @@
                                     <Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="5" Source="./Resources/blank.png" RenderOptions.BitmapScalingMode="NearestNeighbor" />
                                     <Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="5" Source="{Binding Thumbnail}" />
                                 </Grid>
+                                
                                 <!-- 마지막 행 진행 상태 표기 -->
-                                <Grid x:Name="progressBarContainer" Grid.Row="1">
-                                    <ProgressBar Maximum="1" Value="{Binding Progress, Mode=OneWay}" Width="{Binding ElementName=progressBarContainer, Path=ActualWidth}" />
-                                    <TextBlock Text="{Binding TimeRemaining, StringFormat=hh\\:mm\\:ss}" FontSize="8" HorizontalAlignment="Center" />
-                                </Grid>
+                                <ProgressBar Grid.Row="1" Maximum="1" Value="{Binding Progress, Mode=OneWay}" HorizontalAlignment="Stretch" />
+                                <TextBlock Grid.Row="1" Text="{Binding TimeRemaining, StringFormat=hh\\:mm\\:ss}" FontSize="8" HorizontalAlignment="Center" />
                             </Grid>
 
                             <!-- 업로드, 제거 버튼 화면 -->
