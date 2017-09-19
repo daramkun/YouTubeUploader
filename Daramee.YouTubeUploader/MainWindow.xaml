@@ -97,19 +97,25 @@
                 </CheckBox>
 
                 <CheckBox x:Name="deleteWhenCompleteCheckBox" ToolTip="완료 후 삭제" IsEnabled="{Binding YouTubeSession.IsAuthorized}"
-						  DataContext="{x:Static local:MainWindow.SharedWindow}"
-						  IsChecked="{Binding DeleteWhenComplete}" Checked="DeleteWhenCompleteCheckBox_Checked">
+						  DataContext="{x:Static local:MainWindow.SharedWindow}" IsChecked="{Binding DeleteWhenComplete}"
+                          Checked="DeleteWhenCompleteCheckBox_Checked">
                     <Path Data="M10.300001,9.0999935L11.700001,19.999985 20.200001,19.999985 21.600001,9.0999935z M14.300001,4.2999969L14.300001,5.7999959 9.3000011,5.7999959 9.3000011,7.2999947 22.500001,7.2999947 22.500001,5.7999959 17.700001,5.7999959 17.700001,4.2999969z M0,0L32.000001,0 32.000001,24.199982 11.100001,24.199982 5.2000008,31.899977 5.2000008,24.199982 0,24.199982z"
                           Stretch="Uniform" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CheckBox}}"
                           Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
                 </CheckBox>
 
                 <CheckBox x:Name="haltWhenCompleteCheckBox" ToolTip="완료 후 종료" IsEnabled="{Binding YouTubeSession.IsAuthorized}"
-						  DataContext="{x:Static local:MainWindow.SharedWindow}"
-						  IsChecked="{Binding HaltWhenAllCompleted}" Checked="HaltWhenCompleteCheckBox_Checked">
+						  DataContext="{x:Static local:MainWindow.SharedWindow}" IsChecked="{Binding HaltWhenAllCompleted}">
                     <Path Data="M14.800018,3.900021L14.800018,12.800008 10.200012,12.800008 17.100006,19.699996 24,12.800008 19.399994,12.800008 19.399994,3.900021z M0,0L32,0 32,24.199992 11.100006,24.199992 5.2000122,31.899999 5.2000122,24.199992 0,24.199992z"
                           Stretch="Uniform" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CheckBox}}"
                           Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
+                </CheckBox>
+
+                <Separator />
+
+                <CheckBox ToolTip="하드웨어 가속 렌더링" IsChecked="{Binding HardwareAcceleration}">
+                    <Path Data="M22.339996,8.9749945C22.076996,8.9749945 21.864014,9.188999 21.864014,9.4509924 21.864014,9.7139929 22.076996,9.9270056 22.339996,9.9270056 22.602997,9.9270056 22.81601,9.7139929 22.81601,9.4509924 22.81601,9.188999 22.602997,8.9749945 22.339996,8.9749945z M20.529999,5.7749961C20.571991,5.7749961,20.596008,5.776995,20.596008,5.776995L21.660004,8.0589932C21.865997,7.9579957 22.095001,7.8959993 22.339996,7.8959993 22.602997,7.8959993 22.846008,7.9669984 23.063019,8.0820034L24.252991,5.851992C26.290009,6.3970059,26.140991,7.8970063,26.140991,7.8970063L23.815002,8.9819983C23.863007,9.1310003 23.894989,9.2859991 23.894989,9.4509924 23.894989,9.7110022 23.825012,9.9519995 23.713013,10.166996L25.963013,11.366994C25.417999,13.403996,23.916992,13.254994,23.916992,13.254994L22.828003,10.920994C22.673004,10.972004 22.511017,11.006001 22.339996,11.006001 22.097992,11.006001 21.873016,10.946995 21.669006,10.847996L20.438995,13.151997C18.402008,12.606999,18.550995,11.106999,18.550995,11.106999L20.894012,10.013996C20.825012,9.8389929 20.785004,9.6499975 20.785004,9.4509924 20.785004,9.2610052 20.824005,9.0800055 20.886017,8.9109991L18.550018,7.6649964C19.028015,5.882006,20.235992,5.7740043,20.529999,5.7749961z M22.346008,4.2819994C19.493011,4.2819994 17.179993,6.5950039 17.179993,9.4489935 17.179993,12.302007 19.493011,14.614996 22.346008,14.614996 25.200012,14.614996 27.513,12.302007 27.513,9.4489935 27.513,6.5950039 25.200012,4.2819994 22.346008,4.2819994z M0,0L2.4470062,0 2.4470062,0.17399597 2.4470062,0.94699144 2.4470062,2.0439921 32,2.0439921 32,17.295996 30.631012,17.295996C30.631012,17.71601,30.894012,18.056998,31.218018,18.056998L32,18.056998 32,19.054999 29.261993,19.054999 29.261993,17.295996 27.606995,17.295996 27.606995,19.054999 15.106995,19.054999 15.106995,17.295996 2.4470062,17.295996 2.4470062,19.054999 1.2630005,19.054999 1.2630005,13.879995 0.41300964,13.879995 0.41300964,10.103 1.2630005,10.103 1.2630005,7.3490017 0.41300964,7.3490017 0.41300964,5.5840018 1.2630005,5.5840018 1.2630005,0.94699144 0,0.94699144z"
+                          Stretch="Uniform" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CheckBox}}" Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
                 </CheckBox>
 
                 <Separator />
@@ -156,7 +162,8 @@
                                 <Rectangle Fill="Black" Width="214" Height="120" VerticalAlignment="Center" HorizontalAlignment="Left" />
                                 <MediaElement Source="{Binding FileName}" IsMuted="True"
 										      Width="214" Height="120" LoadedBehavior="Manual" UnloadedBehavior="Close"
-										      VerticalAlignment="Center" HorizontalAlignment="Left" />
+										      VerticalAlignment="Center" HorizontalAlignment="Left"
+                                              RenderOptions.BitmapScalingMode="NearestNeighbor" />
 
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                                     <Button Margin="0,0,5,0" Click="ButtonPlayItem_Click" ToolTip="재생" Width="16" Height="16" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -22,21 +22,42 @@ using TaskDialogInterop;
 
 namespace Daramee.YouTubeUploader
 {
-	/// <summary>
-	/// MainWindow.xaml에 대한 상호 작용 논리
-	/// </summary>
-	public sealed partial class MainWindow : Window, IDisposable
+	[DataContract]
+	class SaveData
+	{
+		[DataMember]
+		public bool RetryWhenCanceled { get; set; } = true;
+		[DataMember]
+		public bool HaltWhenAllCompleted { get; set; } = false;
+		[DataMember]
+		public bool DeleteWhenComplete { get; set; } = false;
+		[DataMember]
+		public bool HardwareAcceleration
+		{
+			get { return RenderOptions.ProcessRenderMode == RenderMode.Default; }
+			set { RenderOptions.ProcessRenderMode = value ? RenderMode.Default : RenderMode.SoftwareOnly; }
+		}
+	}
+
+	public sealed partial class MainWindow : Window
 	{
 		public static MainWindow SharedWindow { get; private set; }
 
 		UpdateChecker updateChecker;
+		Optionizer<SaveData> option = new Optionizer<SaveData> ( "DARAM WORLD", "DaramYouTubeUploader" )
+		{
+			IsSaveToRegistry = false
+		};
 		YouTubeSession youtubeSession = new YouTubeSession ( Environment.CurrentDirectory );
 		Categories categories = new Categories ();
 
 		public YouTubeSession YouTubeSession { get { return youtubeSession; } }
-		public bool RetryWhenCanceled { get; set; } = true;
-		public bool HaltWhenAllCompleted { get; set; } = false;
-		public bool DeleteWhenComplete { get; set; } = false;
+
+		public bool RetryWhenCanceled { get { return option.Options.RetryWhenCanceled; } set { option.Options.RetryWhenCanceled = value; } }
+		public bool HaltWhenAllCompleted { get { return option.Options.HaltWhenAllCompleted; } set { option.Options.HaltWhenAllCompleted = value; } }
+		public bool DeleteWhenComplete { get { return option.Options.DeleteWhenComplete; } set { option.Options.DeleteWhenComplete = value; } }
+
+		public bool HardwareAcceleration { get { return option.Options.HardwareAcceleration; } set { option.Options.HardwareAcceleration = value; } }
 
 		public MainWindow ()
 		{
@@ -154,11 +175,7 @@ namespace Daramee.YouTubeUploader
 		private void Window_Closed ( object sender, EventArgs e )
 		{
 			NotificatorManager.Uninitialize ();
-		}
-
-		public void Dispose ()
-		{
-			youtubeSession.Dispose ();
+			option.Save ();
 		}
 
 		private void ButtonOpen_Click ( object sender, RoutedEventArgs e )
@@ -406,16 +423,6 @@ namespace Daramee.YouTubeUploader
 		{
 			App.TaskDialogShow ( "이 기능은 업로드 완료 후 해당 파일을 삭제합니다.",
 				"삭제할 영상이 휴지통으로 가지 않고 곧바로 완전히 삭제되므로 이 기능을 사용할 때는 주의해주세요.", "안내", VistaTaskDialogIcon.Information, "확인" );
-		}
-
-		private void HaltWhenCompleteCheckBox_Checked ( object sender, RoutedEventArgs e )
-		{
-			App.TaskDialogShow ( "이 기능은 모든 업로드 성공적 완료 30초 후에 자동으로 컴퓨터를 종료합니다.",
-				@"이 기능이 켜져있으면서 업로드에 실패한 경우 15초 후 실패한 업로드를 재업로드 시도합니다.
-
-30초 후에는 추가 안내 없이 종료를 시작하므로 주의하십시오.
-
-종료 시점에 이 프로그램 외에 다른 프로그램이 켜져있다면 강제 종료 전에는 컴퓨터가 제대로 종료되지 않을 수 있습니다.", "안내", VistaTaskDialogIcon.Information, "확인" );
 		}
 
 		private void AddItem ( string filename )
