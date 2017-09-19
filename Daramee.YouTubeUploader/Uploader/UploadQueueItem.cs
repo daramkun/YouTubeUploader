@@ -310,9 +310,11 @@ namespace Daramee.YouTubeUploader.Uploader
 				JpegBitmapEncoder encoder = new JpegBitmapEncoder ();
 				foreach ( int quality in QualityLevels )
 				{
+					thumbnailStream.SetLength ( 0 );
+					encoder.Frames.Clear ();
+
 					encoder.QualityLevel = quality;
 					encoder.Frames.Add ( BitmapFrame.Create ( Thumbnail ) );
-					thumbnailStream.SetLength ( 0 );
 					encoder.Save ( thumbnailStream );
 					thumbnailStream.Position = 0;
 
