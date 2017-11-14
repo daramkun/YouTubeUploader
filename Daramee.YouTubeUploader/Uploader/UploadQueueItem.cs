@@ -10,6 +10,7 @@ using System.Windows.Media.Imaging;
 using Google.Apis.Upload;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
+using System.Threading;
 
 namespace Daramee.YouTubeUploader.Uploader
 {
@@ -79,6 +80,7 @@ namespace Daramee.YouTubeUploader.Uploader
 
 		Google.Apis.YouTube.v3.Data.Video video;
 		VideosResource.InsertMediaUpload videoInsertRequest;
+		CancellationTokenSource cancellationTokenSource;
 		TimeSpan startTime;
 
 		Stream mediaStream;
@@ -108,6 +110,8 @@ namespace Daramee.YouTubeUploader.Uploader
 		public long TotalUploaded { get; private set; }
 		public UploadingStatus UploadingStatus { get; private set; }
 		public TimeSpan TimeRemaining { get; private set; }
+
+		public bool IsManuallyPaused { get; private set; } = false;
 
 		public event EventHandler Started;
 		public event EventHandler Uploading;
@@ -158,6 +162,15 @@ namespace Daramee.YouTubeUploader.Uploader
 			videoInsertRequest = null;
 		}
 
+		public void Pause ()
+		{
+			if ( cancellationTokenSource != null )
+			{
+				IsManuallyPaused = true;
+				cancellationTokenSource.Cancel ();
+			}
+		}
+
 		public async Task<UploadResult> UploadStart ()
 		{
 			youtubeSession.TryGetTarget ( out YouTubeSession session );
@@ -173,6 +186,7 @@ namespace Daramee.YouTubeUploader.Uploader
 				TotalUploaded = 0;
 				TimeRemaining = new TimeSpan ();
 				videoInsertRequest = null;
+				IsManuallyPaused = false;
 			}
 
 			if ( video.Id != null && (
@@ -234,7 +248,7 @@ namespace Daramee.YouTubeUploader.Uploader
 					return UploadResult.FailedUploadRequest;
 				}
 
-				videoInsertRequest.ChunkSize = ResumableUpload.MinimumChunkSize;
+				videoInsertRequest.ChunkSize = ResumableUpload.DefaultChunkSize;
 				videoInsertRequest.ProgressChanged += ( uploadProgress ) =>
 				{
 					TotalUploaded = uploadProgress.BytesSent;
@@ -287,7 +301,11 @@ namespace Daramee.YouTubeUploader.Uploader
 			try
 			{
 				startTime = DateTime.Now.TimeOfDay;
-				var uploadStatus = virIsNull ? await videoInsertRequest.UploadAsync () : await videoInsertRequest.ResumeAsync ();
+				cancellationTokenSource = new CancellationTokenSource ();
+				var uploadStatus = virIsNull ?
+					await videoInsertRequest.UploadAsync ( cancellationTokenSource.Token ) :
+					await videoInsertRequest.ResumeAsync ( cancellationTokenSource.Token );
+				cancellationTokenSource.Dispose ();
 				video = videoInsertRequest.ResponseBody ?? video;
 				if ( uploadStatus.Status == UploadStatus.NotStarted )
 				{

@@ -16,6 +16,7 @@
         <conv:UploadingStatusToBooleanForEditableConverter x:Key="uploadingStatusToBooleanForEditableConverter" />
         <conv:UploadingStatusToBooleanForRemoveConverter x:Key="uploadingStatusToBooleanForRemoveConverter" />
         <conv:UploadingStatusToBooleanForPlaylistEditConverter x:Key="uploadingStatusToBooleanForPlaylistEditConverter" />
+        <conv:UploadingStatusToBooleanForPauseConverter x:Key="uploadingStatusToBooleanForPauseConverter" />
         <conv:UploadingStatusToColorConverter x:Key="uploadingStatusToColorConverter" />
         <dcl:BooleanInvertConverter x:Key="booleanInvertConverter" />
 
@@ -322,7 +323,10 @@
                                 
                                 <!-- 마지막 행 진행 상태 표기 -->
                                 <ProgressBar Grid.Row="1" Maximum="1" Value="{Binding Progress, Mode=OneWay}" HorizontalAlignment="Stretch" />
-                                <TextBlock Grid.Row="1" Text="{Binding TimeRemaining, StringFormat=hh\\:mm\\:ss}" FontSize="8" HorizontalAlignment="Center" />
+                                <StackPanel Grid.Row="1" HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <TextBlock FontSize="8" />
+                                    <TextBlock Text="{Binding TimeRemaining, StringFormat=hh\\:mm\\:ss}" FontSize="8" />
+                                </StackPanel>
                             </Grid>
 
                             <!-- 업로드, 제거 버튼 화면 -->
@@ -337,6 +341,13 @@
                                 <Button Click="ButtonReInitialize_Click" ToolTip="업로드 상태 초기화" Margin="0,0,0,5" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
 							            IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" >
                                     <Path Data="M18.133995,0C21.839996,-5.2434189E-08 25.320999,1.7499996 27.937996,4.9229727 30.556999,8.090025 32,12.310972 32,16.797971 32,18.403012 31.805,19.976987 31.443001,21.478999L26.917,21.478999C27.446999,20.018979 27.734001,18.439023 27.734001,16.797971 27.734001,13.690976 26.736,10.773008 24.918999,8.5739728 23.109001,6.3759752 20.697998,5.1710196 18.133995,5.1710196 15.569,5.1710196 13.158997,6.3759752 11.346001,8.5739728 10.001999,10.203001 9.1110001,12.231993 8.7360001,14.435971L13.334,20.672971 0,20.672971 1.0649948,4.0330191 5.4629974,9.9920025C6.1439972,8.1259747 7.0999985,6.4060045 8.3300018,4.9229727 10.946999,1.7499996 14.43,-5.2434189E-08 18.133995,0z"
+                                          Stretch="Uniform" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"
+                                          Width="14" Height="14" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
+                                </Button>
+
+                                <Button Click="ButtonUploadPause_Click" ToolTip="업로드 일시정지" Margin="0,0,0,5" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+							            IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForPauseConverter}}" >
+                                    <Path Data="M17.90004,0L29.099999,0 29.099999,32 17.90004,32z M0,0L11.200022,0 11.200022,32 0,32z"
                                           Stretch="Uniform" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"
                                           Width="14" Height="14" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
                                 </Button>

@@ -311,6 +311,12 @@ namespace Daramee.YouTubeUploader
 			item.StatusReset ();
 		}
 
+		private void ButtonUploadPause_Click ( object sender, RoutedEventArgs e )
+		{
+			var item = ( sender as Button ).DataContext as UploadQueueItem;
+			item.Pause ();
+		}
+
 		private void ButtonRemoveItem_Click ( object sender, RoutedEventArgs e )
 		{
 			var item = ( sender as Button ).DataContext as UploadQueueItem;
@@ -484,7 +490,10 @@ namespace Daramee.YouTubeUploader
 			queueItem.Failed += async ( sender, e ) =>
 			{
 				if ( ( sender as UploadQueueItem ).UploadingStatus == UploadingStatus.UploadCompleted ||
-					 ( sender as UploadQueueItem ).UploadingStatus == UploadingStatus.UpdateComplete )
+					 ( sender as UploadQueueItem ).UploadingStatus == UploadingStatus.UpdateComplete ||
+					 ( sender as UploadQueueItem ).UploadingStatus == UploadingStatus.UploadCanceled )
+					return;
+				if ( ( sender as UploadQueueItem ).IsManuallyPaused )
 					return;
 				if ( !HaltWhenAllCompleted && !RetryWhenCanceled )
 					return;
