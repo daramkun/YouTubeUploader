@@ -264,6 +264,7 @@ namespace Daramee.YouTubeUploader
 
 		private void DataChunkSize_SelectionChanged ( object sender, SelectionChangedEventArgs e )
 		{
+			if ( uploadQueueListBox == null ) return;
 			foreach ( var item in uploadQueueListBox.ItemsSource as ObservableCollection<UploadQueueItem> )
 			{
 				item.DataChunkSize = ( DataChunkSize ) dataChunkSize.SelectedIndex;
