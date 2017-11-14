@@ -72,6 +72,12 @@ namespace Daramee.YouTubeUploader.Uploader
 		UploadCanceled,
 	}
 
+	public enum DataChunkSize : int
+	{
+		ChunkSize_256KB,
+		ChunkSize_10MB,
+	}
+
 	public sealed class UploadQueueItem : INotifyPropertyChanged, IDisposable
 	{
 		private static readonly IEnumerable<int> QualityLevels = new [] { 100, 80, 60, 40, 20, 1 };
@@ -112,6 +118,27 @@ namespace Daramee.YouTubeUploader.Uploader
 		public TimeSpan TimeRemaining { get; private set; }
 
 		public bool IsManuallyPaused { get; private set; } = false;
+
+		public DataChunkSize DataChunkSize
+		{
+			get
+			{
+				if ( videoInsertRequest == null ) return DataChunkSize.ChunkSize_10MB;
+				switch ( videoInsertRequest.ChunkSize )
+				{
+				case ResumableUpload.MinimumChunkSize: return DataChunkSize.ChunkSize_256KB;
+				default: return DataChunkSize.ChunkSize_10MB;
+				}
+			}
+			set
+			{
+				switch ( value )
+				{
+				case DataChunkSize.ChunkSize_256KB: videoInsertRequest.ChunkSize = ResumableUpload.MinimumChunkSize; break;
+				case DataChunkSize.ChunkSize_10MB: videoInsertRequest.ChunkSize = ResumableUpload.DefaultChunkSize; break;
+				}
+			}
+		}
 
 		public event EventHandler Started;
 		public event EventHandler Uploading;
@@ -171,7 +198,7 @@ namespace Daramee.YouTubeUploader.Uploader
 			}
 		}
 
-		public async Task<UploadResult> UploadStart ()
+		public async Task<UploadResult> UploadStart ( DataChunkSize dataChunkSize = DataChunkSize.ChunkSize_10MB )
 		{
 			youtubeSession.TryGetTarget ( out YouTubeSession session );
 
@@ -248,7 +275,7 @@ namespace Daramee.YouTubeUploader.Uploader
 					return UploadResult.FailedUploadRequest;
 				}
 
-				videoInsertRequest.ChunkSize = ResumableUpload.DefaultChunkSize;
+				DataChunkSize = dataChunkSize;
 				videoInsertRequest.ProgressChanged += ( uploadProgress ) =>
 				{
 					TotalUploaded = uploadProgress.BytesSent;

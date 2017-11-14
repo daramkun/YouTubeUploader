@@ -111,6 +111,11 @@
                     <ComboBoxItem Content="1분 뒤 재시도" />
                 </ComboBox>
 
+                <ComboBox x:Name="dataChunkSize" ToolTip="데이터 청크 크기" VerticalAlignment="Center" SelectedIndex="{Binding DataChunkSizeIndex}" SelectionChanged="DataChunkSize_SelectionChanged">
+                    <ComboBoxItem Content="256KiB" />
+                    <ComboBoxItem Content="10MiB" />
+                </ComboBox>
+
                 <Separator />
 
                 <CheckBox x:Name="deleteWhenCompleteCheckBox" ToolTip="완료 후 삭제" IsEnabled="{Binding YouTubeSession.IsAuthorized}"

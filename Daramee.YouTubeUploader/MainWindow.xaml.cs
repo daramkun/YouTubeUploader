@@ -41,6 +41,8 @@ namespace Daramee.YouTubeUploader
 		public int RetryDelayIndex { get; set; } = 3;
 		[DataMember ( IsRequired = false )]
 		public int PrivacyStatusIndex { get; set; } = 0;
+		[DataMember ( IsRequired = false )]
+		public int DataChunkSizeIndex { get; set; } = 1;
 	}
 
 	public sealed partial class MainWindow : Window
@@ -62,6 +64,7 @@ namespace Daramee.YouTubeUploader
 		public bool DeleteWhenComplete { get { return option.Options.DeleteWhenComplete; } set { option.Options.DeleteWhenComplete = value; } }
 		public int RetryDelayIndex { get { return option.Options.RetryDelayIndex; } set { option.Options.RetryDelayIndex = value; } }
 		public int PrivacyStatusIndex { get { return option.Options.PrivacyStatusIndex; } set { option.Options.PrivacyStatusIndex = value; } }
+		public int DataChunkSizeIndex { get { return option.Options.DataChunkSizeIndex; } set { option.Options.DataChunkSizeIndex = value; } }
 
 		public bool HardwareAcceleration { get { return option.Options.HardwareAcceleration; } set { option.Options.HardwareAcceleration = value; } }
 
@@ -257,6 +260,14 @@ namespace Daramee.YouTubeUploader
 					}
 				}
 			} ) );
+		}
+
+		private void DataChunkSize_SelectionChanged ( object sender, SelectionChangedEventArgs e )
+		{
+			foreach ( var item in uploadQueueListBox.ItemsSource as ObservableCollection<UploadQueueItem> )
+			{
+				item.DataChunkSize = ( DataChunkSize ) dataChunkSize.SelectedIndex;
+			}
 		}
 
 		private async void ButtonCheckUpdate_Click ( object sender, RoutedEventArgs e )
@@ -554,7 +565,7 @@ namespace Daramee.YouTubeUploader
 			}
 
 			string itemName = $"{uploadQueueItem.Title}({Path.GetFileName ( HttpUtility.UrlDecode ( uploadQueueItem.FileName.AbsolutePath ) )})";
-			switch ( await uploadQueueItem.UploadStart () )
+			switch ( await uploadQueueItem.UploadStart ( ( DataChunkSize ) dataChunkSize.SelectedIndex ) )
 			{
 			case UploadResult.Succeed:
 				switch ( uploadQueueItem.UploadingStatus )
