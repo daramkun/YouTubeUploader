@@ -45,24 +45,41 @@ namespace Daramee.YouTubeUploader.Uploader
 			YouTubeService = null;
 		}
 
-		private Stream GetDefaultClientSecretsStream ()
+		private void GetAPIKeyAndClientSecret ( out string apiKey, out Stream clientSecret )
 		{
-			var stream = new MemoryStream ();
+			if ( File.Exists ( "user_custom_settings.txt" ) )
+			{
+				var lines = File.ReadAllLines ( "user_custom_settings.txt" );
+				apiKey = lines [ 0 ];
+				clientSecret = new MemoryStream ( Encoding.UTF8.GetBytes ( $"{{ installed : {{ \"client_id\": \"{ lines [ 1 ] }\", \"client_secret\": \"{ lines [ 2 ] }\", \"redirect_uri\" : \"urn:ietf:wg:oauth:2.0:oob\" }} }}" ) );
+				clientSecret.Position = 0;
+			}
+			else
+			{
+				if ( File.Exists ( "client_secrets.json" ) )
+				{
+					clientSecret = File.Open ( "client_secrets.json", FileMode.Open, FileAccess.Read );
+				}
+				else
+				{
+					clientSecret = new MemoryStream ( Encoding.UTF8.GetBytes ( "{ installed : { \"client_id\": \"265154369970-nvej6rlmsigg57b0956clc36j7of2anu.apps.googleusercontent.com\", \"client_secret\": \"T0v3vOo6WndzgH3WQ9UvkLlU\", \"redirect_uri\" : \"urn:ietf:wg:oauth:2.0:oob\" } }" ) );
+					clientSecret.Position = 0;
+				}
 
-			string json = "{ installed : { \"client_id\": \"265154369970-nvej6rlmsigg57b0956clc36j7of2anu.apps.googleusercontent.com\", \"client_secret\": \"T0v3vOo6WndzgH3WQ9UvkLlU\", \"redirect_uri\" : \"urn:ietf:wg:oauth:2.0:oob\" } }";
-			byte [] jsonBytes = Encoding.UTF8.GetBytes ( json );
-			stream.Write ( jsonBytes, 0, jsonBytes.Length );
-			stream.Position = 0;
-
-			return stream;
+				if ( File.Exists ( "api_key.txt" ) )
+					apiKey = File.ReadAllText ( "api_key.txt" );
+				else
+					apiKey = "AIzaSyCvMp_S7s1vNhrfCZuOEUtSk7tcEuuKcpE";
+			}
 		}
 
 		public async Task<bool> Authorization ()
 		{
 			UserCredential credential;
 
-			Stream stream;
-			using ( stream = File.Exists ( "client_secrets.json" ) ? new FileStream ( "client_secrets.json", FileMode.Open, FileAccess.Read ) : GetDefaultClientSecretsStream () )
+			GetAPIKeyAndClientSecret ( out string apiKey, out Stream stream );
+
+			using ( stream )
 			{
 				credential = await GoogleWebAuthorizationBroker.AuthorizeAsync (
 					GoogleClientSecrets.Load ( stream ).Secrets,
@@ -77,7 +94,7 @@ namespace Daramee.YouTubeUploader.Uploader
 
 			YouTubeService = new YouTubeService ( new BaseClientService.Initializer ()
 			{
-				ApiKey = File.Exists ( "api_key.txt" ) ? File.ReadAllText ( "api_key.txt" ) : "AIzaSyCvMp_S7s1vNhrfCZuOEUtSk7tcEuuKcpE",
+				ApiKey = apiKey,
 				ApplicationName = "DaramYouTubeUploader",
 				GZipEnabled = true,
 				HttpClientInitializer = credential,

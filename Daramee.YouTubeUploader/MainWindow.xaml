@@ -69,6 +69,11 @@
                           Stretch="Uniform" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"
                           Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
                 </Button>
+                <Button x:Name="buttonSetAPIKey" Click="ButtonSetAPIKey_Click" IsEnabled="{Binding YouTubeSession.IsAuthorized, Converter={StaticResource booleanInvertConverter}}" ToolTip="유튜브 API 키 오버라이드">
+                    <Path Data="M23.000002,21L23.000002,24.300003 19.699999,24.300003 19.699999,26.300003 23.000002,26.300003 23.000002,29.599998 25.000002,29.599998 25.000002,26.300003 28.300007,26.300003 28.300007,24.300003 25.000002,24.300003 25.000002,21z M24.000002,18.599998C27.700001,18.599998 30.700001,21.599998 30.700001,25.300003 30.700001,29 27.700001,32 24.000002,32 20.300005,32 17.300005,29 17.300005,25.300003 17.400011,21.599998 20.300005,18.599998 24.000002,18.599998z M13.600007,0C17.100008,0 20.000002,3.5 20.000002,7.9000015 20.000002,11.5 18.199999,14.199997 15.600008,15.5 15.300005,15.699997 14.800005,16.099998 14.800005,16.599998 14.800005,17.099998 15.300005,17.5 15.600008,17.599998 16.500002,17.900002 17.400011,18.300003 18.199999,18.599998 16.300005,20.199997 15.100008,22.599998 15.100008,25.300003 15.100008,25.900002 15.199999,26.5 15.300005,27L0,27C1.8000032,21.900002 6.3000036,19.599998 11.600007,17.5 11.90001,17.400002 12.300004,17 12.300004,16.5 12.300004,16 11.90001,15.599998 11.600007,15.5 9.0000011,14.199997 7.1999975,11.599998 7.1999975,7.9000015 7.1999975,3.5 10.100007,0 13.600007,0z"
+                          Stretch="Uniform" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"
+                          Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.2,0.2" />
+                </Button>
 
                 <Separator />
                 <ComboBox x:Name="comboBoxDefaultPrivacyStatus" ToolTip="항목 추가 시 기본 공개 상태" IsEnabled="{Binding YouTubeSession.IsAuthorized}" VerticalAlignment="Center" SelectedIndex="{Binding PrivacyStatusIndex}">
@@ -146,18 +151,47 @@
 				 ScrollViewer.CanContentScroll="False"
 				 AllowDrop="True" Drop="UploadQueueListBox_Drop" DragEnter="UploadQueueListBox_DragEnter">
             <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
+                <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="Padding" Value="0"/>
                     <Setter Property="HorizontalAlignment" Value="Stretch" />
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                     <Setter Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollContentPresenter}}}" />
                     <Setter Property="Focusable" Value="False"/>
+
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="true">
+                                        <Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
+                                    </Trigger>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsSelected" Value="true"/>
+                                            <Condition Property="Selector.IsSelectionActive" Value="false"/>
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}}"/>
+                                    </MultiTrigger>
+                                    <Trigger Property="IsEnabled" Value="false">
+                                        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+
                 </Style>
             </ListBox.ItemContainerStyle>
 
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderThickness="1" BorderBrush="LightGray" Margin="5">
+                    <Border BorderThickness="1" BorderBrush="LightGray" Margin="5,5,5,0">
                         <Grid Height="160" Margin="5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="220" />
@@ -242,7 +276,7 @@
 
                                     <!-- 1열 편집 -->
                                     <TextBox Text="{Binding Title}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
-									     VerticalAlignment="Center" Margin="0,0,10,0"
+									     VerticalAlignment="Center" Margin="0,0,10,0" ToolTip="{Binding FileName}"
 									     IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" />
                                     <TextBox Text="{Binding Description}" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3"
 									     TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"

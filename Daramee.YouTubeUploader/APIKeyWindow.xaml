@@ -1,0 +1,45 @@
+﻿<Window x:Class="Daramee.YouTubeUploader.APIKeyWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Daramee.YouTubeUploader"
+        mc:Ignorable="d"
+        Title="API 키 설정" Height="220" Width="420" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="84" />
+            <RowDefinition Height="24" />
+        </Grid.RowDefinitions>
+
+        <GroupBox Header="API 키" Margin="8,8,8,4" Grid.Row="0">
+            <TextBox Name="textBoxAPIKey" Margin="4" />
+        </GroupBox>
+
+        <GroupBox Header="클라이언트 보안 비밀" Margin="8,4,8,4" Grid.Row="1">
+            <Grid Margin="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="128" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="8" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="클라이언트 ID:" Grid.Row="0" />
+                <TextBlock Text="클라이언트 보안 비밀:" Grid.Row="2" />
+
+                <TextBox Name="textBoxClientID" Grid.Row="0" Grid.Column="1" />
+                <TextBox Name="textBoxClientSecret" Grid.Row="2" Grid.Column="1" />
+            </Grid>
+        </GroupBox>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="확인" Width="80" Margin="0,0,8,0" Click="Button_Click" />
+            <Button Content="기본 값 사용" Width="80" Click="Button_Click_1" />
+        </StackPanel>
+    </Grid>
+</Window>

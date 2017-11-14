@@ -105,6 +105,7 @@ namespace Daramee.YouTubeUploader.Uploader
 		public IList<Playlist> Playlists { get; private set; } = new ObservableCollection<Playlist> ();
 
 		public double Progress { get; private set; }
+		public long TotalUploaded { get; private set; }
 		public UploadingStatus UploadingStatus { get; private set; }
 		public TimeSpan TimeRemaining { get; private set; }
 
@@ -133,6 +134,7 @@ namespace Daramee.YouTubeUploader.Uploader
 			PrivacyStatus = PrivacyStatus.Public;
 
 			Progress = 0;
+			TotalUploaded = 0;
 			UploadingStatus = UploadingStatus.Queued;
 		}
 
@@ -168,6 +170,7 @@ namespace Daramee.YouTubeUploader.Uploader
 					mediaStream.Dispose ();
 				mediaStream = null;
 				Progress = 0;
+				TotalUploaded = 0;
 				TimeRemaining = new TimeSpan ();
 				videoInsertRequest = null;
 			}
@@ -234,6 +237,7 @@ namespace Daramee.YouTubeUploader.Uploader
 				videoInsertRequest.ChunkSize = ResumableUpload.MinimumChunkSize;
 				videoInsertRequest.ProgressChanged += ( uploadProgress ) =>
 				{
+					TotalUploaded = uploadProgress.BytesSent;
 					Progress = uploadProgress.BytesSent / ( double ) mediaStream.Length;
 					double percentage = ( uploadProgress.BytesSent - lastSentBytes ) / ( double ) mediaStream.Length;
 					lastSentBytes = uploadProgress.BytesSent;

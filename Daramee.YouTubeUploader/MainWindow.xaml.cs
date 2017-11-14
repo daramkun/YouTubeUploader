@@ -31,7 +31,7 @@ namespace Daramee.YouTubeUploader
 		public bool HaltWhenAllCompleted { get; set; } = false;
 		[DataMember ( IsRequired = false )]
 		public bool DeleteWhenComplete { get; set; } = false;
-		[DataMember (IsRequired = false )]
+		[DataMember ( IsRequired = false )]
 		public bool HardwareAcceleration
 		{
 			get { return RenderOptions.ProcessRenderMode == RenderMode.Default; }
@@ -52,7 +52,7 @@ namespace Daramee.YouTubeUploader
 		{
 			IsSaveToRegistry = false
 		};
-		YouTubeSession youtubeSession = new YouTubeSession ( Environment.CurrentDirectory );
+		YouTubeSession youtubeSession = new YouTubeSession ( AppDomain.CurrentDomain.BaseDirectory );
 		Categories categories = new Categories ();
 
 		public YouTubeSession YouTubeSession { get { return youtubeSession; } }
@@ -68,7 +68,7 @@ namespace Daramee.YouTubeUploader
 		public MainWindow ()
 		{
 			SharedWindow = this;
-			
+
 			updateChecker = new UpdateChecker ( "v{0}.{1}{2}" );
 
 			InitializeComponent ();
@@ -79,8 +79,8 @@ namespace Daramee.YouTubeUploader
 
 		private async void Window_Loaded ( object sender, RoutedEventArgs e )
 		{
-			InitializeNotificatorImages ();
-			
+			//InitializeNotificatorImages ();
+
 			Stream iconStream = Application.GetResourceStream ( new Uri ( "pack://application:,,,/DaramYouTubeUploader;component/Resources/MainIcon.ico" ) ).Stream;
 			NotificatorManager.Initialize ( new NotificatorInitializer ()
 			{
@@ -93,6 +93,8 @@ namespace Daramee.YouTubeUploader
 				InformationTypeImagePath = Path.Combine ( tempPath, "InformationIcon.png" ),
 				ErrorTypeImagePath = Path.Combine ( tempPath, "ErrorIcon.png" ),
 				CustomTypeImagePath1 = Path.Combine ( tempPath, "SucceedIcon.png" ),
+
+				ForceLegacy = true
 			} );
 			iconStream.Dispose ();
 			NotificatorManager.Notificator.Clicked += ( sender2, e2 ) =>
@@ -101,7 +103,6 @@ namespace Daramee.YouTubeUploader
 				{
 					if ( WindowState == WindowState.Minimized )
 						WindowState = WindowState.Normal;
-					//Focus ();
 					Activate ();
 				} ) );
 			};
@@ -223,7 +224,7 @@ namespace Daramee.YouTubeUploader
 						else if ( ( ex as Google.GoogleApiException ).Error.Message.IndexOf ( "Invalid Credentials" ) >= 0 )
 						{
 							App.TaskDialogShow ( "Google API 인증 오류",
-								"api_key.txt 파일 또는 client_secrets.json 파일 중 하나가 적용이 되지 않거나 YouTube Data API 사용 설정이 제대로 되지 않아 문제가 발생했습니다. 다시 한번 확인해주세요.",
+								"API 키 및 클라이언트 비밀 보안 중 하나 이상이 문제가 있거나 YouTube Data API 사용 설정이 제대로 되지 않아 문제가 발생했습니다. 다시 한번 확인해주세요.",
 								"안내", VistaTaskDialogIcon.Error, "확인" );
 						}
 					}
@@ -235,6 +236,11 @@ namespace Daramee.YouTubeUploader
 		private void ButtonDisconnect_Click ( object sender, RoutedEventArgs e )
 		{
 			youtubeSession.Unauthorization ();
+		}
+
+		private void ButtonSetAPIKey_Click ( object sender, RoutedEventArgs e )
+		{
+			new APIKeyWindow ().ShowDialog ();
 		}
 
 		private async void ButtonAllUpload_Click ( object sender, RoutedEventArgs e )
@@ -320,10 +326,7 @@ namespace Daramee.YouTubeUploader
 
 		private void HyperlinkBrowse_Click ( object sender, RoutedEventArgs e )
 		{
-			OpenFileDialog ofd = new OpenFileDialog ()
-			{
-				Filter = "가능한 모든 파일(*.jpg;*.png)|*.jpg;*.png"
-			};
+			OpenFileDialog ofd = new OpenFileDialog () { Filter = "가능한 모든 파일(*.jpg;*.png)|*.jpg;*.png" };
 			if ( ofd.ShowDialog () == false )
 				return;
 
@@ -353,7 +356,7 @@ namespace Daramee.YouTubeUploader
 					blackBrush.Freeze ();
 
 					RenderTargetBitmap bmp = new RenderTargetBitmap ( 1280, 720, 96, 96, PixelFormats.Default );
-					
+
 					Grid container = new Grid ()
 					{
 						Width = 1280,
@@ -369,15 +372,15 @@ namespace Daramee.YouTubeUploader
 
 					switch ( result )
 					{
-						case 1: image.Stretch = Stretch.Uniform; break;
-						case 2: image.Stretch = Stretch.UniformToFill; break;
-						case 3: image.Stretch = Stretch.Fill; break;
+					case 1: image.Stretch = Stretch.Uniform; break;
+					case 2: image.Stretch = Stretch.UniformToFill; break;
+					case 3: image.Stretch = Stretch.Fill; break;
 					}
 
 					container.Children.Add ( image );
 					container.Measure ( new Size ( 1280, 720 ) );
 					container.Arrange ( new Rect ( 0, 0, 1280, 720 ) );
-					
+
 					bmp.Render ( container );
 					bmp.Freeze ();
 
@@ -481,7 +484,7 @@ namespace Daramee.YouTubeUploader
 			queueItem.Failed += async ( sender, e ) =>
 			{
 				if ( ( sender as UploadQueueItem ).UploadingStatus == UploadingStatus.UploadCompleted ||
-				( sender as UploadQueueItem ).UploadingStatus == UploadingStatus.UpdateComplete )
+					 ( sender as UploadQueueItem ).UploadingStatus == UploadingStatus.UpdateComplete )
 					return;
 				if ( !HaltWhenAllCompleted && !RetryWhenCanceled )
 					return;
@@ -489,12 +492,12 @@ namespace Daramee.YouTubeUploader
 				int sec = 0;
 				switch ( option.Options.RetryDelayIndex )
 				{
-					case 0: sec = 0; break;
-					case 1: sec = 5; break;
-					case 2: sec = 10; break;
-					case 3: sec = 15; break;
-					case 4: sec = 30; break;
-					case 5: sec = 60; break;
+				case 0: sec = 0; break;
+				case 1: sec = 5; break;
+				case 2: sec = 10; break;
+				case 3: sec = 15; break;
+				case 4: sec = 30; break;
+				case 5: sec = 60; break;
 				}
 				if ( sec != 0 )
 					await Task.Delay ( 1000 * sec );
@@ -544,53 +547,21 @@ namespace Daramee.YouTubeUploader
 			string itemName = $"{uploadQueueItem.Title}({Path.GetFileName ( HttpUtility.UrlDecode ( uploadQueueItem.FileName.AbsolutePath ) )})";
 			switch ( await uploadQueueItem.UploadStart () )
 			{
-				case UploadResult.Succeed:
-					{
-						switch ( uploadQueueItem.UploadingStatus )
-						{
-							case UploadingStatus.UploadCompleted:
-								NotificatorManager.Notify ( "안내",
-									$"{itemName}에 대한 업로드를 성공했습니다.",
-									NotifyType.CustomType1 );
-								break;
-							case UploadingStatus.UpdateComplete:
-								NotificatorManager.Notify ( "안내",
-									$"{itemName}에 대한 업데이트를 성공했습니다.",
-									NotifyType.CustomType1 );
-								break;
-							case UploadingStatus.UploadFailed:
-								NotificatorManager.Notify ( "안내",
-									$"{itemName}에 대한 업로드를 실패했습니다.",
-									NotifyType.Warning );
-								break;
-							case UploadingStatus.UpdateFailed:
-								NotificatorManager.Notify ( "안내",
-									$"{itemName}에 대한 업데이트를 실패했습니다.",
-									NotifyType.Warning );
-								break;
-						}
-					}
-					break;
-				case UploadResult.UploadCanceled:
-					NotificatorManager.Notify ( "안내",
-						$"{itemName}에 대한 업로드가 중단됐습니다.\n이어서 업로드가 가능합니다.",
-						NotifyType.Warning );
-					break;
-				case UploadResult.AlreadyUploading:
-					NotificatorManager.Notify ( "오류", $"{itemName}은 이미 업로드가 시작되었습니다.", NotifyType.Error );
-					break;
-				case UploadResult.CannotAccesToFile:
-					NotificatorManager.Notify ( "오류", $"{itemName}의 영상 파일에 접근할 수 없었습니다.", NotifyType.Error );
-					break;
-				case UploadResult.FailedUploadRequest:
-					NotificatorManager.Notify ( "오류", $"{itemName}의 업로드 요청을 시작할 수 없었습니다.", NotifyType.Error );
-					break;
-				case UploadResult.CannotStartUpload:
-					NotificatorManager.Notify ( "오류", $"{itemName}의 업로드 작업을 시작할 수 없었습니다.", NotifyType.Error );
-					break;
-				case UploadResult.FileSizeIsTooBig:
-					NotificatorManager.Notify ( "오류", $"{itemName}의 업로드할 파일의 크기는 64GB를 넘길 수 없습니다.", NotifyType.Error );
-					break;
+			case UploadResult.Succeed:
+				switch ( uploadQueueItem.UploadingStatus )
+				{
+				case UploadingStatus.UploadCompleted: NotificatorManager.Notify ( "안내", $"{itemName}에 대한 업로드를 성공했습니다.", NotifyType.CustomType1 ); break;
+				case UploadingStatus.UpdateComplete: NotificatorManager.Notify ( "안내", $"{itemName}에 대한 업데이트를 성공했습니다.", NotifyType.CustomType1 ); break;
+				case UploadingStatus.UploadFailed: NotificatorManager.Notify ( "안내", $"{itemName}에 대한 업로드를 실패했습니다.", NotifyType.Warning ); break;
+				case UploadingStatus.UpdateFailed: NotificatorManager.Notify ( "안내", $"{itemName}에 대한 업데이트를 실패했습니다.", NotifyType.Warning ); break;
+				}
+				break;
+			case UploadResult.UploadCanceled: NotificatorManager.Notify ( "안내", $"{itemName}에 대한 업로드가 중단됐습니다.\n업로드 재개가 가능합니다.", NotifyType.Warning ); break;
+			case UploadResult.AlreadyUploading: NotificatorManager.Notify ( "오류", $"{itemName}은 이미 업로드가 시작되었습니다.", NotifyType.Error ); break;
+			case UploadResult.CannotAccesToFile: NotificatorManager.Notify ( "오류", $"{itemName}의 영상 파일에 접근할 수 없었습니다.", NotifyType.Error ); break;
+			case UploadResult.FailedUploadRequest: NotificatorManager.Notify ( "오류", $"{itemName}의 업로드 요청을 시작할 수 없었습니다.", NotifyType.Error ); break;
+			case UploadResult.CannotStartUpload: NotificatorManager.Notify ( "오류", $"{itemName}의 업로드 작업을 시작할 수 없었습니다.", NotifyType.Error ); break;
+			case UploadResult.FileSizeIsTooBig: NotificatorManager.Notify ( "오류", $"{itemName}의 업로드할 파일의 크기는 64GB를 넘길 수 없습니다.", NotifyType.Error ); break;
 			}
 		}
 	}
