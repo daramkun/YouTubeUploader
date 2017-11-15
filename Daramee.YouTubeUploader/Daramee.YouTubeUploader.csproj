@@ -122,6 +122,7 @@
     <Compile Include="APIKeyWindow.xaml.cs">
       <DependentUpon>APIKeyWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\ByteUnitConverter.cs" />
     <Compile Include="Converters\PrivacyStatusToIntegerConverter.cs" />
     <Compile Include="Converters\UploadingStatusToBooleanForEditableConverter.cs" />
     <Compile Include="Converters\UploadingStatusToBooleanForPauseConverter.cs" />

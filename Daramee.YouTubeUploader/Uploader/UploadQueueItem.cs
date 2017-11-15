@@ -114,6 +114,7 @@ namespace Daramee.YouTubeUploader.Uploader
 
 		public double Progress { get; private set; }
 		public long TotalUploaded { get; private set; }
+		public long FileSize { get { return mediaStream.Length; } }
 		public UploadingStatus UploadingStatus { get; private set; }
 		public TimeSpan TimeRemaining { get; private set; }
 
@@ -132,6 +133,7 @@ namespace Daramee.YouTubeUploader.Uploader
 			}
 			set
 			{
+				if ( videoInsertRequest == null ) return;
 				switch ( value )
 				{
 				case DataChunkSize.ChunkSize_256KB: videoInsertRequest.ChunkSize = ResumableUpload.MinimumChunkSize; break;
@@ -150,6 +152,13 @@ namespace Daramee.YouTubeUploader.Uploader
 			youtubeSession = new WeakReference<YouTubeSession> ( session );
 
 			FileName = new Uri ( filename, UriKind.Absolute );
+			mediaStream = new FileStream ( HttpUtility.UrlDecode ( FileName.AbsolutePath ), FileMode.Open, FileAccess.Read, FileShare.Read );
+			if ( mediaStream.Length >= 68719476736 )
+			{
+				mediaStream.Dispose ();
+				mediaStream = null;
+				throw new ArgumentException ( "File size is to big.", "filename" );
+			}
 
 			video = new Google.Apis.YouTube.v3.Data.Video ()
 			{
@@ -249,21 +258,6 @@ namespace Daramee.YouTubeUploader.Uploader
 				return UploadResult.AlreadyUploading;
 
 			UploadingStatus = UploadingStatus.PrepareUpload;
-
-			try
-			{
-				if ( mediaStream == null )
-				{
-					mediaStream = new FileStream ( HttpUtility.UrlDecode ( FileName.AbsolutePath ), FileMode.Open, FileAccess.Read, FileShare.Read );
-					if ( mediaStream.Length >= 68719476736 )
-					{
-						mediaStream.Dispose ();
-						mediaStream = null;
-						return UploadResult.FileSizeIsTooBig;
-					}
-				}
-			}
-			catch { UploadingStatus = UploadingStatus.UploadFailed; return UploadResult.CannotAccesToFile; }
 
 			bool virIsNull = videoInsertRequest == null;
 			if ( virIsNull )

@@ -19,6 +19,7 @@
         <conv:UploadingStatusToBooleanForPauseConverter x:Key="uploadingStatusToBooleanForPauseConverter" />
         <conv:UploadingStatusToColorConverter x:Key="uploadingStatusToColorConverter" />
         <dcl:BooleanInvertConverter x:Key="booleanInvertConverter" />
+        <conv:ByteUnitConverter x:Key="byteUnitConverter" />
 
         <ResourceDictionary x:Key="notifyIcons" Source="./NotifyIconDictionary.xaml" />
 
@@ -329,7 +330,10 @@
                                 <!-- 마지막 행 진행 상태 표기 -->
                                 <ProgressBar Grid.Row="1" Maximum="1" Value="{Binding Progress, Mode=OneWay}" HorizontalAlignment="Stretch" />
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" Orientation="Horizontal">
-                                    <TextBlock FontSize="8" />
+                                    <TextBlock Text="{Binding TotalUploaded, Converter={StaticResource byteUnitConverter}}" FontSize="8" />
+                                    <TextBlock Text="/" FontSize="8" />
+                                    <TextBlock Text="{Binding FileSize, Converter={StaticResource byteUnitConverter}}" FontSize="8" />
+                                    <TextBlock Text=", " FontSize="8" />
                                     <TextBlock Text="{Binding TimeRemaining, StringFormat=hh\\:mm\\:ss}" FontSize="8" />
                                 </StackPanel>
                             </Grid>

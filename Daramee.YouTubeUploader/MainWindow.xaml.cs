@@ -471,7 +471,23 @@ namespace Daramee.YouTubeUploader
 			if ( alreadyAdded )
 				return;
 
-			var queueItem = new UploadQueueItem ( youtubeSession, filename ) { PrivacyStatus = ( PrivacyStatus ) comboBoxDefaultPrivacyStatus.SelectedIndex };
+			string itemName = Path.GetFileName ( filename );
+			UploadQueueItem queueItem;
+			try
+			{
+				queueItem = new UploadQueueItem ( youtubeSession, filename ) { PrivacyStatus = ( PrivacyStatus ) comboBoxDefaultPrivacyStatus.SelectedIndex };
+			}
+			catch ( ArgumentException )
+			{
+				NotificatorManager.Notify ( "오류", $"{itemName}의 업로드할 파일의 크기는 64GB를 넘길 수 없습니다.", NotifyType.Error );
+				return;
+			}
+			catch ( IOException )
+			{
+				NotificatorManager.Notify ( "오류", $"{itemName}의 영상 파일에 접근할 수 없었습니다.", NotifyType.Error );
+				return;
+			}
+
 			// 업로드 성공
 			queueItem.Completed += ( sender, e ) =>
 			{
@@ -579,10 +595,8 @@ namespace Daramee.YouTubeUploader
 				break;
 			case UploadResult.UploadCanceled: NotificatorManager.Notify ( "안내", $"{itemName}에 대한 업로드가 중단됐습니다.\n업로드 재개가 가능합니다.", NotifyType.Warning ); break;
 			case UploadResult.AlreadyUploading: NotificatorManager.Notify ( "오류", $"{itemName}은 이미 업로드가 시작되었습니다.", NotifyType.Error ); break;
-			case UploadResult.CannotAccesToFile: NotificatorManager.Notify ( "오류", $"{itemName}의 영상 파일에 접근할 수 없었습니다.", NotifyType.Error ); break;
 			case UploadResult.FailedUploadRequest: NotificatorManager.Notify ( "오류", $"{itemName}의 업로드 요청을 시작할 수 없었습니다.", NotifyType.Error ); break;
 			case UploadResult.CannotStartUpload: NotificatorManager.Notify ( "오류", $"{itemName}의 업로드 작업을 시작할 수 없었습니다.", NotifyType.Error ); break;
-			case UploadResult.FileSizeIsTooBig: NotificatorManager.Notify ( "오류", $"{itemName}의 업로드할 파일의 크기는 64GB를 넘길 수 없습니다.", NotifyType.Error ); break;
 			}
 		}
 	}
