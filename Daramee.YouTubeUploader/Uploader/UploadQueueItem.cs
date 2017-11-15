@@ -308,6 +308,7 @@ namespace Daramee.YouTubeUploader.Uploader
 
 					PC ( nameof ( Progress ) );
 					PC ( nameof ( UploadingStatus ) );
+					PC ( nameof ( TotalUploaded ) );
 					PC ( nameof ( TimeRemaining ) );
 				};
 				videoInsertRequest.ResponseReceived += async ( video ) =>

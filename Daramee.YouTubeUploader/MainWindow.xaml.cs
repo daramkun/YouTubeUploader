@@ -248,13 +248,15 @@ namespace Daramee.YouTubeUploader
 
 		private async void ButtonAllUpload_Click ( object sender, RoutedEventArgs e )
 		{
+			List<UploadQueueItem> copied = new List<UploadQueueItem> ( uploadQueueListBox.ItemsSource as IEnumerable<UploadQueueItem> );
+			DataChunkSize chunkSize = ( DataChunkSize ) dataChunkSize.SelectedIndex;
 			await Task.Run ( new Action ( () =>
 			{
-				foreach ( var item in uploadQueueListBox.ItemsSource as ObservableCollection<UploadQueueItem> )
+				foreach ( var item in copied )
 				{
 					if ( item.UploadingStatus == UploadingStatus.Queued || item.UploadingStatus == UploadingStatus.UploadFailed )
 					{
-						ThreadPool.QueueUserWorkItem ( async ( i ) => { await UploadItem ( i as UploadQueueItem ); }, item );
+						ThreadPool.QueueUserWorkItem ( async ( i ) => { await UploadItem ( i as UploadQueueItem, chunkSize ); }, item );
 						while ( item.UploadingStatus < UploadingStatus.Uploading )
 							Thread.Sleep ( 1 );
 					}
@@ -310,7 +312,7 @@ namespace Daramee.YouTubeUploader
 		private async void ButtonUpload_Click ( object sender, RoutedEventArgs e )
 		{
 			var uploadQueueItem = ( ( sender as Button ).DataContext as UploadQueueItem );
-			await UploadItem ( uploadQueueItem );
+			await UploadItem ( uploadQueueItem, ( DataChunkSize ) dataChunkSize.SelectedIndex );
 		}
 
 		private void ButtonReInitialize_Click ( object sender, RoutedEventArgs e )
@@ -573,7 +575,7 @@ namespace Daramee.YouTubeUploader
 			( uploadQueueListBox.ItemsSource as IList<UploadQueueItem> ).Add ( queueItem );
 		}
 
-		private async Task UploadItem ( UploadQueueItem uploadQueueItem )
+		private async Task UploadItem ( UploadQueueItem uploadQueueItem, DataChunkSize dataChunkSize )
 		{
 			if ( uploadQueueItem.Title.Trim ().Length == 0 )
 			{
@@ -582,7 +584,7 @@ namespace Daramee.YouTubeUploader
 			}
 
 			string itemName = $"{uploadQueueItem.Title}({Path.GetFileName ( HttpUtility.UrlDecode ( uploadQueueItem.FileName.AbsolutePath ) )})";
-			switch ( await uploadQueueItem.UploadStart ( ( DataChunkSize ) dataChunkSize.SelectedIndex ) )
+			switch ( await uploadQueueItem.UploadStart ( dataChunkSize ) )
 			{
 			case UploadResult.Succeed:
 				switch ( uploadQueueItem.UploadingStatus )
