@@ -143,6 +143,12 @@
 
                 <Separator />
 
+				<Button ToolTip="피드백" Click="ButtonFeedback_Click">
+					<Path Data="M14.300025,0C18.400033,0,21.700038,3.8999996,21.700038,8.5999994L21.700038,8.7999997C22.300039,9.3999996,22.80004,10.099999,23.300041,10.8L26.800046,10.8 26.800046,7.6999998 28.200049,7.6999998 28.200049,12.099999 26.800046,12.099999 24.000042,12.099999C25.000044,14.1,25.600045,16.3,25.600045,18.8L25.600045,19.2 28.200049,19.2 28.200049,20.4 25.500045,20.4C25.200044,23,24.300042,25.4,22.90004,27.299999L23.700042,27.299999 26.900046,30.2 25.900045,31.099999 23.10004,28.599999 21.800038,28.599999C19.800035,30.7 17.20003,31.999999 14.200025,31.999999 11.30002,31.999999 8.6000153,30.7 6.6000121,28.599999L5.50001,28.599999 2.7000051,31.099999 1.7000036,30.2 4.9000087,27.299999 5.7000103,27.299999C4.3000078,25.4,3.4000063,23,3.1000056,20.4L0,20.4 0,19.2 3.1000056,19.2 3.1000056,18.8C3.1000056,16.4,3.700007,14.1,4.7000084,12.099999L1.4000025,12.099999 0,12.099999 0,7.6999998 1.4000025,7.6999998 1.4000025,10.8 5.3000097,10.8C5.8000107,10.099999,6.3000112,9.3999996,6.9000127,8.7999997L6.9000127,8.5999994C6.9000125,3.8999996,10.200018,0,14.300025,0z"
+						  Stretch="Uniform" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"
+						  Width="16" Height="16" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" />
+				</Button>
+
                 <Button ToolTip="업데이트 확인" Click="ButtonCheckUpdate_Click">
                     <Path Data="M30.593,9.0030207L31.999985,10.361021 18.957978,23.868021 12.459985,18.72902 13.672999,17.195025 18.780976,21.234022z M11.02401,4.3140163L16.644027,9.8050042 15.185022,11.299001 12.120014,8.3043607 12.120014,17.747007 10.032026,17.747007 10.032026,8.2238792 6.8630276,11.340018 5.3860273,9.8650156 10.873961,4.4676647z M10.825997,0L10.958,0C16.948114,0 21.839207,4.8259993 21.910208,10.831998 21.946209,13.876997 20.735186,16.664997 18.753148,18.684997L17.091116,17.384997C17.140118,17.336997 17.194118,17.294997 17.242119,17.245996 18.935152,15.533997 19.851169,13.264997 19.822168,10.856998 19.765167,6.020999 15.788092,2.0879998 10.958,2.0879998L10.824998,2.0879998C8.5059533,2.0879998 6.318912,3.0069995 4.6688805,4.6769991 2.9768486,6.3899989 2.0608311,8.6579986 2.0888319,11.065998 2.1448326,15.797997 5.955905,19.655996 10.644994,19.819997L11.247005,20.262997 13.096041,21.724997C12.444028,21.849996,11.774016,21.922997,11.086002,21.922997L10.953,21.922997C4.9628859,21.922997 0.071793556,17.096997 0.00079154968,11.090998 -0.071209908,5.0409992 4.7758827,0 10.825997,0z"
                           Stretch="Uniform" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"
@@ -307,14 +313,14 @@
                                     </ComboBox>
                                     <StackPanel Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,0,10,0" VerticalAlignment="Center">
                                         <TextBlock Margin="0,0,5,0">
-								<Hyperlink IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" Click="HyperlinkEditTags_Click">
-									태그 편집
-								</Hyperlink>
+											<Hyperlink IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" Click="HyperlinkEditTags_Click">
+												태그 편집
+											</Hyperlink>
                                         </TextBlock>
                                         <TextBlock Margin="0,0,5,0">
-								<Hyperlink IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForPlaylistEditConverter}}" Click="HyperlinkAddPlaylists_Click">
-									재생목록 추가
-								</Hyperlink>
+											<Hyperlink IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForPlaylistEditConverter}}" Click="HyperlinkAddPlaylists_Click">
+												재생목록 추가
+											</Hyperlink>
                                         </TextBlock>
                                     </StackPanel>
                                     <!-- 1열 상태 표기 -->

@@ -55,6 +55,14 @@ namespace Daramee.YouTubeUploader
 					TaskDialogShow ( "심각한 오류가 발생했습니다.", $"{( e2.ExceptionObject as FileNotFoundException ).Message} 파일이 존재하지 않습니다.",
 						"오류", VistaTaskDialogIcon.Error, "확인" );
 				}
+				else
+				{
+					TaskDialogShow ( "오류가 발생했습니다.", ( e2.ExceptionObject as Exception ).Message, "오류", VistaTaskDialogIcon.Error, "확인" );
+				}
+			};
+			this.DispatcherUnhandledException += ( sender, e2 ) =>
+			{
+
 			};
 
 			base.OnStartup ( e );

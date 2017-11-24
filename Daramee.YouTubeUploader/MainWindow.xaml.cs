@@ -43,6 +43,12 @@ namespace Daramee.YouTubeUploader
 		public int PrivacyStatusIndex { get; set; } = 0;
 		[DataMember ( IsRequired = false )]
 		public int DataChunkSizeIndex { get; set; } = 1;
+		[DataMember ( IsRequired = false )]
+		public bool Notification
+		{
+			get { return NotificatorManager.Notificator.IsEnabledNotification; }
+			set { NotificatorManager.Notificator.IsEnabledNotification = value; }
+		}
 	}
 
 	public sealed partial class MainWindow : Window
@@ -50,10 +56,7 @@ namespace Daramee.YouTubeUploader
 		public static MainWindow SharedWindow { get; private set; }
 
 		UpdateChecker updateChecker;
-		Optionizer<SaveData> option = new Optionizer<SaveData> ( "DARAM WORLD", "DaramYouTubeUploader" )
-		{
-			IsSaveToRegistry = false
-		};
+		Optionizer<SaveData> option;
 		YouTubeSession youtubeSession = new YouTubeSession ( AppDomain.CurrentDomain.BaseDirectory );
 		Categories categories = new Categories ();
 
@@ -74,14 +77,6 @@ namespace Daramee.YouTubeUploader
 
 			updateChecker = new UpdateChecker ( "v{0}.{1}{2}" );
 
-			InitializeComponent ();
-			TaskbarItemInfo = new TaskbarItemInfo ();
-
-			uploadQueueListBox.ItemsSource = new ObservableCollection<UploadQueueItem> ();
-		}
-
-		private async void Window_Loaded ( object sender, RoutedEventArgs e )
-		{
 			//InitializeNotificatorImages ();
 
 			Stream iconStream = Application.GetResourceStream ( new Uri ( "pack://application:,,,/DaramYouTubeUploader;component/Resources/MainIcon.ico" ) ).Stream;
@@ -110,14 +105,27 @@ namespace Daramee.YouTubeUploader
 				} ) );
 			};
 
+			option = new Optionizer<SaveData> ( "DARAM WORLD", "DaramYouTubeUploader" )
+			{
+				IsSaveToRegistry = false
+			};
+
+			InitializeComponent ();
+			TaskbarItemInfo = new TaskbarItemInfo ();
+
+			uploadQueueListBox.ItemsSource = new ObservableCollection<UploadQueueItem> ();
+		}
+
+		private async void Window_Loaded ( object sender, RoutedEventArgs e )
+		{
+			if ( youtubeSession.IsAlreadyAuthorized )
+				ButtonConnect_Click ( sender, e );
+			
 			notificationToggleCheckBox.DataContext = NotificatorManager.Notificator;
 			notificationToggleCheckBox.SetBinding ( CheckBox.IsCheckedProperty, new Binding ( nameof ( NotificatorManager.Notificator.IsEnabledNotification ) )
 			{
 				Mode = BindingMode.TwoWay,
 			} );
-
-			if ( youtubeSession.IsAlreadyAuthorized )
-				ButtonConnect_Click ( sender, e );
 
 			if ( await updateChecker.CheckUpdate () == true )
 				NotificatorManager.Notify ( "업데이트 확인", "Daram YouTube Uploader의 최신 버전이 있습니다.", NotifyType.Information );
@@ -271,6 +279,11 @@ namespace Daramee.YouTubeUploader
 			{
 				item.DataChunkSize = ( DataChunkSize ) dataChunkSize.SelectedIndex;
 			}
+		}
+
+		private void ButtonFeedback_Click ( object sender, RoutedEventArgs e )
+		{
+			Process.Start ( "https://github.com/daramkun/YouTubeUploader/issues" );
 		}
 
 		private async void ButtonCheckUpdate_Click ( object sender, RoutedEventArgs e )
