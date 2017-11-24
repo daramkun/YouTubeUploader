@@ -14,6 +14,7 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.Http;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
+using Newtonsoft.Json;
 
 namespace Daramee.YouTubeUploader.Uploader
 {
@@ -44,6 +45,17 @@ namespace Daramee.YouTubeUploader.Uploader
 				YouTubeService.Dispose ();
 			YouTubeService = null;
 		}
+		
+		struct ClientSecret
+		{
+			public struct ClientSecretInstalled
+			{
+				public string client_id;
+				public string client_secret;
+				public string redirect_uri;
+			}
+			public ClientSecretInstalled installed;
+		}
 
 		private void GetAPIKeyAndClientSecret ( out string apiKey, out Stream clientSecret )
 		{
@@ -52,24 +64,36 @@ namespace Daramee.YouTubeUploader.Uploader
 				var lines = File.ReadAllLines ( "user_custom_settings.txt" );
 				apiKey = lines [ 0 ];
 				clientSecret = new MemoryStream ( Encoding.UTF8.GetBytes ( $"{{ installed : {{ \"client_id\": \"{ lines [ 1 ] }\", \"client_secret\": \"{ lines [ 2 ] }\", \"redirect_uri\" : \"urn:ietf:wg:oauth:2.0:oob\" }} }}" ) );
-				clientSecret.Position = 0;
 			}
 			else
 			{
+				string client_id = null;
+				string client_secret = null;
 				if ( File.Exists ( "client_secrets.json" ) )
 				{
-					clientSecret = File.Open ( "client_secrets.json", FileMode.Open, FileAccess.Read );
+					string clientSecretString = File.ReadAllText ( "client_secrets.json" );
+					clientSecret = new MemoryStream ( Encoding.UTF8.GetBytes ( clientSecretString ) );
+
+					ClientSecret secret = JsonConvert.DeserializeObject<ClientSecret> ( clientSecretString );
+					client_id = secret.installed.client_id;
+					client_secret = secret.installed.client_secret;
 				}
 				else
 				{
 					clientSecret = new MemoryStream ( Encoding.UTF8.GetBytes ( "{ installed : { \"client_id\": \"265154369970-nvej6rlmsigg57b0956clc36j7of2anu.apps.googleusercontent.com\", \"client_secret\": \"T0v3vOo6WndzgH3WQ9UvkLlU\", \"redirect_uri\" : \"urn:ietf:wg:oauth:2.0:oob\" } }" ) );
-					clientSecret.Position = 0;
 				}
 
 				if ( File.Exists ( "api_key.txt" ) )
 					apiKey = File.ReadAllText ( "api_key.txt" );
 				else
 					apiKey = "AIzaSyCvMp_S7s1vNhrfCZuOEUtSk7tcEuuKcpE";
+
+				if ( client_id != null && client_secret != null )
+				{
+					File.Delete ( "api_key.txt" );
+					File.Delete ( "client_secrets.json" );
+					File.WriteAllLines ( "user_custom_settings.txt", new string [] { apiKey, client_id, client_secret } );
+				}
 			}
 		}
 
