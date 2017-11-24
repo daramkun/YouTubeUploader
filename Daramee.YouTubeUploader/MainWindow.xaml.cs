@@ -303,6 +303,11 @@ namespace Daramee.YouTubeUploader
 			}
 		}
 
+		private void ButtonWiki_Click ( object sender, RoutedEventArgs e )
+		{
+			Process.Start ( "https://github.com/daramkun/YouTubeUploader/wiki" );
+		}
+
 		private void ButtonPlayItem_Click ( object sender, RoutedEventArgs e )
 		{
 			( ( ( ( sender as Button ).Parent as StackPanel ).Parent as Grid ).Children [ 1 ] as MediaElement ).Play ();
