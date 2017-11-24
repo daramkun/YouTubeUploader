@@ -282,10 +282,10 @@
                                     </StackPanel>
 
                                     <!-- 1열 편집 -->
-                                    <TextBox Text="{Binding Title}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
+									<TextBox Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
 									     VerticalAlignment="Center" Margin="0,0,10,0" ToolTip="{Binding FileName}"
 									     IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}" />
-                                    <TextBox Text="{Binding Description}" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3"
+									<TextBox Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3"
 									     TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
 									     MaxLines="16" Margin="0,0,10,0"
 									     IsEnabled="{Binding UploadingStatus, Converter={StaticResource uploadingStatusToBooleanForEditableConverter}}"  />

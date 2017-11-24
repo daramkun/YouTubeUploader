@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" IgnorableNamespaces="uap mp rescap">
-  <Identity Name="0225A3A7-E587-4E62-B39D-7860C80EFE9A" Publisher="CN=daram" Version="1.2.0.0" />
+  <Identity Name="17270Daramkun.DaramYouTubeUploader" Publisher="CN=DF3D7011-1E8D-4278-81C3-565FF92A9A0B" Version="1.21.0.0" />
   <Properties>
-    <DisplayName>Daramee.YouTubeUploader.UWP</DisplayName>
-    <PublisherDisplayName>Daramee</PublisherDisplayName>
+    <DisplayName>DaramYouTubeUploader</DisplayName>
+    <PublisherDisplayName>Daramkun</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
