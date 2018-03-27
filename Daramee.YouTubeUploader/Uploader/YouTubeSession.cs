@@ -55,6 +55,16 @@ namespace Daramee.YouTubeUploader.Uploader
 				public string redirect_uri;
 			}
 			public ClientSecretInstalled installed;
+			
+			public ClientSecret ( string client_id, string client_secret, string redirect_uri )
+			{
+				installed = new ClientSecretInstalled
+				{
+					client_id = client_id,
+					client_secret = client_secret,
+					redirect_uri = redirect_uri
+				};
+			}
 		}
 
 		private void GetAPIKeyAndClientSecret ( out string apiKey, out Stream clientSecret )

@@ -105,10 +105,7 @@ namespace Daramee.YouTubeUploader
 				} ) );
 			};
 
-			option = new Optionizer<SaveData> ( "DARAM WORLD", "DaramYouTubeUploader" )
-			{
-				IsSaveToRegistry = false
-			};
+			option = new Optionizer<SaveData> ( "DARAM WORLD", "DaramYouTubeUploader" );
 
 			InitializeComponent ();
 			TaskbarItemInfo = new TaskbarItemInfo ();
