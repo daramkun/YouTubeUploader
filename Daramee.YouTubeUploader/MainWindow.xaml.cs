@@ -16,9 +16,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shell;
 using Daramee.DaramCommonLib;
+using Daramee.TaskDialogSharp;
 using Daramee.YouTubeUploader.Uploader;
 using Microsoft.Win32;
-using TaskDialogInterop;
 
 namespace Daramee.YouTubeUploader
 {
@@ -177,9 +177,10 @@ namespace Daramee.YouTubeUploader
 
 			if ( incompleted )
 			{
-				var result = App.TaskDialogShow ( "종료하시겠습니까?", "아직 업로드가 완전히 끝나지 않았습니다. 종료하실 경우 이어서 업로드 하기가 불가능합니다.", "안내",
-					VistaTaskDialogIcon.Warning, "예", "아니오" );
-				if ( result.CustomButtonResult == 1 )
+				var result = App.TaskDialogShow ( "안내", "종료하시겠습니까?",
+					"아직 업로드가 완전히 끝나지 않았습니다. 종료하실 경우 이어서 업로드 하기가 불가능합니다.", 
+					TaskDialogIcon.Warning, TaskDialogCommonButtonFlags.Yes | TaskDialogCommonButtonFlags.No );
+				if ( result.Button == TaskDialogResult.No )
 				{
 					e.Cancel = true;
 					return;
@@ -224,16 +225,16 @@ namespace Daramee.YouTubeUploader
 					{
 						if ( ( ex as Google.GoogleApiException ).Error.Message.IndexOf ( "Daily Limit Exceeded." ) >= 0 )
 						{
-							if ( App.TaskDialogShow ( "Google API 호출 제한",
+							if ( App.TaskDialogShow ( "안내", "Google API 호출 제한",
 								"금일 또는 100초 내 Google API 최대 호출량을 넘어서서 현재 이용이 불가능합니다. 100초 이후 또는 금일이 지나면 다시 이용이 가능하나, 지금 바로 이용하시려면 자세한 내용은 해결법 버튼을 눌러 확인해주세요.",
-								"안내", VistaTaskDialogIcon.Error, "확인", "해결법" ).CustomButtonResult == 1 )
+								TaskDialogIcon.Error, TaskDialogCommonButtonFlags.OK, "해결법" ).Button == 101 )
 								Process.Start ( "https://github.com/daramkun/YouTubeUploader/wiki/사용자-지정-키-사용하기" );
 						}
 						else if ( ( ex as Google.GoogleApiException ).Error.Message.IndexOf ( "Invalid Credentials" ) >= 0 )
 						{
-							App.TaskDialogShow ( "Google API 인증 오류",
+							App.TaskDialogShow ( "안내", "Google API 인증 오류",
 								"API 키 및 클라이언트 비밀 보안 중 하나 이상이 문제가 있거나 YouTube Data API 사용 설정이 제대로 되지 않아 문제가 발생했습니다. 다시 한번 확인해주세요.",
-								"안내", VistaTaskDialogIcon.Error, "확인" );
+								TaskDialogIcon.Error, TaskDialogCommonButtonFlags.OK );
 						}
 					}
 					ButtonDisconnect_Click ( this, e );
@@ -287,16 +288,16 @@ namespace Daramee.YouTubeUploader
 		{
 			if ( await updateChecker.CheckUpdate () == true )
 			{
-				if ( App.TaskDialogShow ( $"업데이트가 확인되었습니다.",
-					$"현재 버전: {updateChecker.ThisVersion}\n최신 버전: {await updateChecker.GetNewestVersion ()}", "안내",
-					VistaTaskDialogIcon.Information, "확인", "업데이트" ).CustomButtonResult == 1 )
+				if ( App.TaskDialogShow ( "안내", $"업데이트가 확인되었습니다.",
+					$"현재 버전: {updateChecker.ThisVersion}\n최신 버전: {await updateChecker.GetNewestVersion ()}",
+					TaskDialogIcon.Information, TaskDialogCommonButtonFlags.OK, "업데이트" ).Button == 101 )
 					updateChecker.ShowDownloadPage ();
 			}
 			else
 			{
-				App.TaskDialogShow ( "현재 버전이 최신 버전입니다.",
-					$"현재 버전: {updateChecker.ThisVersion}\n최신 버전: {await updateChecker.GetNewestVersion ()}", "안내",
-					VistaTaskDialogIcon.Information, "확인" );
+				App.TaskDialogShow ( "안내", "현재 버전이 최신 버전입니다.",
+					$"현재 버전: {updateChecker.ThisVersion}\n최신 버전: {await updateChecker.GetNewestVersion ()}",
+					TaskDialogIcon.Information, TaskDialogCommonButtonFlags.OK );
 			}
 		}
 
@@ -332,8 +333,8 @@ namespace Daramee.YouTubeUploader
 
 		private void ButtonReInitialize_Click ( object sender, RoutedEventArgs e )
 		{
-			if ( App.TaskDialogShow ( "이 항목의 업로드 상태를 초기화하시겠습니까?", "업로드 상태를 초기화하면 업로드를 이어하지 않고 새로 업로드를 시작합니다.",
-				"안내", VistaTaskDialogIcon.Warning, "예", "아니오" ).CustomButtonResult == 1 )
+			if ( App.TaskDialogShow ( "안내", "이 항목의 업로드 상태를 초기화하시겠습니까?", "업로드 상태를 초기화하면 업로드를 이어하지 않고 새로 업로드를 시작합니다.",
+				TaskDialogIcon.Warning, TaskDialogCommonButtonFlags.Yes | TaskDialogCommonButtonFlags.No ).Button == TaskDialogResult.No )
 				return;
 
 			var item = ( sender as Button ).DataContext as UploadQueueItem;
@@ -351,8 +352,8 @@ namespace Daramee.YouTubeUploader
 			var item = ( sender as Button ).DataContext as UploadQueueItem;
 			if ( item.UploadingStatus == UploadingStatus.UploadFailed )
 			{
-				if ( App.TaskDialogShow ( "이 항목을 목록에서 제거하시겠습니까?", "이 항목을 지우면 업로드를 이어서 하지 못하게 됩니다.",
-					"안내", VistaTaskDialogIcon.Warning, "예", "아니오" ).CustomButtonResult == 1 )
+				if ( App.TaskDialogShow ( "안내", "이 항목을 목록에서 제거하시겠습니까?", "이 항목을 지우면 업로드를 이어서 하지 못하게 됩니다.",
+					TaskDialogIcon.Warning, TaskDialogCommonButtonFlags.Yes | TaskDialogCommonButtonFlags.No ).Button == TaskDialogResult.No )
 					return;
 			}
 
@@ -382,9 +383,9 @@ namespace Daramee.YouTubeUploader
 
 			if ( Math.Abs ( ( bitmapSource.PixelWidth / ( double ) bitmapSource.PixelHeight ) - ( 16 / 9.0 ) ) >= float.Epsilon )
 			{
-				var result = App.TaskDialogShow ( "이미지 크기가 16:9 비율이어야 합니다.",
+				var result = App.TaskDialogShow ( "알림", "이미지 크기가 16:9 비율이어야 합니다.",
 					"클립보드 이미지 크기 비율이 16:9인지 확인해주세요.\nYouTube 권장 크기는 1280 * 720입니다.",
-					"알림", VistaTaskDialogIcon.Warning, "확인", "레터박스 추가", "잘라내기", "늘리기" ).CustomButtonResult;
+					TaskDialogIcon.Warning, TaskDialogCommonButtonFlags.OK, "레터박스 추가", "잘라내기", "늘리기" ).Button;
 				if ( result != 0 )
 				{
 					var blackBrush = new SolidColorBrush ( Colors.Black );
@@ -465,8 +466,9 @@ namespace Daramee.YouTubeUploader
 
 		private void DeleteWhenCompleteCheckBox_Checked ( object sender, RoutedEventArgs e )
 		{
-			App.TaskDialogShow ( "이 기능은 업로드 완료 후 해당 파일을 삭제합니다.",
-				"삭제할 영상이 휴지통으로 가지 않고 곧바로 완전히 삭제되므로 이 기능을 사용할 때는 주의해주세요.", "안내", VistaTaskDialogIcon.Information, "확인" );
+			App.TaskDialogShow ( "안내", "이 기능은 업로드 완료 후 해당 파일을 삭제합니다.",
+				"삭제할 영상이 휴지통으로 가지 않고 곧바로 완전히 삭제되므로 이 기능을 사용할 때는 주의해주세요.",
+				TaskDialogIcon.Information, TaskDialogCommonButtonFlags.OK );
 		}
 
 		private void AddItem ( string filename )
@@ -594,7 +596,8 @@ namespace Daramee.YouTubeUploader
 		{
 			if ( uploadQueueItem.Title.Trim ().Length == 0 )
 			{
-				App.TaskDialogShow ( "입력에 오류가 있습니다.", "영상 제목은 반드시 채워져야 합니다.", "오류", VistaTaskDialogIcon.Error, "확인" );
+				App.TaskDialogShow ( "오류", "입력에 오류가 있습니다.", "영상 제목은 반드시 채워져야 합니다.", 
+					TaskDialogIcon.Error, TaskDialogCommonButtonFlags.OK );
 				return;
 			}
 

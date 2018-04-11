@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Daramee.TaskDialogSharp;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -31,9 +32,9 @@ namespace Daramee.YouTubeUploader
 				string.IsNullOrEmpty(textBoxClientID.Text.Trim()) ||
 				string.IsNullOrEmpty(textBoxClientSecret.Text.Trim()))
 			{
-				App.TaskDialogShow ( "빈 입력란이 있습니다.",
+				App.TaskDialogShow ( "오류", "빈 입력란이 있습니다.",
 					"세 개의 입력란이 모두 정상적으로 채워져야 합니다.\n기본 값을 사용하고 싶으신 경우 \"기본 값 사용\" 버튼을 눌러주세요.",
-					"오류", TaskDialogInterop.VistaTaskDialogIcon.Error, "확인" );
+					TaskDialogIcon.Error, TaskDialogCommonButtonFlags.OK );
 				return;
 			}
 

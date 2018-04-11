@@ -110,6 +110,9 @@
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml.Serialization" />
+    <Reference Include="TaskDialogSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6672d4e390fea69b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Daramee.TaskDialogSharp.1.0.0\lib\net40\TaskDialogSharp.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -215,10 +218,6 @@
     <ProjectReference Include="..\..\DaramCommonLib\Daramee.DaramCommonLib\Daramee.DaramCommonLib.csproj">
       <Project>{b33b6a90-7cd7-4351-b32e-fc0102984180}</Project>
       <Name>Daramee.DaramCommonLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\WPF-Task-Dialog\TaskDialog\TaskDialog.csproj">
-      <Project>{37fd53f7-8a8f-4427-8ff4-6299e2933a7e}</Project>
-      <Name>TaskDialog</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

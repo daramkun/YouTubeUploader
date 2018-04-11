@@ -7,9 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daramee.YouTubeUploader", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daramee.DaramCommonLib", "..\DaramCommonLib\Daramee.DaramCommonLib\Daramee.DaramCommonLib.csproj", "{B33B6A90-7CD7-4351-B32E-FC0102984180}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskDialog", "..\WPF-Task-Dialog\TaskDialog\TaskDialog.csproj", "{37FD53F7-8A8F-4427-8FF4-6299E2933A7E}"
-EndProject
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "Daramee.YouTubeUploader.UWP", "Daramee.YouTubeUploader.UWP\Daramee.YouTubeUploader.UWP.wapproj", "{6886141A-AB34-43E7-B23C-9FDFDA58A4C5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. YouTube Uploader", "1. YouTube Uploader", "{23E67E96-97FB-4D92-A24F-42093E115C44}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. External Libraries", "2. External Libraries", "{B4BB501B-EB48-4BBD-9950-A2BBE7B1897B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,18 +47,6 @@ Global
 		{B33B6A90-7CD7-4351-B32E-FC0102984180}.Release|x64.Build.0 = Release|Any CPU
 		{B33B6A90-7CD7-4351-B32E-FC0102984180}.Release|x86.ActiveCfg = Release|Any CPU
 		{B33B6A90-7CD7-4351-B32E-FC0102984180}.Release|x86.Build.0 = Release|Any CPU
-		{37FD53F7-8A8F-4427-8FF4-6299E2933A7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{37FD53F7-8A8F-4427-8FF4-6299E2933A7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{37FD53F7-8A8F-4427-8FF4-6299E2933A7E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{37FD53F7-8A8F-4427-8FF4-6299E2933A7E}.Debug|x64.Build.0 = Debug|Any CPU
-		{37FD53F7-8A8F-4427-8FF4-6299E2933A7E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{37FD53F7-8A8F-4427-8FF4-6299E2933A7E}.Debug|x86.Build.0 = Debug|Any CPU
-		{37FD53F7-8A8F-4427-8FF4-6299E2933A7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{37FD53F7-8A8F-4427-8FF4-6299E2933A7E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{37FD53F7-8A8F-4427-8FF4-6299E2933A7E}.Release|x64.ActiveCfg = Release|Any CPU
-		{37FD53F7-8A8F-4427-8FF4-6299E2933A7E}.Release|x64.Build.0 = Release|Any CPU
-		{37FD53F7-8A8F-4427-8FF4-6299E2933A7E}.Release|x86.ActiveCfg = Release|Any CPU
-		{37FD53F7-8A8F-4427-8FF4-6299E2933A7E}.Release|x86.Build.0 = Release|Any CPU
 		{6886141A-AB34-43E7-B23C-9FDFDA58A4C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6886141A-AB34-43E7-B23C-9FDFDA58A4C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6886141A-AB34-43E7-B23C-9FDFDA58A4C5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
@@ -78,6 +68,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{738B0BFA-147A-4090-BA39-5CDC97AAA2DC} = {23E67E96-97FB-4D92-A24F-42093E115C44}
+		{B33B6A90-7CD7-4351-B32E-FC0102984180} = {B4BB501B-EB48-4BBD-9950-A2BBE7B1897B}
+		{6886141A-AB34-43E7-B23C-9FDFDA58A4C5} = {23E67E96-97FB-4D92-A24F-42093E115C44}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D0E2F3F6-7991-47D1-B371-F2382C4789C0}
