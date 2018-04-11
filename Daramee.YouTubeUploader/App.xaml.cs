@@ -33,7 +33,7 @@ namespace Daramee.YouTubeUploader
 
 			TaskDialog taskDialog = new TaskDialog
 			{
-				Title = Localizer.SharedStrings [ "daram_renamer" ],
+				Title = "다람 유튜브 업로더",
 				MainInstruction = message,
 				Content = content,
 				MainIcon = icon,
