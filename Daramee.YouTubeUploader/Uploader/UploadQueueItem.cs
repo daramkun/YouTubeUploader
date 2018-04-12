@@ -75,6 +75,8 @@ namespace Daramee.YouTubeUploader.Uploader
 	public enum DataChunkSize : int
 	{
 		ChunkSize_256KB,
+		ChunkSize_1MB,
+		ChunkSize_5MB,
 		ChunkSize_10MB,
 	}
 
@@ -119,7 +121,9 @@ namespace Daramee.YouTubeUploader.Uploader
 		public TimeSpan TimeRemaining { get; private set; }
 
 		public bool IsManuallyPaused { get; private set; } = false;
-
+		
+		private const int KB = 0x400;
+		private const int MB = 0x100000;
 		public DataChunkSize DataChunkSize
 		{
 			get
@@ -127,8 +131,11 @@ namespace Daramee.YouTubeUploader.Uploader
 				if ( videoInsertRequest == null ) return DataChunkSize.ChunkSize_10MB;
 				switch ( videoInsertRequest.ChunkSize )
 				{
-				case ResumableUpload.MinimumChunkSize: return DataChunkSize.ChunkSize_256KB;
-				default: return DataChunkSize.ChunkSize_10MB;
+					case ResumableUpload.MinimumChunkSize: return DataChunkSize.ChunkSize_256KB;
+					case 1 * MB: return DataChunkSize.ChunkSize_1MB;
+					case 5 * MB: return DataChunkSize.ChunkSize_5MB;
+
+					default: return DataChunkSize.ChunkSize_10MB;
 				}
 			}
 			set
@@ -136,8 +143,10 @@ namespace Daramee.YouTubeUploader.Uploader
 				if ( videoInsertRequest == null ) return;
 				switch ( value )
 				{
-				case DataChunkSize.ChunkSize_256KB: videoInsertRequest.ChunkSize = ResumableUpload.MinimumChunkSize; break;
-				case DataChunkSize.ChunkSize_10MB: videoInsertRequest.ChunkSize = ResumableUpload.DefaultChunkSize; break;
+					case DataChunkSize.ChunkSize_256KB: videoInsertRequest.ChunkSize = ResumableUpload.MinimumChunkSize; break;
+					case DataChunkSize.ChunkSize_1MB: videoInsertRequest.ChunkSize = 1 * MB; break;
+					case DataChunkSize.ChunkSize_5MB: videoInsertRequest.ChunkSize = 5 * MB; break;
+					case DataChunkSize.ChunkSize_10MB: videoInsertRequest.ChunkSize = ResumableUpload.DefaultChunkSize; break;
 				}
 			}
 		}

@@ -42,7 +42,7 @@ namespace Daramee.YouTubeUploader
 		[DataMember ( IsRequired = false )]
 		public int PrivacyStatusIndex { get; set; } = 0;
 		[DataMember ( IsRequired = false )]
-		public int DataChunkSizeIndex { get; set; } = 1;
+		public int DataChunkSizeIndex { get; set; } = 3;
 		[DataMember ( IsRequired = false )]
 		public bool Notification
 		{

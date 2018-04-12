@@ -110,9 +110,6 @@
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml.Serialization" />
-    <Reference Include="TaskDialogSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6672d4e390fea69b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Daramee.TaskDialogSharp.1.0.0\lib\net40\TaskDialogSharp.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

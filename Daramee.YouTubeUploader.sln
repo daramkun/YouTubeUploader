@@ -13,7 +13,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. YouTube Uploader", "1. Y
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. External Libraries", "2. External Libraries", "{B4BB501B-EB48-4BBD-9950-A2BBE7B1897B}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TaskDialogSharp.Shared", "..\TaskDialogSharp\TaskDialogSharp.Shared\TaskDialogSharp.Shared.shproj", "{23D58846-FEF0-468A-80DE-0D37A129A27C}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\TaskDialogSharp\TaskDialogSharp.Shared\TaskDialogSharp.Shared.projitems*{23d58846-fef0-468a-80de-0d37a129a27c}*SharedItemsImports = 13
+		..\TaskDialogSharp\TaskDialogSharp.Shared\TaskDialogSharp.Shared.projitems*{b33b6a90-7cd7-4351-b32e-fc0102984180}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
@@ -73,6 +79,7 @@ Global
 		{738B0BFA-147A-4090-BA39-5CDC97AAA2DC} = {23E67E96-97FB-4D92-A24F-42093E115C44}
 		{B33B6A90-7CD7-4351-B32E-FC0102984180} = {B4BB501B-EB48-4BBD-9950-A2BBE7B1897B}
 		{6886141A-AB34-43E7-B23C-9FDFDA58A4C5} = {23E67E96-97FB-4D92-A24F-42093E115C44}
+		{23D58846-FEF0-468A-80DE-0D37A129A27C} = {B4BB501B-EB48-4BBD-9950-A2BBE7B1897B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D0E2F3F6-7991-47D1-B371-F2382C4789C0}
