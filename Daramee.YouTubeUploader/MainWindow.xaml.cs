@@ -57,10 +57,9 @@ namespace Daramee.YouTubeUploader
 
 		UpdateChecker updateChecker;
 		Optionizer<SaveData> option;
-		YouTubeSession youtubeSession = new YouTubeSession ( AppDomain.CurrentDomain.BaseDirectory );
 		Categories categories = new Categories ();
 
-		public YouTubeSession YouTubeSession { get { return youtubeSession; } }
+		public YouTubeSession YouTubeSession { get; private set; } = new YouTubeSession ( AppDomain.CurrentDomain.BaseDirectory );
 
 		public bool RetryWhenCanceled { get { return option.Options.RetryWhenCanceled; } set { option.Options.RetryWhenCanceled = value; } }
 		public bool HaltWhenAllCompleted { get { return option.Options.HaltWhenAllCompleted; } set { option.Options.HaltWhenAllCompleted = value; } }
@@ -115,7 +114,7 @@ namespace Daramee.YouTubeUploader
 
 		private async void Window_Loaded ( object sender, RoutedEventArgs e )
 		{
-			if ( youtubeSession.IsAlreadyAuthorized )
+			if ( YouTubeSession.IsAlreadyAuthorized )
 				ButtonConnect_Click ( sender, e );
 			
 			notificationToggleCheckBox.DataContext = NotificatorManager.Notificator;
@@ -212,12 +211,12 @@ namespace Daramee.YouTubeUploader
 
 		private async void ButtonConnect_Click ( object sender, RoutedEventArgs e )
 		{
-			if ( await youtubeSession.Authorization () )
+			if ( await YouTubeSession.Authorization () )
 			{
 				try
 				{
-					await categories.Refresh ( youtubeSession );
-					await Playlists.Refresh ( youtubeSession );
+					await categories.Refresh ( YouTubeSession );
+					await Playlists.Refresh ( YouTubeSession );
 				}
 				catch ( Exception ex )
 				{
@@ -244,7 +243,7 @@ namespace Daramee.YouTubeUploader
 
 		private void ButtonDisconnect_Click ( object sender, RoutedEventArgs e )
 		{
-			youtubeSession.Unauthorization ();
+			YouTubeSession.Unauthorization ();
 		}
 
 		private void ButtonSetAPIKey_Click ( object sender, RoutedEventArgs e )
@@ -473,7 +472,7 @@ namespace Daramee.YouTubeUploader
 
 		private void AddItem ( string filename )
 		{
-			if ( !youtubeSession.IsAlreadyAuthorized )
+			if ( !YouTubeSession.IsAlreadyAuthorized )
 				return;
 
 			bool alreadyAdded = false;
@@ -494,7 +493,7 @@ namespace Daramee.YouTubeUploader
 			UploadQueueItem queueItem;
 			try
 			{
-				queueItem = new UploadQueueItem ( youtubeSession, filename ) { PrivacyStatus = ( PrivacyStatus ) comboBoxDefaultPrivacyStatus.SelectedIndex };
+				queueItem = new UploadQueueItem ( YouTubeSession, filename ) { PrivacyStatus = ( PrivacyStatus ) comboBoxDefaultPrivacyStatus.SelectedIndex };
 			}
 			catch ( ArgumentException )
 			{
