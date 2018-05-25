@@ -125,6 +125,7 @@
                 <ComboBox x:Name="dataChunkSize" ToolTip="데이터 청크 크기" VerticalAlignment="Center" SelectedIndex="{Binding DataChunkSizeIndex}" SelectionChanged="DataChunkSize_SelectionChanged">
                     <ComboBoxItem Content="256KiB" />
                     <ComboBoxItem Content="1MiB" />
+                    <ComboBoxItem Content="2MiB" />
                     <ComboBoxItem Content="5MiB" />
                     <ComboBoxItem Content="10MiB" />
                 </ComboBox>

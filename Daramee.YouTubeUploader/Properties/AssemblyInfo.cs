@@ -13,7 +13,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration ( "" )]
 [assembly: AssemblyCompany ( "" )]
 [assembly: AssemblyProduct ( "Daram YouTube Uploader" )]
-[assembly: AssemblyCopyright ( "Copyright © 2017 Daramee" )]
+[assembly: AssemblyCopyright ( "Copyright © 2017-2018 Daramee" )]
 [assembly: AssemblyTrademark ( "" )]
 [assembly: AssemblyCulture ( "" )]
 
@@ -52,8 +52,8 @@ using System.Windows;
 // 모든 값을 지정하거나 아래와 같이 '*'를 사용하여 빌드 번호 및 수정 번호가 자동으로
 // 지정되도록 할 수 있습니다.
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion ( "1.2.4.0" )]
-[assembly: AssemblyFileVersion ( "1.2.4.0" )]
+[assembly: AssemblyVersion ( "1.2.5.0" )]
+[assembly: AssemblyFileVersion ( "1.2.5.0" )]
 [assembly: Guid ( "0225A3A7-E587-4E62-B39D-7860C80EFE9A" )]
 [assembly: NeutralResourcesLanguage ( "ko-KR" )]
 

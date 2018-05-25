@@ -76,6 +76,7 @@ namespace Daramee.YouTubeUploader.Uploader
 	{
 		ChunkSize_256KB,
 		ChunkSize_1MB,
+		ChunkSize_2MB,
 		ChunkSize_5MB,
 		ChunkSize_10MB,
 	}
@@ -133,6 +134,7 @@ namespace Daramee.YouTubeUploader.Uploader
 				{
 					case ResumableUpload.MinimumChunkSize: return DataChunkSize.ChunkSize_256KB;
 					case 1 * MB: return DataChunkSize.ChunkSize_1MB;
+					case 2 * MB: return DataChunkSize.ChunkSize_2MB;
 					case 5 * MB: return DataChunkSize.ChunkSize_5MB;
 
 					default: return DataChunkSize.ChunkSize_10MB;
@@ -145,6 +147,7 @@ namespace Daramee.YouTubeUploader.Uploader
 				{
 					case DataChunkSize.ChunkSize_256KB: videoInsertRequest.ChunkSize = ResumableUpload.MinimumChunkSize; break;
 					case DataChunkSize.ChunkSize_1MB: videoInsertRequest.ChunkSize = 1 * MB; break;
+					case DataChunkSize.ChunkSize_2MB: videoInsertRequest.ChunkSize = 2 * MB; break;
 					case DataChunkSize.ChunkSize_5MB: videoInsertRequest.ChunkSize = 5 * MB; break;
 					case DataChunkSize.ChunkSize_10MB: videoInsertRequest.ChunkSize = ResumableUpload.DefaultChunkSize; break;
 				}
