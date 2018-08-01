@@ -5,30 +5,21 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 
 namespace Daramee.YouTubeUploader.Converters
 {
-	class UploadingStatusToBooleanForRemoveConverter : IValueConverter
+	class UploadingStatusToPathConverter : IValueConverter
 	{
 		public object Convert ( object value, Type targetType, object parameter, CultureInfo culture )
 		{
 			switch ( ( UploadingStatus ) value )
 			{
-				case UploadingStatus.Queued:
-				case UploadingStatus.UploadFailed:
-				case UploadingStatus.UploadCompleted:
-				case UploadingStatus.UpdateFailed:
-				case UploadingStatus.UpdateComplete:
-					return true;
-
-				case UploadingStatus.PrepareUpload:
-				case UploadingStatus.UploadStart:
 				case UploadingStatus.Uploading:
-				case UploadingStatus.UpdateStart:
-					return false;
+					return Application.Current.FindResource ( "pathUploadPause" );
 
-				default: return false;
+				default: return Application.Current.FindResource ( "pathUploadStart" );
 			}
 		}
 

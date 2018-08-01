@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Google.Apis.YouTube.v3.Data;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Google.Apis.YouTube.v3.Data;
 
-namespace Daramee.YouTubeUploader.Uploader
+namespace Daramee.YouTubeUploader.YouTube
 {
 	public class VideoCategory
 	{
@@ -20,12 +20,12 @@ namespace Daramee.YouTubeUploader.Uploader
 		public static IReadOnlyList<VideoCategory> DetectedCategories { get; private set; }
 			= new ObservableCollection<VideoCategory> () { new VideoCategory () { Name = "없음", Id = null } };
 
-		public async Task Refresh ( YouTubeSession session )
+		public async Task Refresh ()
 		{
 			while ( DetectedCategories.Count > 1 )
 				( DetectedCategories as IList<VideoCategory> ).RemoveAt ( 1 );
 
-			var request = session.YouTubeService.VideoCategories.List ( "snippet" );
+			var request = YouTubeSession.SharedYouTubeSession.YouTubeService.VideoCategories.List ( "snippet" );
 			request.RegionCode = RegionInfo.CurrentRegion.TwoLetterISORegionName;
 			request.Hl = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
@@ -44,9 +44,11 @@ namespace Daramee.YouTubeUploader.Uploader
 			{
 				if ( i.Snippet.Assignable == false )
 					continue;
-				VideoCategory item = new VideoCategory ();
-				item.Name = i.Snippet.Title;
-				item.Id = i.Id;
+				VideoCategory item = new VideoCategory
+				{
+					Name = i.Snippet.Title,
+					Id = i.Id
+				};
 				( DetectedCategories as IList<VideoCategory> ).Add ( item );
 			}
 		}

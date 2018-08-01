@@ -1,4 +1,4 @@
-﻿using Daramee.TaskDialogSharp;
+﻿using Daramee.Winston.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,9 +28,9 @@ namespace Daramee.YouTubeUploader
 
 		private void Button_Click ( object sender, RoutedEventArgs e )
 		{
-			if ( string.IsNullOrEmpty(textBoxAPIKey.Text.Trim ()) ||
-				string.IsNullOrEmpty(textBoxClientID.Text.Trim()) ||
-				string.IsNullOrEmpty(textBoxClientSecret.Text.Trim()))
+			if ( string.IsNullOrEmpty ( textBoxAPIKey.Text.Trim () ) ||
+				string.IsNullOrEmpty ( textBoxClientID.Text.Trim () ) ||
+				string.IsNullOrEmpty ( textBoxClientSecret.Text.Trim () ) )
 			{
 				App.TaskDialogShow ( "오류", "빈 입력란이 있습니다.",
 					"세 개의 입력란이 모두 정상적으로 채워져야 합니다.\n기본 값을 사용하고 싶으신 경우 \"기본 값 사용\" 버튼을 눌러주세요.",
@@ -51,8 +51,6 @@ namespace Daramee.YouTubeUploader
 		private void Button_Click_1 ( object sender, RoutedEventArgs e )
 		{
 			File.Delete ( "user_custom_settings.txt" );
-			File.Delete ( "client_secrets.json" );
-			File.Delete ( "api_key.txt" );
 
 			Close ();
 		}

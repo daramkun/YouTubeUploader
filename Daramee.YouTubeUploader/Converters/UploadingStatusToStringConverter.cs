@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
-using Daramee.YouTubeUploader.Uploader;
+using Daramee.YouTubeUploader.YouTube;
 
 namespace Daramee.YouTubeUploader.Converters
 {
@@ -25,6 +25,9 @@ namespace Daramee.YouTubeUploader.Converters
 				case UploadingStatus.UpdateStart: return "업데이트가 시작됐습니다.";
 				case UploadingStatus.UpdateComplete: return "업데이트에 성공했습니다.";
 				case UploadingStatus.UpdateFailed: return "업데이트에 실패했습니다.";
+
+				case UploadingStatus.UpdateThumbnail: return "미리보기 이미지를 업데이트 중입니다.";
+				case UploadingStatus.UpdatePlaylist: return "재생목록을 업데이트 중입니다.";
 
 				default: return "";
 			}

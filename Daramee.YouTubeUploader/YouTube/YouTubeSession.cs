@@ -1,22 +1,21 @@
-﻿using System;
+﻿using Google.Apis.Auth.OAuth2;
+using Google.Apis.Http;
+using Google.Apis.Services;
+using Google.Apis.YouTube.v3;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Http;
-using Google.Apis.Services;
-using Google.Apis.YouTube.v3;
-using Newtonsoft.Json;
 
-namespace Daramee.YouTubeUploader.Uploader
+namespace Daramee.YouTubeUploader.YouTube
 {
 	public sealed class YouTubeSession : INotifyPropertyChanged, IDisposable
 	{
@@ -45,7 +44,7 @@ namespace Daramee.YouTubeUploader.Uploader
 				YouTubeService.Dispose ();
 			YouTubeService = null;
 		}
-		
+
 		struct ClientSecret
 		{
 			public struct ClientSecretInstalled
@@ -55,7 +54,7 @@ namespace Daramee.YouTubeUploader.Uploader
 				public string redirect_uri;
 			}
 			public ClientSecretInstalled installed;
-			
+
 			public ClientSecret ( string client_id, string client_secret, string redirect_uri )
 			{
 				installed = new ClientSecretInstalled
@@ -77,42 +76,16 @@ namespace Daramee.YouTubeUploader.Uploader
 			}
 			else
 			{
-				string client_id = null;
-				string client_secret = null;
-				if ( File.Exists ( "client_secrets.json" ) )
-				{
-					string clientSecretString = File.ReadAllText ( "client_secrets.json" );
-					clientSecret = new MemoryStream ( Encoding.UTF8.GetBytes ( clientSecretString ) );
-
-					ClientSecret secret = JsonConvert.DeserializeObject<ClientSecret> ( clientSecretString );
-					client_id = secret.installed.client_id;
-					client_secret = secret.installed.client_secret;
-				}
-				else
-				{
-					clientSecret = new MemoryStream ( Encoding.UTF8.GetBytes ( "{ installed : { \"client_id\": \"265154369970-nvej6rlmsigg57b0956clc36j7of2anu.apps.googleusercontent.com\", \"client_secret\": \"T0v3vOo6WndzgH3WQ9UvkLlU\", \"redirect_uri\" : \"urn:ietf:wg:oauth:2.0:oob\" } }" ) );
-				}
-
-				if ( File.Exists ( "api_key.txt" ) )
-					apiKey = File.ReadAllText ( "api_key.txt" );
-				else
-					apiKey = "AIzaSyCvMp_S7s1vNhrfCZuOEUtSk7tcEuuKcpE";
-
-				if ( client_id != null && client_secret != null )
-				{
-					File.Delete ( "api_key.txt" );
-					File.Delete ( "client_secrets.json" );
-					File.WriteAllLines ( "user_custom_settings.txt", new string [] { apiKey, client_id, client_secret } );
-				}
+				apiKey = "AIzaSyCvMp_S7s1vNhrfCZuOEUtSk7tcEuuKcpE";
+				clientSecret = new MemoryStream ( Encoding.UTF8.GetBytes ( "{ installed : { \"client_id\": \"265154369970-nvej6rlmsigg57b0956clc36j7of2anu.apps.googleusercontent.com\", \"client_secret\": \"T0v3vOo6WndzgH3WQ9UvkLlU\", \"redirect_uri\" : \"urn:ietf:wg:oauth:2.0:oob\" } }" ) );
 			}
 		}
 
 		public async Task<bool> Authorization ()
 		{
-			UserCredential credential;
-
 			GetAPIKeyAndClientSecret ( out string apiKey, out Stream stream );
 
+			UserCredential credential;
 			using ( stream )
 			{
 				credential = await GoogleWebAuthorizationBroker.AuthorizeAsync (
@@ -122,7 +95,6 @@ namespace Daramee.YouTubeUploader.Uploader
 					CancellationToken.None
 				);
 			}
-
 			if ( credential == null )
 				return false;
 

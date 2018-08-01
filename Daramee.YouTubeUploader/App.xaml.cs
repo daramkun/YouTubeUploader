@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Daramee.DaramCommonLib;
+using Daramee.Winston.Dialogs;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.IO;
-using System.Net.NetworkInformation;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Navigation;
-using Daramee.DaramCommonLib;
-using Daramee.TaskDialogSharp;
 
 namespace Daramee.YouTubeUploader
 {
@@ -16,7 +18,7 @@ namespace Daramee.YouTubeUploader
 	public partial class App : Application
 	{
 		public static TaskDialogResult TaskDialogShow ( string title, string message, string content, TaskDialogIcon icon,
-			TaskDialogCommonButtonFlags commonButtons, params string [] buttons )
+			   TaskDialogCommonButtonFlags commonButtons, params string [] buttons )
 		{
 			List<TaskDialogButton> tdButtons = new List<TaskDialogButton> ( buttons != null ? buttons.Length : 0 );
 			if ( tdButtons != null )
@@ -54,7 +56,7 @@ namespace Daramee.YouTubeUploader
 
 			if ( !NetworkHelper.IsNetworkAvailable ( 0 ) )
 			{
-				TaskDialogShow ( "오류", "인터넷 연결을 확인 후 다시 실행해주세요.", "이 프로그램은 네트워크 연결을 필요로 합니다.", 
+				TaskDialogShow ( "오류", "인터넷 연결을 확인 후 다시 실행해주세요.", "이 프로그램은 네트워크 연결을 필요로 합니다.",
 					TaskDialogIcon.Error, TaskDialogCommonButtonFlags.OK );
 				Shutdown ();
 			}

@@ -50,7 +50,7 @@ namespace Daramee.YouTubeUploader
 			} );
 		}
 
-		private void progressToHalt_ValueChanged ( object sender, RoutedPropertyChangedEventArgs<double> e )
+		private void ProgressToHalt_ValueChanged ( object sender, RoutedPropertyChangedEventArgs<double> e )
 		{
 			if ( progressToHalt.Value == progressToHalt.Maximum )
 			{

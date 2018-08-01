@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Daramee.YouTubeUploader"
-        mc:Ignorable="d" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d"
         Title="Microsoft® Windows® 종료" Height="110" Width="320" Loaded="Window_Loaded">
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -12,7 +12,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <ProgressBar x:Name="progressToHalt" Maximum="30" ValueChanged="progressToHalt_ValueChanged" />
-        <Button Content="취소" Width="60" Grid.Row="1" Margin="0,5,0,0" Click="Button_Click" />
+        <ProgressBar x:Name="progressToHalt" Maximum="30" ValueChanged="ProgressToHalt_ValueChanged" />
+        <Button Content="취소" Width="60" Height="22" Grid.Row="1" Margin="0,5,0,0" Click="Button_Click" />
     </Grid>
 </Window>

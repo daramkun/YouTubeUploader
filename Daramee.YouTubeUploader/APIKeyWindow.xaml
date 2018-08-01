@@ -5,12 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Daramee.YouTubeUploader"
         mc:Ignorable="d"
-        Title="API 키 설정" Height="220" Width="420" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="API 키 설정" Height="224" Width="420"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen" ShowInTaskbar="False">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
             <RowDefinition Height="84" />
-            <RowDefinition Height="24" />
+            <RowDefinition Height="32" />
         </Grid.RowDefinitions>
 
         <GroupBox Header="API 키" Margin="8,8,8,4" Grid.Row="0">
@@ -37,7 +38,7 @@
             </Grid>
         </GroupBox>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
             <Button Content="확인" Width="80" Margin="0,0,8,0" Click="Button_Click" />
             <Button Content="기본 값 사용" Width="80" Click="Button_Click_1" />
         </StackPanel>
