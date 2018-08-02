@@ -1,4 +1,5 @@
-﻿using Daramee.YouTubeUploader.YouTube;
+﻿using Daramee.DaramCommonLib;
+using Daramee.YouTubeUploader.YouTube;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,9 +17,9 @@ namespace Daramee.YouTubeUploader.Converters
 			switch ( ( UploadingStatus ) value )
 			{
 				case UploadingStatus.Uploading:
-					return "일시 정지";
+					return StringTable.SharedStrings [ "item_status_uploadpause" ];
 
-				default: return "업로드 시작";
+				default: return StringTable.SharedStrings [ "item_status_uploadstart" ];
 			}
 		}
 

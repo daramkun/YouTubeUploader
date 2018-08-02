@@ -79,7 +79,7 @@ namespace Daramee.YouTubeUploader
 
 		private void ThumbnailFromFileHyperlink_Click ( object sender, RoutedEventArgs e )
 		{
-			OpenFileDialog ofd = new OpenFileDialog () { Filter = "가능한 모든 파일(*.jpg;*.png)|*.jpg;*.png" };
+			OpenFileDialog ofd = new OpenFileDialog () { Filter = StringTable.SharedStrings [ "ofd_availableallimages" ] };
 			if ( ofd.ShowDialog () == false )
 				return;
 
@@ -109,9 +109,9 @@ namespace Daramee.YouTubeUploader
 
 			if ( Math.Abs ( ( bitmapSource.PixelWidth / ( double ) bitmapSource.PixelHeight ) - ( 16 / 9.0 ) ) >= float.Epsilon )
 			{
-				var result = App.TaskDialogShow ( "알림", "이미지 크기가 16:9 비율이어야 합니다.",
-					"클립보드 이미지 크기 비율이 16:9인지 확인해주세요.\nYouTube 권장 크기는 1280 * 720입니다.",
-					TaskDialogIcon.Warning, TaskDialogCommonButtonFlags.OK, "레터박스 추가", "잘라내기", "늘리기" ).Button;
+				var result = App.TaskDialogShow ( StringTable.SharedStrings [ "message_image_size_must_16_9" ],
+					StringTable.SharedStrings [ "content_image_size_must_16_9" ],
+					TaskDialogIcon.Warning, TaskDialogCommonButtonFlags.OK, StringTable.SharedStrings [ "button_add_letterbox" ], StringTable.SharedStrings [ "button_crop" ], StringTable.SharedStrings [ "button_stretch" ] ).Button;
 				if ( result != 0 )
 				{
 					var blackBrush = new SolidColorBrush ( Colors.Black );

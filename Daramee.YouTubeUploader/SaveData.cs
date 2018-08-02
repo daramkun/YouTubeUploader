@@ -37,5 +37,16 @@ namespace Daramee.YouTubeUploader
 			get { return NotificatorManager.Notificator.IsEnabledNotification; }
 			set { NotificatorManager.Notificator.IsEnabledNotification = value; }
 		}
+
+		[DataMember ( IsRequired = false, Name = "left" )]
+		public double Left { get; set; }
+		[DataMember ( IsRequired = false, Name = "top" )]
+		public double Top { get; set; }
+		[DataMember ( IsRequired = false, Name = "width" )]
+		public double Width { get; set; }
+		[DataMember ( IsRequired = false, Name = "height" )]
+		public double Height { get; set; }
+		[DataMember ( IsRequired = false, Name = "window_state" )]
+		public System.Windows.WindowState WindowState { get; set; }
 	}
 }

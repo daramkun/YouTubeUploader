@@ -5,12 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Daramee.YouTubeUploader"
              xmlns:youtube="clr-namespace:Daramee.YouTubeUploader.YouTube"
+             xmlns:dcl="clr-namespace:Daramee.DaramCommonLib"
              mc:Ignorable="d" 
              Name="editorRoot" DataContext="{Binding UploadItem, ElementName=editorRoot}"
              IsEnabled="{Binding UploadItem, ElementName=editorRoot, Converter={StaticResource itemIsNotNullToBooleanConverter}}"
              d:DesignHeight="360" d:DesignWidth="640">
     <UserControl.Resources>
-        <Style TargetType="TextBlock">
+        <Style x:Key="textBlockStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="Black" />
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
@@ -37,20 +38,20 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="제목: " Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" />
-                <TextBlock Text="설명: " Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Margin="0,7,0,0" />
-                <TextBlock Text="공개: " Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" />
-                <TextBlock Text="분류: " Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" />
-                <TextBlock Text="기타: " Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" />
-                <TextBlock Text="썸네일: " Grid.Row="5" Grid.Column="0" VerticalAlignment="Top" Margin="0,7,0,0" />
+                <TextBlock Text="{Binding [editor_textblock_title], Source={x:Static dcl:StringTable.SharedStrings}}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource textBlockStyle}" />
+                <TextBlock Text="{Binding [editor_textblock_description], Source={x:Static dcl:StringTable.SharedStrings}}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Style="{StaticResource textBlockStyle}" Margin="0,7,0,0" />
+                <TextBlock Text="{Binding [editor_textblock_privacystatus], Source={x:Static dcl:StringTable.SharedStrings}}" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource textBlockStyle}" />
+                <TextBlock Text="{Binding [editor_textblock_category], Source={x:Static dcl:StringTable.SharedStrings}}" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource textBlockStyle}" />
+                <TextBlock Text="{Binding [editor_textblock_etc], Source={x:Static dcl:StringTable.SharedStrings}}" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource textBlockStyle}" />
+                <TextBlock Text="{Binding [editor_textblock_thumbnail], Source={x:Static dcl:StringTable.SharedStrings}}" Grid.Row="5" Grid.Column="0" VerticalAlignment="Top" Style="{StaticResource textBlockStyle}" Margin="0,7,0,0" />
 
                 <TextBox Text="{Binding Title}" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" />
                 <TextBox Text="{Binding Description}" Grid.Row="1" Grid.Column="1" Margin="0,8,0,8"
                          ScrollViewer.VerticalScrollBarVisibility="Visible" AcceptsReturn="True" TextWrapping="Wrap" />
                 <ComboBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" SelectedIndex="{Binding PrivacyStatus, Converter={StaticResource privacyStatusToIntegerConverter}}">
-                    <ComboBoxItem Content="공개" />
-                    <ComboBoxItem Content="미등록" />
-                    <ComboBoxItem Content="비공개" />
+                    <ComboBoxItem Content="{Binding [combobox_privacystatus_public], Source={x:Static dcl:StringTable.SharedStrings}}" />
+                    <ComboBoxItem Content="{Binding [combobox_privacystatus_unlisted], Source={x:Static dcl:StringTable.SharedStrings}}" />
+                    <ComboBoxItem Content="{Binding [combobox_privacystatus_private], Source={x:Static dcl:StringTable.SharedStrings}}" />
                 </ComboBox>
                 <ComboBox Name="categoryComboBox" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center"
                   ItemsSource="{x:Static youtube:Categories.DetectedCategories}" SelectionChanged="CategorySelection_Changed" >
@@ -63,12 +64,12 @@
                 <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Margin="0,0,5,0">
 				        <Hyperlink Click="EditTagsHyperlink_Click">
-					        태그 편집
+					        <TextBlock Text="{Binding [editor_hyperlink_edittags], Source={x:Static dcl:StringTable.SharedStrings}}" />
 				        </Hyperlink>
                     </TextBlock>
                     <TextBlock Margin="0,0,5,0">
 				        <Hyperlink Click="AddToPlaylistHyperlink_Click">
-					        재생목록 추가
+					        <TextBlock Text="{Binding [editor_hyperlink_addplaylists], Source={x:Static dcl:StringTable.SharedStrings}}" />
 				        </Hyperlink>
                     </TextBlock>
                 </StackPanel>
@@ -84,17 +85,17 @@
                     <StackPanel Grid.Column="1" Orientation="Vertical">
                         <TextBlock Margin="4,0,0,2">
                             <Hyperlink Click="ThumbnailFromFileHyperlink_Click">
-                                파일
+                                <TextBlock Text="{Binding [editor_hyperlink_tnfile], Source={x:Static dcl:StringTable.SharedStrings}}" />
                             </Hyperlink>
                         </TextBlock>
                         <TextBlock Margin="4,0,0,2">
                             <Hyperlink Click="ThumbnailFromClipboardHyperlink_Click">
-                                클립보드
+                                <TextBlock Text="{Binding [editor_hyperlink_tnclipboard], Source={x:Static dcl:StringTable.SharedStrings}}" />
                             </Hyperlink>
                         </TextBlock>
                         <TextBlock Margin="4,0,0,0">
                             <Hyperlink Click="ThumbnailFromVideoClipHyperlink_Click">
-                                영상 클립
+                                <TextBlock Text="{Binding [editor_hyperlink_tnvideoclip], Source={x:Static dcl:StringTable.SharedStrings}}" />
                             </Hyperlink>
                         </TextBlock>
                     </StackPanel>

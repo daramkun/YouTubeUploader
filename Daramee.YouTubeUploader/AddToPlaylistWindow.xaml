@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Daramee.YouTubeUploader"
+        xmlns:dcl="clr-namespace:Daramee.DaramCommonLib"
         mc:Ignorable="d"
         Title="재생목록 추가" Height="400" Width="500">
     <Grid Margin="5">
