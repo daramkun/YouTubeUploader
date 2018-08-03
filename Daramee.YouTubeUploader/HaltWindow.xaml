@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Daramee.YouTubeUploader"
         xmlns:dcl="clr-namespace:Daramee.DaramCommonLib"
         mc:Ignorable="d"
-        Title="Microsoft® Windows® 종료" Height="110" Width="320" Loaded="Window_Loaded">
+        Title="{Binding [halt_windows], Source={x:Static dcl:StringTable.SharedStrings}}" Height="110" Width="320" Loaded="Window_Loaded">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="24" />
@@ -14,6 +14,6 @@
         </Grid.RowDefinitions>
 
         <ProgressBar x:Name="progressToHalt" Maximum="30" ValueChanged="ProgressToHalt_ValueChanged" />
-        <Button Content="취소" Width="60" Height="22" Grid.Row="1" Margin="0,5,0,0" Click="Button_Click" />
+        <Button Content="{Binding [button_cancel], Source={x:Static dcl:StringTable.SharedStrings}}" Width="60" Height="22" Grid.Row="1" Margin="0,5,0,0" Click="Button_Click" />
     </Grid>
 </Window>

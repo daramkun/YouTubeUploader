@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Daramee.YouTubeUploader"
         xmlns:dcl="clr-namespace:Daramee.DaramCommonLib"
         mc:Ignorable="d"
-        Title="태그 편집" Height="320" Width="400" ResizeMode="NoResize">
+        Title="{Binding [edit_tags], Source={x:Static dcl:StringTable.SharedStrings}}" Height="320" Width="400" ResizeMode="NoResize">
     <Grid Margin="8">
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
@@ -24,12 +24,12 @@
             <TextBox x:Name="textBoxTag" />
             <TextBlock Grid.Column="1" Margin="5,0,0,0" HorizontalAlignment="Center">
                 <Hyperlink Click="ButtonAdd_Click">
-                    추가
+                    <TextBlock Text="{Binding [button_add], Source={x:Static dcl:StringTable.SharedStrings}}" />
                 </Hyperlink>
             </TextBlock>
             <TextBlock Grid.Column="2" Margin="5,0,0,0" HorizontalAlignment="Center">
                 <Hyperlink Click="ButtonRemove_Click">
-                    제거
+                    <TextBlock Text="{Binding [button_remove], Source={x:Static dcl:StringTable.SharedStrings}}" />
                 </Hyperlink>
             </TextBlock>
         </Grid>
@@ -39,7 +39,7 @@
         </ListBox>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-            <Button Content="닫기" Width="60" Height="25" Click="ButtonClose_Click" />
+            <Button Content="{Binding [button_close], Source={x:Static dcl:StringTable.SharedStrings}}" Width="60" Height="25" Click="ButtonClose_Click" />
         </StackPanel>
     </Grid>
 </Window>

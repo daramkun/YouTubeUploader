@@ -78,14 +78,14 @@ namespace Daramee.YouTubeUploader
 			catch ( ArgumentException )
 			{
 				NotificatorManager.Notify ( StringTable.SharedStrings [ "title_error" ],
-					$"{itemName}의 업로드할 파일의 크기는 64GB를 넘길 수 없습니다.",
+					string.Format ( StringTable.SharedStrings [ "message_filesize_limit" ], itemName),
 					NotifyType.Error );
 				return;
 			}
 			catch ( IOException )
 			{
 				NotificatorManager.Notify ( StringTable.SharedStrings [ "title_error" ],
-					$"{itemName}의 영상 파일에 접근할 수 없었습니다.",
+					string.Format ( StringTable.SharedStrings [ "message_cannot_access_file" ], itemName ),
 					NotifyType.Error );
 				return;
 			}
@@ -186,7 +186,8 @@ namespace Daramee.YouTubeUploader
 		{
 			if ( string.IsNullOrEmpty ( uploadItem.Title.Trim () ) )
 			{
-				App.TaskDialogShow ( "입력에 오류가 있습니다.", "영상 제목은 반드시 채워져야 합니다.",
+				App.TaskDialogShow ( StringTable.SharedStrings [ "message_input_has_error" ], 
+					StringTable.SharedStrings [ "content_input_has_error" ],
 					TaskDialogIcon.Error, TaskDialogCommonButtonFlags.OK );
 				return;
 			}
@@ -199,44 +200,44 @@ namespace Daramee.YouTubeUploader
 					{
 						case UploadingStatus.UploadCompleted:
 							NotificatorManager.Notify ( StringTable.SharedStrings [ "title_notice" ],
-								$"{itemName}에 대한 업로드를 성공했습니다.",
+								string.Format ( StringTable.SharedStrings [ "uploadingstatus_upload_succeed" ], itemName ),
 								NotifyType.CustomType1 );
 							break;
 						case UploadingStatus.UpdateComplete:
 							NotificatorManager.Notify ( StringTable.SharedStrings [ "title_notice" ],
-								$"{itemName}에 대한 업데이트를 성공했습니다.",
+								string.Format ( StringTable.SharedStrings [ "uploadingstatus_update_succeed" ], itemName ),
 								NotifyType.CustomType1 );
 							break;
 						case UploadingStatus.UploadFailed:
 							NotificatorManager.Notify ( StringTable.SharedStrings [ "title_notice" ],
-								$"{itemName}에 대한 업로드를 실패했습니다.",
+								string.Format ( StringTable.SharedStrings [ "uploadingstatus_upload_failed" ], itemName ),
 								NotifyType.Warning );
 							break;
 						case UploadingStatus.UpdateFailed:
 							NotificatorManager.Notify ( StringTable.SharedStrings [ "title_notice" ],
-								$"{itemName}에 대한 업데이트를 실패했습니다.",
+								string.Format ( StringTable.SharedStrings [ "uploadingstatus_update_failed" ], itemName ),
 								NotifyType.Warning );
 							break;
 					}
 					break;
 				case UploadResult.UploadCanceled:
 					NotificatorManager.Notify ( StringTable.SharedStrings [ "title_notice" ],
-						$"{itemName}에 대한 업로드가 중단됐습니다.\n업로드 재개가 가능합니다.",
+						string.Format ( StringTable.SharedStrings [ "uploadingstatus_upload_paused" ], itemName ),
 						NotifyType.Warning );
 					break;
 				case UploadResult.AlreadyUploading:
 					NotificatorManager.Notify ( StringTable.SharedStrings [ "title_error" ],
-						$"{itemName}은 이미 업로드가 시작되었습니다.",
+						string.Format ( StringTable.SharedStrings [ "uploadingstatus_upload_is_already_started" ], itemName ),
 						NotifyType.Error );
 					break;
 				case UploadResult.FailedUploadRequest:
 					NotificatorManager.Notify ( StringTable.SharedStrings [ "title_error" ],
-						$"{itemName}의 업로드 요청을 시작할 수 없었습니다.",
+						string.Format ( StringTable.SharedStrings [ "uploadingstatus_upload_cannot_request" ], itemName ),
 						NotifyType.Error );
 					break;
 				case UploadResult.CannotStartUpload:
 					NotificatorManager.Notify ( StringTable.SharedStrings [ "title_error" ],
-						$"{itemName}의 업로드 작업을 시작할 수 없었습니다.",
+						string.Format ( StringTable.SharedStrings [ "uploadingstatus_upload_cannot_start" ], itemName ),
 						NotifyType.Error );
 					break;
 			}
@@ -293,7 +294,7 @@ namespace Daramee.YouTubeUploader
 				ButtonConnect_Click ( sender, e );
 			if ( await updateChecker.CheckUpdate () == true )
 				NotificatorManager.Notify ( StringTable.SharedStrings [ "title_hasupdate" ],
-					"Daram YouTube Uploader의 최신 버전이 있습니다.",
+					string.Format ( StringTable.SharedStrings [ "message_update_available" ], StringTable.SharedStrings [ "youtube_uploader" ] ),
 					NotifyType.Information );
 		}
 
@@ -301,8 +302,8 @@ namespace Daramee.YouTubeUploader
 		{
 			if ( IsIncompleted () )
 			{
-				var result = App.TaskDialogShow ( "종료하시겠습니까?",
-					"아직 업로드가 완전히 끝나지 않았습니다.\n지금 종료하실 경우 이어서 업로드 하기가 불가능합니다.",
+				var result = App.TaskDialogShow ( StringTable.SharedStrings [ "message_ask_quit" ],
+					StringTable.SharedStrings [ "content_ask_quit" ],
 					TaskDialogIcon.Warning, TaskDialogCommonButtonFlags.Yes | TaskDialogCommonButtonFlags.No );
 				if ( result.Button == TaskDialogResult.No )
 				{
@@ -355,15 +356,15 @@ namespace Daramee.YouTubeUploader
 					{
 						if ( ( ex as Google.GoogleApiException ).Error.Message.IndexOf ( "Daily Limit Exceeded." ) >= 0 )
 						{
-							if ( App.TaskDialogShow ( "Google API 호출 제한",
-								"금일 또는 100초 내 Google API 최대 호출량을 넘어서서 현재 이용이 불가능합니다. 100초 이후 또는 금일이 지나면 다시 이용이 가능하나, 지금 바로 이용하시려면 자세한 내용은 해결법 버튼을 눌러 확인해주세요.",
+							if ( App.TaskDialogShow ( StringTable.SharedStrings [ "message_google_api_limit" ],
+								StringTable.SharedStrings [ "content_google_api_limit" ],
 								TaskDialogIcon.Error, TaskDialogCommonButtonFlags.OK, StringTable.SharedStrings [ "button_solution" ] ).Button == 101 )
 								Process.Start ( "https://github.com/daramkun/YouTubeUploader/wiki/사용자-지정-키-사용하기" );
 						}
 						else if ( ( ex as Google.GoogleApiException ).Error.Message.IndexOf ( "Invalid Credentials" ) >= 0 )
 						{
-							App.TaskDialogShow ( "Google API 인증 오류",
-								"API 키 및 클라이언트 비밀 보안 중 하나 이상이 문제가 있거나 YouTube Data API 사용 설정이 제대로 되지 않아 문제가 발생했습니다. 다시 한번 확인해주세요.",
+							App.TaskDialogShow ( StringTable.SharedStrings [ "message_google_api_auth_error" ],
+								StringTable.SharedStrings [ "content_google_api_auth_error" ],
 								TaskDialogIcon.Error, TaskDialogCommonButtonFlags.OK );
 						}
 					}
@@ -376,8 +377,8 @@ namespace Daramee.YouTubeUploader
 		{
 			if ( IsIncompleted () )
 			{
-				if ( App.TaskDialogShow ( "아직 업로드 중인 파일이 존재합니다.",
-					"지금 YouTube로부터 연결을 해제하면 업로드가 중단되고 업로드 리스트도 비워집니다.\n중단된 영상은 이어서 업로드가 불가능하니 주의하시기 바랍니다.", 
+				if ( App.TaskDialogShow ( StringTable.SharedStrings [ "message_ask_disconnect" ],
+					StringTable.SharedStrings [ "content_ask_disconnect" ], 
 					TaskDialogIcon.Warning, TaskDialogCommonButtonFlags.OK | TaskDialogCommonButtonFlags.Cancel ).Button
 					== TaskDialogResult.Cancel )
 					return;
@@ -422,15 +423,15 @@ namespace Daramee.YouTubeUploader
 		{
 			if ( await updateChecker.CheckUpdate () == true )
 			{
-				if ( App.TaskDialogShow ( "업데이트가 확인되었습니다.",
-					$"현재 버전: {updateChecker.ThisVersion}\n최신 버전: {await updateChecker.GetNewestVersion ()}",
+				if ( App.TaskDialogShow ( StringTable.SharedStrings [ "message_check_update_available" ],
+					string.Format ( StringTable.SharedStrings [ "content_check_update" ], updateChecker.ThisVersion, await updateChecker.GetNewestVersion () ),
 					TaskDialogIcon.Information, TaskDialogCommonButtonFlags.OK, StringTable.SharedStrings [ "button_update" ] ).Button == 101 )
 					updateChecker.ShowDownloadPage ();
 			}
 			else
 			{
-				App.TaskDialogShow ( "현재 버전이 최신 버전입니다.",
-					$"현재 버전: {updateChecker.ThisVersion}\n최신 버전: {await updateChecker.GetNewestVersion ()}",
+				App.TaskDialogShow ( StringTable.SharedStrings [ "message_check_update_latest" ],
+					string.Format ( StringTable.SharedStrings [ "content_check_update" ], updateChecker.ThisVersion, await updateChecker.GetNewestVersion () ),
 					TaskDialogIcon.Information, TaskDialogCommonButtonFlags.OK );
 			}
 		}
@@ -496,8 +497,8 @@ namespace Daramee.YouTubeUploader
 
 		private void ButtonReInitialize_Click ( object sender, RoutedEventArgs e )
 		{
-			if ( App.TaskDialogShow ( "이 항목의 업로드 상태를 초기화하시겠습니까?", 
-				"업로드 상태를 초기화하면 업로드를 이어하지 않고 새로 업로드를 시작합니다.",
+			if ( App.TaskDialogShow ( StringTable.SharedStrings [ "message_ask_uploading_status_clear" ],
+				StringTable.SharedStrings [ "content_ask_uploading_status_clear" ],
 				TaskDialogIcon.Warning, TaskDialogCommonButtonFlags.Yes | TaskDialogCommonButtonFlags.No ).Button == TaskDialogResult.No )
 				return;
 
@@ -510,8 +511,8 @@ namespace Daramee.YouTubeUploader
 			var item = ( sender as Button ).DataContext as UploadItem;
 			if ( item.UploadingStatus == UploadingStatus.UploadFailed )
 			{
-				if ( App.TaskDialogShow ( "이 항목을 목록에서 제거하시겠습니까?",
-					"이 항목을 지우면 업로드를 이어서 하지 못하게 됩니다.",
+				if ( App.TaskDialogShow ( StringTable.SharedStrings [ "message_ask_remove_item" ],
+					StringTable.SharedStrings [ "content_ask_remove_item" ],
 					TaskDialogIcon.Warning, TaskDialogCommonButtonFlags.Yes | TaskDialogCommonButtonFlags.No ).Button == TaskDialogResult.No )
 					return;
 			}

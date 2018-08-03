@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Daramee.YouTubeUploader"
         xmlns:dcl="clr-namespace:Daramee.DaramCommonLib"
         mc:Ignorable="d"
-        Title="재생목록 추가" Height="400" Width="500">
+        Title="{Binding [add_to_playlists], Source={x:Static dcl:StringTable.SharedStrings}}" Height="400" Width="500">
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -22,7 +22,7 @@
         </ListBox>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-            <Button Content="선택" Width="60" Height="25" Click="ButtonClose_Click" />
+            <Button Content="{Binding [button_select], Source={x:Static dcl:StringTable.SharedStrings}}" Width="60" Height="25" Click="ButtonClose_Click" />
         </StackPanel>
     </Grid>
 </Window>

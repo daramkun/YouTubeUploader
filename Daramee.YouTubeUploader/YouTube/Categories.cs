@@ -1,4 +1,5 @@
-﻿using Google.Apis.YouTube.v3.Data;
+﻿using Daramee.DaramCommonLib;
+using Google.Apis.YouTube.v3.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,7 +19,14 @@ namespace Daramee.YouTubeUploader.YouTube
 	public class Categories
 	{
 		public static IReadOnlyList<VideoCategory> DetectedCategories { get; private set; }
-			= new ObservableCollection<VideoCategory> () { new VideoCategory () { Name = "없음", Id = null } };
+			= new ObservableCollection<VideoCategory> ()
+			{
+				new VideoCategory ()
+				{
+					Name = StringTable.SharedStrings [ "category_none" ],
+					Id = null
+				}
+			};
 
 		public async Task Refresh ()
 		{
