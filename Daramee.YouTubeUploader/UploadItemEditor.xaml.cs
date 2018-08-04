@@ -84,6 +84,7 @@ namespace Daramee.YouTubeUploader
 				return;
 
 			BitmapSource bitmapSource = ImageSourceHelper.GetImageFromFile ( ofd.FileName );
+			ofd = null;
 			SetThumbnailImage ( bitmapSource );
 		}
 
@@ -99,7 +100,9 @@ namespace Daramee.YouTubeUploader
 			var window = new GetSnapshotFromMediaWindow ( UploadItem.FileName ) { Owner = MainWindow.SharedWindow };
 			if ( window.ShowDialog () == false )
 				return;
-			SetThumbnailImage ( window.CapturedSource );
+			BitmapSource bitmapSource = window.CapturedSource;
+			window = null;
+			SetThumbnailImage ( bitmapSource );
 		}
 
 		private void SetThumbnailImage ( BitmapSource bitmapSource )

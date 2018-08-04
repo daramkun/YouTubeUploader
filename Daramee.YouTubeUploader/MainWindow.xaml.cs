@@ -4,6 +4,7 @@ using Daramee.YouTubeUploader.YouTube;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace Daramee.YouTubeUploader
 	/// <summary>
 	/// MainWindow.xaml에 대한 상호 작용 논리
 	/// </summary>
-	public partial class MainWindow : Window
+	public partial class MainWindow : Window, INotifyPropertyChanged
 	{
 		public static MainWindow SharedWindow { get; private set; }
 
@@ -35,17 +36,20 @@ namespace Daramee.YouTubeUploader
 		Optionizer<SaveData> option;
 		Categories categories = new Categories ();
 
+		public event PropertyChangedEventHandler PropertyChanged;
+		private void PC ( string name ) { PropertyChanged?.Invoke ( this, new PropertyChangedEventArgs ( name ) ); }
+
 		public YouTubeSession YouTubeSession { get; private set; } = new YouTubeSession ( AppDomain.CurrentDomain.BaseDirectory );
 
-		public bool RetryWhenCanceled { get { return option.Options.RetryWhenCanceled; } set { option.Options.RetryWhenCanceled = value; } }
-		public bool HaltWhenAllCompleted { get { return option.Options.HaltWhenAllCompleted; } set { option.Options.HaltWhenAllCompleted = value; } }
-		public bool DeleteWhenComplete { get { return option.Options.DeleteWhenComplete; } set { option.Options.DeleteWhenComplete = value; } }
-		public int RetryDelayIndex { get { return option.Options.RetryDelayIndex; } set { option.Options.RetryDelayIndex = value; } }
-		public int PrivacyStatusIndex { get { return option.Options.PrivacyStatusIndex; } set { option.Options.PrivacyStatusIndex = value; } }
-		public int DataChunkSizeIndex { get { return option.Options.DataChunkSizeIndex; } set { option.Options.DataChunkSizeIndex = value; } }
-		public bool Notification { get { return option.Options.Notification; } set { option.Options.Notification = value; } }
+		public bool RetryWhenCanceled { get { return option.Options.RetryWhenCanceled; } set { option.Options.RetryWhenCanceled = value; PC ( nameof ( RetryWhenCanceled ) ); } }
+		public bool HaltWhenAllCompleted { get { return option.Options.HaltWhenAllCompleted; } set { option.Options.HaltWhenAllCompleted = value; PC ( nameof ( HaltWhenAllCompleted ) ); } }
+		public bool DeleteWhenComplete { get { return option.Options.DeleteWhenComplete; } set { option.Options.DeleteWhenComplete = value; PC ( nameof ( DeleteWhenComplete ) ); } }
+		public int RetryDelayIndex { get { return option.Options.RetryDelayIndex; } set { option.Options.RetryDelayIndex = value; PC ( nameof ( RetryDelayIndex ) ); } }
+		public int PrivacyStatusIndex { get { return option.Options.PrivacyStatusIndex; } set { option.Options.PrivacyStatusIndex = value; PC ( nameof ( PrivacyStatusIndex ) ); } }
+		public int DataChunkSizeIndex { get { return option.Options.DataChunkSizeIndex; } set { option.Options.DataChunkSizeIndex = value; PC ( nameof ( DataChunkSizeIndex ) ); } }
+		public bool Notification { get { return option.Options.Notification; } set { option.Options.Notification = value; PC ( nameof ( Notification ) ); } }
 
-		public bool HardwareAcceleration { get { return option.Options.HardwareAcceleration; } set { option.Options.HardwareAcceleration = value; } }
+		public bool HardwareAcceleration { get { return option.Options.HardwareAcceleration; } set { option.Options.HardwareAcceleration = value; PC ( nameof ( HardwareAcceleration ) ); } }
 
 		private void AddItem ( string filename )
 		{

@@ -93,7 +93,7 @@
                                 <TextBlock Text="{Binding [editor_hyperlink_tnclipboard], Source={x:Static dcl:StringTable.SharedStrings}}" />
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock Margin="4,0,0,0">
+                        <TextBlock Margin="4,0,0,0" IsEnabled="{Binding HardwareAcceleration, Source={x:Static local:MainWindow.SharedWindow}}">
                             <Hyperlink Click="ThumbnailFromVideoClipHyperlink_Click">
                                 <TextBlock Text="{Binding [editor_hyperlink_tnvideoclip], Source={x:Static dcl:StringTable.SharedStrings}}" />
                             </Hyperlink>
