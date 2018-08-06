@@ -23,7 +23,7 @@ namespace Daramee.YouTubeUploader.YouTube
 			{
 				new VideoCategory ()
 				{
-					Name = StringTable.SharedStrings [ "category_none" ],
+					Name = StringTable.SharedStrings? [ "category_none" ],
 					Id = null
 				}
 			};

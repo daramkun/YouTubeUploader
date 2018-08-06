@@ -65,6 +65,15 @@ namespace Daramee.YouTubeUploader.YouTube
 		#endregion
 
 		public Uri FileName { get; private set; }
+		public Uri URL
+		{
+			get
+			{
+				if ( string.IsNullOrEmpty ( video.Id ) ) return null;
+				return new Uri ( $"https://youtube.com/watch?v={video.Id}" );
+			}
+		}
+
 		public string Title { get { return video.Snippet.Title; } set { video.Snippet.Title = value; PC (); } }
 		public string Description { get { return video.Snippet.Description; } set { video.Snippet.Description = value; PC (); } }
 		public PrivacyStatus PrivacyStatus
@@ -247,6 +256,8 @@ namespace Daramee.YouTubeUploader.YouTube
 				UploadingStatus = UploadingStatus.UploadFailed;
 				return UploadResult.UploadCanceled;
 			}
+
+			PC ( nameof ( URL ) );
 
 			return UploadResult.Succeed;
 		}

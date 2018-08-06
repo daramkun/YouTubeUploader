@@ -23,6 +23,14 @@ namespace Daramee.YouTubeUploader.YouTube
 				return collection.First ().FileName;
 			}
 		}
+		public Uri URL
+		{
+			get
+			{
+				if ( collection.Count > 1 ) return null;
+				return collection.First ().URL;
+			}
+		}
 
 		public string Title
 		{

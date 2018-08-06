@@ -11,6 +11,7 @@ namespace Daramee.YouTubeUploader.YouTube
 	public interface IUploadItem : INotifyPropertyChanged
 	{
 		Uri FileName { get; }
+		Uri URL { get; }
 
 		string Title { get; set; }
 		string Description { get; set; }

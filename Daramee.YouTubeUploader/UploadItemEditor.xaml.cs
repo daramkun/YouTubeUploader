@@ -4,6 +4,7 @@ using Daramee.YouTubeUploader.YouTube;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -157,6 +158,11 @@ namespace Daramee.YouTubeUploader
 			UploadItem.Thumbnail = bitmapSource;
 
 			GC.Collect ();
+		}
+
+		private void URLHyperlink_Click ( object sender, RoutedEventArgs e )
+		{
+			Process.Start ( textBlockURL.Text );
 		}
 	}
 }

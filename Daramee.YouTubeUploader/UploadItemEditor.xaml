@@ -32,6 +32,7 @@
                     <RowDefinition Height="32" />
                     <RowDefinition Height="64" />
                     <RowDefinition Height="32" />
+                    <RowDefinition Height="32" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="64" />
@@ -44,6 +45,7 @@
                 <TextBlock Text="{Binding [editor_textblock_category], Source={x:Static dcl:StringTable.SharedStrings}}" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource textBlockStyle}" />
                 <TextBlock Text="{Binding [editor_textblock_etc], Source={x:Static dcl:StringTable.SharedStrings}}" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource textBlockStyle}" />
                 <TextBlock Text="{Binding [editor_textblock_thumbnail], Source={x:Static dcl:StringTable.SharedStrings}}" Grid.Row="5" Grid.Column="0" VerticalAlignment="Top" Style="{StaticResource textBlockStyle}" Margin="0,7,0,0" />
+                <TextBlock Text="{Binding [editor_textblock_url], Source={x:Static dcl:StringTable.SharedStrings}}" Grid.Row="6" Grid.Column="0" VerticalAlignment="Top" Style="{StaticResource textBlockStyle}" Margin="0,7,0,0" />
 
                 <TextBox Text="{Binding Title}" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" />
                 <TextBox Text="{Binding Description}" Grid.Row="1" Grid.Column="1" Margin="0,8,0,8"
@@ -100,6 +102,12 @@
                         </TextBlock>
                     </StackPanel>
                 </Grid>
+
+                <TextBlock Grid.Row="6" Grid.Column="1" VerticalAlignment="Center">
+                    <Hyperlink Click="URLHyperlink_Click">
+                        <TextBlock Name="textBlockURL" Text="{Binding URL}" />
+                    </Hyperlink>
+                </TextBlock>
             </Grid>
         </ScrollViewer>
     </Border>
