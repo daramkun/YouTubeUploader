@@ -110,7 +110,7 @@ namespace Daramee.YouTubeUploader.YouTube
 
 		public double Progress { get { return progress; } private set { progress = value; PC (); } }
 		public long TotalUploaded { get { return totalUploaded; } private set { totalUploaded = value; PC (); } }
-		public long FileSize { get { return mediaStream.Length; } }
+		public long FileSize { get { return mediaStream != null ? mediaStream.Length : 0; } }
 		public UploadingStatus UploadingStatus { get { return uploadingStatus; } private set { uploadingStatus = value; PC (); } }
 		public TimeSpan TimeRemaining { get { return timeRemaining; } private set { timeRemaining = value; PC (); } }
 
