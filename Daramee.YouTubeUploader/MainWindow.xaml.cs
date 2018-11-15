@@ -251,7 +251,7 @@ namespace Daramee.YouTubeUploader
 		{
 			SharedWindow = this;
 
-			updateChecker = new UpdateChecker ( "v{0}.{1}{2}" );
+			updateChecker = new UpdateChecker ( "Version {0}.{1}{2}" );
 
 			Stream iconStream = Application.GetResourceStream ( new Uri ( "pack://application:,,,/DaramYouTubeUploader;component/Resources/MainIcon.ico" ) ).Stream;
 			NotificatorManager.Initialize ( new NotificatorInitializer ()
