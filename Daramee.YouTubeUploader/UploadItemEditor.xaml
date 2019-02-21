@@ -105,6 +105,13 @@
 
                 <TextBlock Grid.Row="6" Grid.Column="1" VerticalAlignment="Center">
                     <Hyperlink Click="URLHyperlink_Click">
+						<Hyperlink.ContextMenu>
+							<ContextMenu>
+								<MenuItem Header="{Binding [editor_hyperlink_contextmenu_openlink], Source={x:Static dcl:StringTable.SharedStrings}}" Click="URLHyperlinkContextMenuOpenLink_Click" />
+								<Separator />
+								<MenuItem Header="{Binding [editor_hyperlink_contextmenu_copylink], Source={x:Static dcl:StringTable.SharedStrings}}" Click="URLHyperlinkContextMenuCopyLink_Click" />
+							</ContextMenu>
+						</Hyperlink.ContextMenu>
                         <TextBlock Name="textBlockURL" Text="{Binding URL}" />
                     </Hyperlink>
                 </TextBlock>

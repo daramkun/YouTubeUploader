@@ -164,5 +164,15 @@ namespace Daramee.YouTubeUploader
 		{
 			Process.Start ( textBlockURL.Text );
 		}
+
+		private void URLHyperlinkContextMenuOpenLink_Click ( object sender, RoutedEventArgs e )
+		{
+			URLHyperlink_Click ( sender, e );
+		}
+
+		private void URLHyperlinkContextMenuCopyLink_Click ( object sender, RoutedEventArgs e )
+		{
+			Clipboard.SetText ( textBlockURL.Text );
+		}
 	}
 }
