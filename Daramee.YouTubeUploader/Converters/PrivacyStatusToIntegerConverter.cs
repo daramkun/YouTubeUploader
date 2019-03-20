@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
-using Daramee.YouTubeUploader.Uploader;
+using Daramee.YouTubeUploader.YouTube;
 
 namespace Daramee.YouTubeUploader.Converters
 {

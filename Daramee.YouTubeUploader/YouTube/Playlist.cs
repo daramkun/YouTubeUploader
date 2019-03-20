@@ -6,12 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Daramee.YouTubeUploader.Uploader
+namespace Daramee.YouTubeUploader.YouTube
 {
-	public class Video
+	public class PlaylistVideo
 	{
-		WeakReference<YouTubeSession> youTubeSession;
-
 		public Google.Apis.YouTube.v3.Data.Video Original { get; private set; }
 
 		public string Id { get { return Original.Id; } }
@@ -23,10 +21,9 @@ namespace Daramee.YouTubeUploader.Uploader
 			set { Original.Status.PrivacyStatus = value.GetPrivacyStatus (); }
 		}
 
-		public Video ( YouTubeSession session, Google.Apis.YouTube.v3.Data.Video original = null )
+		public PlaylistVideo ( YouTubeSession session, Google.Apis.YouTube.v3.Data.Video original = null )
 		{
-			youTubeSession = new WeakReference<YouTubeSession> ( session );
-			this.Original = original ?? new Google.Apis.YouTube.v3.Data.Video ()
+			Original = original ?? new Google.Apis.YouTube.v3.Data.Video ()
 			{
 				Snippet = new Google.Apis.YouTube.v3.Data.VideoSnippet (),
 				Status = new Google.Apis.YouTube.v3.Data.VideoStatus ()
@@ -36,9 +33,7 @@ namespace Daramee.YouTubeUploader.Uploader
 
 	public class Playlist
 	{
-		WeakReference<YouTubeSession> youTubeSession;
-		
-		public IReadOnlyList<Video> DetectedVideos { get; private set; } = new ObservableCollection<Video> ();
+		public IReadOnlyList<PlaylistVideo> DetectedVideos { get; private set; } = new ObservableCollection<PlaylistVideo> ();
 		public Google.Apis.YouTube.v3.Data.Playlist Original { get; private set; }
 
 		public string Id { get { return Original.Id; } }
@@ -49,11 +44,10 @@ namespace Daramee.YouTubeUploader.Uploader
 			get { return Original.Status.PrivacyStatus.GetPrivacyStatus (); }
 			set { Original.Status.PrivacyStatus = value.GetPrivacyStatus (); }
 		}
-		
-		public Playlist ( YouTubeSession session, Google.Apis.YouTube.v3.Data.Playlist original = null )
+
+		public Playlist ( Google.Apis.YouTube.v3.Data.Playlist original = null )
 		{
-			youTubeSession = new WeakReference<YouTubeSession> ( session );
-			this.Original = original ?? new Google.Apis.YouTube.v3.Data.Playlist ()
+			Original = original ?? new Google.Apis.YouTube.v3.Data.Playlist ()
 			{
 				Snippet = new Google.Apis.YouTube.v3.Data.PlaylistSnippet (),
 				Status = new Google.Apis.YouTube.v3.Data.PlaylistStatus ()
@@ -93,9 +87,8 @@ namespace Daramee.YouTubeUploader.Uploader
 					}
 				},
 			};
-
-			youTubeSession.TryGetTarget ( out YouTubeSession session );
-			var insert = session.YouTubeService.PlaylistItems.Insert ( item, "snippet" );
+			
+			var insert = YouTubeSession.SharedYouTubeSession.YouTubeService.PlaylistItems.Insert ( item, "snippet" );
 			var result = insert.Execute ();
 
 			return result != null;
@@ -105,15 +98,15 @@ namespace Daramee.YouTubeUploader.Uploader
 	public static class Playlists
 	{
 		public static IReadOnlyList<Playlist> DetectedPlaylists { get; private set; } = new ObservableCollection<Playlist> ();
-		
-		public static async Task Refresh ( YouTubeSession session )
+
+		public static async Task Refresh ()
 		{
 			( DetectedPlaylists as IList<Playlist> ).Clear ();
-			
+
 			string nextToken = null;
 			do
 			{
-				var request = session.YouTubeService.Playlists.List ( "snippet,status" );
+				var request = YouTubeSession.SharedYouTubeSession.YouTubeService.Playlists.List ( "snippet,status" );
 				request.Mine = true;
 				request.MaxResults = 50;
 				request.PageToken = nextToken;
@@ -121,7 +114,7 @@ namespace Daramee.YouTubeUploader.Uploader
 				var result = await request.ExecuteAsync ();
 				foreach ( var item in result.Items )
 				{
-					( DetectedPlaylists as IList<Playlist> ).Add ( new Playlist ( session, item ) );
+					( DetectedPlaylists as IList<Playlist> ).Add ( new Playlist ( item ) );
 				}
 				nextToken = result.NextPageToken;
 			}
@@ -132,17 +125,19 @@ namespace Daramee.YouTubeUploader.Uploader
 		{
 			if ( privacyStatus == PrivacyStatus.Unlisted ) return false;
 
-			Google.Apis.YouTube.v3.Data.Playlist pl = new Google.Apis.YouTube.v3.Data.Playlist ();
-			pl.Snippet = new Google.Apis.YouTube.v3.Data.PlaylistSnippet ()
+			Google.Apis.YouTube.v3.Data.Playlist pl = new Google.Apis.YouTube.v3.Data.Playlist
 			{
-				Title = title,
-				Description = description
+				Snippet = new Google.Apis.YouTube.v3.Data.PlaylistSnippet ()
+				{
+					Title = title,
+					Description = description
+				},
+				Status = new Google.Apis.YouTube.v3.Data.PlaylistStatus ()
+				{
+					PrivacyStatus = privacyStatus.GetPrivacyStatus ()
+				}
 			};
-			pl.Status = new Google.Apis.YouTube.v3.Data.PlaylistStatus ()
-			{
-				PrivacyStatus = privacyStatus.GetPrivacyStatus ()
-			};
-			
+
 			var insert = session.YouTubeService.Playlists.Insert ( pl, "snippet,status" );
 
 			return ( insert.Execute () != null );
@@ -151,7 +146,7 @@ namespace Daramee.YouTubeUploader.Uploader
 		public static bool RemovePlaylist ( YouTubeSession session, Playlist playlist )
 		{
 			if ( playlist.Id == null ) return false;
-			
+
 			var delete = session.YouTubeService.Playlists.Delete ( playlist.Id );
 			var result = delete.Execute ();
 			return ( result == null || result == "" );

@@ -4,20 +4,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Daramee.YouTubeUploader"
+        xmlns:dcl="clr-namespace:Daramee.DaramCommonLib"
         mc:Ignorable="d"
-        Title="API 키 설정" Height="220" Width="420" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="{Binding [setting_api_key], Source={x:Static dcl:StringTable.SharedStrings}}" Height="224" Width="420"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen" ShowInTaskbar="False">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
             <RowDefinition Height="84" />
-            <RowDefinition Height="24" />
+            <RowDefinition Height="32" />
         </Grid.RowDefinitions>
 
-        <GroupBox Header="API 키" Margin="8,8,8,4" Grid.Row="0">
+        <GroupBox Header="{Binding [textblock_apikey], Source={x:Static dcl:StringTable.SharedStrings}}" Margin="8,8,8,4" Grid.Row="0">
             <TextBox Name="textBoxAPIKey" Margin="4" />
         </GroupBox>
 
-        <GroupBox Header="클라이언트 보안 비밀" Margin="8,4,8,4" Grid.Row="1">
+        <GroupBox Header="{Binding [group_clientsecrets], Source={x:Static dcl:StringTable.SharedStrings}}" Margin="8,4,8,4" Grid.Row="1">
             <Grid Margin="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="128" />
@@ -29,17 +31,17 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="클라이언트 ID:" Grid.Row="0" />
-                <TextBlock Text="클라이언트 보안 비밀:" Grid.Row="2" />
+                <TextBlock Text="{Binding [textblock_clientid], Source={x:Static dcl:StringTable.SharedStrings}}" Grid.Row="0" />
+                <TextBlock Text="{Binding [textblock_clientsecrets], Source={x:Static dcl:StringTable.SharedStrings}}" Grid.Row="2" />
 
                 <TextBox Name="textBoxClientID" Grid.Row="0" Grid.Column="1" />
                 <TextBox Name="textBoxClientSecret" Grid.Row="2" Grid.Column="1" />
             </Grid>
         </GroupBox>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="확인" Width="80" Margin="0,0,8,0" Click="Button_Click" />
-            <Button Content="기본 값 사용" Width="80" Click="Button_Click_1" />
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
+            <Button Content="{Binding [button_ok], Source={x:Static dcl:StringTable.SharedStrings}}" Width="80" Margin="0,0,8,0" Click="Button_Click" />
+            <Button Content="{Binding [button_setdefault], Source={x:Static dcl:StringTable.SharedStrings}}" Width="80" Click="Button_Click_1" />
         </StackPanel>
     </Grid>
 </Window>

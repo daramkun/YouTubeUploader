@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daramee.YouTubeUploader", "Daramee.YouTubeUploader\Daramee.YouTubeUploader.csproj", "{C15C9DAE-A727-444A-8A95-17DB0A168969}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Daramee.DaramCommonLib.Shared", "..\..\GitHub\DaramCommonLib\Daramee.DaramCommonLib.Shared\Daramee.DaramCommonLib.Shared.shproj", "{7C78E361-8D16-47C6-A81A-D1F883707EE5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "YouTube Uploader", "YouTube Uploader", "{9F4E6A80-C07F-4090-BA43-7F36588D8D3D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "YouTube Uploader Libraries", "YouTube Uploader Libraries", "{B20701D8-052A-4ACC-8D14-38693394C35E}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Daramee.Winston.Shared", "..\..\GitHub\Winston\Daramee.Winston.Shared\Daramee.Winston.Shared.shproj", "{07D3172F-FF1F-4E6F-AEBE-3E725904B2A7}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\..\GitHub\Winston\Daramee.Winston.Shared\Daramee.Winston.Shared.projitems*{07d3172f-ff1f-4e6f-aebe-3e725904b2a7}*SharedItemsImports = 13
+		..\..\GitHub\DaramCommonLib\Daramee.DaramCommonLib.Shared\Daramee.DaramCommonLib.Shared.projitems*{7c78e361-8d16-47c6-a81a-d1f883707ee5}*SharedItemsImports = 13
+		..\..\GitHub\DaramCommonLib\Daramee.DaramCommonLib.Shared\Daramee.DaramCommonLib.Shared.projitems*{c15c9dae-a727-444a-8a95-17db0a168969}*SharedItemsImports = 4
+		..\..\GitHub\Winston\Daramee.Winston.Shared\Daramee.Winston.Shared.projitems*{c15c9dae-a727-444a-8a95-17db0a168969}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C15C9DAE-A727-444A-8A95-17DB0A168969}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C15C9DAE-A727-444A-8A95-17DB0A168969}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C15C9DAE-A727-444A-8A95-17DB0A168969}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C15C9DAE-A727-444A-8A95-17DB0A168969}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C15C9DAE-A727-444A-8A95-17DB0A168969} = {9F4E6A80-C07F-4090-BA43-7F36588D8D3D}
+		{7C78E361-8D16-47C6-A81A-D1F883707EE5} = {B20701D8-052A-4ACC-8D14-38693394C35E}
+		{07D3172F-FF1F-4E6F-AEBE-3E725904B2A7} = {B20701D8-052A-4ACC-8D14-38693394C35E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {912C5927-53BE-4DF8-A2E6-494AC614E0B8}
+	EndGlobalSection
+EndGlobal

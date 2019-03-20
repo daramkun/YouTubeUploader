@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Daramee.YouTubeUploader.YouTube;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,7 +13,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Daramee.YouTubeUploader.Uploader;
 
 namespace Daramee.YouTubeUploader
 {
@@ -28,14 +28,11 @@ namespace Daramee.YouTubeUploader
 		}
 	}
 
-	/// <summary>
-	/// PlaylistWindow.xaml에 대한 상호 작용 논리
-	/// </summary>
-	public partial class PlaylistWindow : Window
+	public partial class AddToPlaylistWindow : Window
 	{
 		ObservableCollection<Playlist> playlistsObject;
 
-		public PlaylistWindow ( ObservableCollection<Playlist> playlistsObject )
+		public AddToPlaylistWindow ( ObservableCollection<Playlist> playlistsObject )
 		{
 			InitializeComponent ();
 

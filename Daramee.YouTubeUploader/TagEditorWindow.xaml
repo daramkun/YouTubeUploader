@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Daramee.YouTubeUploader"
+        xmlns:dcl="clr-namespace:Daramee.DaramCommonLib"
         mc:Ignorable="d"
-        Title="태그 편집" Height="320" Width="400" ResizeMode="NoResize">
-    <Grid Margin="5">
+        Title="{Binding [edit_tags], Source={x:Static dcl:StringTable.SharedStrings}}" Height="320" Width="400" ResizeMode="NoResize">
+    <Grid Margin="8">
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
             <RowDefinition />
@@ -16,13 +17,21 @@
         <Grid VerticalAlignment="Top" Height="20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-                <ColumnDefinition Width="60" />
-                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="40" />
             </Grid.ColumnDefinitions>
 
             <TextBox x:Name="textBoxTag" />
-            <Button Content="추가" Grid.Column="1" Margin="5,0,0,0" Click="ButtonAdd_Click" />
-            <Button Content="제거" Grid.Column="2" Margin="5,0,0,0" Click="ButtonRemove_Click" />
+            <TextBlock Grid.Column="1" Margin="5,0,0,0" HorizontalAlignment="Center">
+                <Hyperlink Click="ButtonAdd_Click">
+                    <TextBlock Text="{Binding [button_add], Source={x:Static dcl:StringTable.SharedStrings}}" />
+                </Hyperlink>
+            </TextBlock>
+            <TextBlock Grid.Column="2" Margin="5,0,0,0" HorizontalAlignment="Center">
+                <Hyperlink Click="ButtonRemove_Click">
+                    <TextBlock Text="{Binding [button_remove], Source={x:Static dcl:StringTable.SharedStrings}}" />
+                </Hyperlink>
+            </TextBlock>
         </Grid>
 
         <ListBox x:Name="listBoxTags" Grid.Row="1" SelectionMode="Multiple">
@@ -30,7 +39,7 @@
         </ListBox>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-            <Button Content="닫기" Width="60" Height="25" Click="ButtonClose_Click" />
+            <Button Content="{Binding [button_close], Source={x:Static dcl:StringTable.SharedStrings}}" Width="60" Height="25" Click="ButtonClose_Click" />
         </StackPanel>
     </Grid>
 </Window>

@@ -1,22 +1,21 @@
-﻿using System;
+﻿using Daramee.DaramCommonLib;
+using Daramee.Winston.Dialogs;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.IO;
-using System.Net.NetworkInformation;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Navigation;
-using Daramee.DaramCommonLib;
-using Daramee.TaskDialogSharp;
 
 namespace Daramee.YouTubeUploader
 {
-	/// <summary>
-	/// App.xaml에 대한 상호 작용 논리
-	/// </summary>
 	public partial class App : Application
 	{
-		public static TaskDialogResult TaskDialogShow ( string title, string message, string content, TaskDialogIcon icon,
-			TaskDialogCommonButtonFlags commonButtons, params string [] buttons )
+		public static TaskDialogResult TaskDialogShow ( string message, string content, TaskDialogIcon icon,
+			   TaskDialogCommonButtonFlags commonButtons, params string [] buttons )
 		{
 			List<TaskDialogButton> tdButtons = new List<TaskDialogButton> ( buttons != null ? buttons.Length : 0 );
 			if ( tdButtons != null )
@@ -33,13 +32,15 @@ namespace Daramee.YouTubeUploader
 
 			TaskDialog taskDialog = new TaskDialog
 			{
-				Title = "다람 유튜브 업로더",
+				Title = StringTable.SharedStrings [ "youtube_uploader" ],
 				MainInstruction = message,
 				Content = content,
 				MainIcon = icon,
 				CommonButtons = commonButtons,
 				Buttons = tdButtons.Count > 0 ? tdButtons.ToArray () : null,
 			};
+			if ( YouTubeUploader.MainWindow.SharedWindow != null )
+				return taskDialog.Show ( YouTubeUploader.MainWindow.SharedWindow );
 			return taskDialog.Show ();
 		}
 
@@ -47,41 +48,31 @@ namespace Daramee.YouTubeUploader
 		{
 			if ( Environment.OSVersion.Version <= new Version ( 5, 0 ) )
 			{
-				MessageBox.Show ( "이 프로그램은 Windows XP 이하의\n운영체제에서는 동작하지 않습니다.", "안내",
+				MessageBox.Show ( "This application cannot use in Windows XP or lesser.", "Notice",
 					MessageBoxButton.OK, MessageBoxImage.Error );
 				Shutdown ( -1 );
 			}
 
+			ProgramHelper.Initialize ( Assembly.GetExecutingAssembly (), "daramkun", "YouTubeUploader" );
+			StringTable stringTable = new StringTable ();
+
 			if ( !NetworkHelper.IsNetworkAvailable ( 0 ) )
 			{
-				TaskDialogShow ( "오류", "인터넷 연결을 확인 후 다시 실행해주세요.", "이 프로그램은 네트워크 연결을 필요로 합니다.", 
+				TaskDialogShow ( StringTable.SharedStrings [ "message_check_network" ], StringTable.SharedStrings [ "content_check_network" ],
 					TaskDialogIcon.Error, TaskDialogCommonButtonFlags.OK );
 				Shutdown ();
 			}
-
-			ProgramHelper.Initialize ( Assembly.GetExecutingAssembly (), "daramkun", "YouTubeUploader" );
+			
 
 			AppDomain.CurrentDomain.UnhandledException += ( sender, e2 ) =>
 			{
-				if ( e2.ExceptionObject is MissingMethodException )
-				{
-					TaskDialogShow ( "오류", "심각한 오류가 발생했습니다.", ( e2.ExceptionObject as MissingMethodException ).Message,
-						TaskDialogIcon.Error, TaskDialogCommonButtonFlags.OK );
-				}
-				else if ( e2.ExceptionObject is FileNotFoundException )
-				{
-					TaskDialogShow ( "오류", "심각한 오류가 발생했습니다.", $"{( e2.ExceptionObject as FileNotFoundException ).Message} 파일이 존재하지 않습니다.",
-						TaskDialogIcon.Error, TaskDialogCommonButtonFlags.OK );
-				}
-				else
-				{
-					TaskDialogShow ( "오류", "오류가 발생했습니다.", ( e2.ExceptionObject as Exception ).Message,
-						TaskDialogIcon.Error, TaskDialogCommonButtonFlags.OK );
-				}
+				TaskDialogShow ( StringTable.SharedStrings [ "message_error_raised" ], ( e2.ExceptionObject as Exception ).Message,
+					TaskDialogIcon.Error, TaskDialogCommonButtonFlags.OK );
 			};
 			this.DispatcherUnhandledException += ( sender, e2 ) =>
 			{
-
+				TaskDialogShow ( StringTable.SharedStrings [ "message_error_raised" ], e2.Exception.Message,
+					TaskDialogIcon.Error, TaskDialogCommonButtonFlags.OK );
 			};
 
 			base.OnStartup ( e );
