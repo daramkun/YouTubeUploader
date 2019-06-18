@@ -77,8 +77,14 @@ namespace Daramee.YouTubeUploader.YouTube
 			}
 			else
 			{*/
-				apiKey = "AIzaSyCvMp_S7s1vNhrfCZuOEUtSk7tcEuuKcpE";
-				clientSecret = new MemoryStream ( Encoding.UTF8.GetBytes ( "{ installed : { \"client_id\": \"265154369970-nvej6rlmsigg57b0956clc36j7of2anu.apps.googleusercontent.com\", \"client_secret\": \"T0v3vOo6WndzgH3WQ9UvkLlU\", \"redirect_uri\" : \"urn:ietf:wg:oauth:2.0:oob\" } }" ) );
+				apiKey = Encoding.UTF8.GetString ( Convert.FromBase64String ( "QUl6YVN5Q3ZNcF9TN3Mxdk5ocmZDWnVPRVV0U2s3dGNFdXVLY3BF" ) );
+				string clientIdStr = Encoding.UTF8.GetString ( Convert.FromBase64String ( "MjY1MTU0MzY5OTcwLW52ZWo2cmxtc2lnZzU3YjA5NTZjbGMzNmo3b2YyYW51LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29t" ) );
+				string clientSecretStr = Encoding.UTF8.GetString ( Convert.FromBase64String ( "VDB2M3ZPbzZXbmR6Z0gzV1E5VXZrTGxV" ) );
+				clientSecret = new MemoryStream (
+					Encoding.UTF8.GetBytes (
+						$"{{ installed : {{ \"client_id\": \"{clientIdStr}\", \"client_secret\": \"{clientSecretStr}\" }} }}"
+					)
+				);
 			//}
 		}
 
