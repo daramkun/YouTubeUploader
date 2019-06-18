@@ -1,6 +1,7 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Apis.Http;
 using Google.Apis.Services;
+using Google.Apis.Util.Store;
 using Google.Apis.YouTube.v3;
 using Newtonsoft.Json;
 using System;
@@ -68,17 +69,23 @@ namespace Daramee.YouTubeUploader.YouTube
 
 		private void GetAPIKeyAndClientSecret ( out string apiKey, out Stream clientSecret )
 		{
-			if ( File.Exists ( "user_custom_settings.txt" ) )
+			/*if ( File.Exists ( "user_custom_settings.txt" ) )
 			{
 				var lines = File.ReadAllLines ( "user_custom_settings.txt" );
 				apiKey = lines [ 0 ];
 				clientSecret = new MemoryStream ( Encoding.UTF8.GetBytes ( $"{{ installed : {{ \"client_id\": \"{ lines [ 1 ] }\", \"client_secret\": \"{ lines [ 2 ] }\", \"redirect_uri\" : \"urn:ietf:wg:oauth:2.0:oob\" }} }}" ) );
 			}
 			else
-			{
-				apiKey = "AIzaSyCvMp_S7s1vNhrfCZuOEUtSk7tcEuuKcpE";
-				clientSecret = new MemoryStream ( Encoding.UTF8.GetBytes ( "{ installed : { \"client_id\": \"265154369970-nvej6rlmsigg57b0956clc36j7of2anu.apps.googleusercontent.com\", \"client_secret\": \"T0v3vOo6WndzgH3WQ9UvkLlU\", \"redirect_uri\" : \"urn:ietf:wg:oauth:2.0:oob\" } }" ) );
-			}
+			{*/
+				apiKey = Encoding.UTF8.GetString ( Convert.FromBase64String ( "QUl6YVN5Q3ZNcF9TN3Mxdk5ocmZDWnVPRVV0U2s3dGNFdXVLY3BF" ) );
+				string clientIdStr = Encoding.UTF8.GetString ( Convert.FromBase64String ( "MjY1MTU0MzY5OTcwLW52ZWo2cmxtc2lnZzU3YjA5NTZjbGMzNmo3b2YyYW51LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29t" ) );
+				string clientSecretStr = Encoding.UTF8.GetString ( Convert.FromBase64String ( "VDB2M3ZPbzZXbmR6Z0gzV1E5VXZrTGxV" ) );
+				clientSecret = new MemoryStream (
+					Encoding.UTF8.GetBytes (
+						$"{{ installed : {{ \"client_id\": \"{clientIdStr}\", \"client_secret\": \"{clientSecretStr}\" }} }}"
+					)
+				);
+			//}
 		}
 
 		public async Task<bool> Authorization ()
@@ -88,11 +95,13 @@ namespace Daramee.YouTubeUploader.YouTube
 			UserCredential credential;
 			using ( stream )
 			{
+				var fileDataStore = new FileDataStore ( Environment.CurrentDirectory, true );
 				credential = await GoogleWebAuthorizationBroker.AuthorizeAsync (
 					GoogleClientSecrets.Load ( stream ).Secrets,
 					new [] { YouTubeService.Scope.Youtube, YouTubeService.Scope.YoutubeUpload },
 					"user",
-					CancellationToken.None
+					CancellationToken.None,
+					fileDataStore
 				);
 			}
 			if ( credential == null )
